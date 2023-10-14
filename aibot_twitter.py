@@ -73,8 +73,8 @@ def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_
 # Main Code:
 
 # Twitter API constant credentials
-consumer_key = '7G6aj7rnvqA26D6dwy2kvK2ui'
-consumer_secret = 'rX5mcADDJn8XswQ8bBiE6CdgUfFIh94Y8qcRyoLgHPyiRTL2MY'
+consumer_key = 'TDRZejJIRUZXczMzTURYXzluTWk6MTpjaQ'
+consumer_secret = 'ETplZ_Jrp0dxDMME1E3d8vXeVolB55mtqvOHrBpGevDRq810u1'
 
 # Loop through the Twitter accounts and their access tokens
 for row in data:
