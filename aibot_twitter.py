@@ -110,8 +110,8 @@ api_key = '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'
 openai.api_key = api_key
 
 # Twitter API constant credentials
-consumer_key = 'TDRZejJIRUZXczMzTURYXzluTWk6MTpjaQ'
-consumer_secret = 'ETplZ_Jrp0dxDMME1E3d8vXeVolB55mtqvOHrBpGevDRq810u1'
+consumer_key = '7G6aj7rnvqA26D6dwy2kvK2ui'
+consumer_secret = 'rX5mcADDJn8XswQ8bBiE6CdgUfFIh94Y8qcRyoLgHPyiRTL2MY'
 BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOUPqgEAAAAAyZHqSFaw92wUz0KrwDzUcQfeRhQ%3DWEocFGkh76X0KrSmixBTOEZ8HvhCPfQJSDjmybtD9mzjoSrfL7'
 
 # Set up Google Sheets API credentials
