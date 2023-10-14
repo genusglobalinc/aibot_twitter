@@ -11,7 +11,7 @@ import requests
 # Function to send a standard Direct Message using Twitter API v2
 def send_standard_dm(api, recipient_id, message):
     try:
-        url = f'https://api.twitter.com/2/direct_messages/events'
+        url = 'https://api.twitter.com/2/direct_messages/events'
         data = {
             "event": {
                 "type": "message_create",
@@ -25,7 +25,13 @@ def send_standard_dm(api, recipient_id, message):
                 }
             }
         }
-        response = api.request('POST', url, json=data)
+        
+        headers = {
+            "Authorization": f"Bearer {BEARER_TOKEN}"
+        }
+
+        response = requests.post(url, json=data, headers=headers)
+
         if response.status_code == 201:
             print(f"Direct message sent to recipient {recipient_id}")
         else:
@@ -70,7 +76,7 @@ def search_users(api, keyword):
         'max_results': 100,  # The number of results to retrieve
     }
     
-    url = 'https://api.twitter.com/2/users/search'
+    url = 'https://api.twitter.com/2/users'
     response = api.request('GET', url, params=search_params)
     
     if response.status_code == 200:
@@ -82,27 +88,18 @@ def search_users(api, keyword):
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
     users = search_users(api, keyword=hashtag)
     
-    if users is None:
-        print(f"No results found for hashtag: {hashtag}")
-        return
-
-    if 'data' in users and isinstance(users['data'], list):
+    if users:
         for user in users['data']:
-            # Validate user data here
-            if 'description' in user and 'username' in user:
-                user_bio = user['description'].lower()
-                if any(keyword in user_bio for keyword in bio_keywords):
-                    account_username = user['username']
-                    recipient_id = user['id']
-                    dm_content = generate_meeting_request_dm(account_username)
-                    send_standard_dm(api, recipient_id, dm_content)
-                    daily_dm_limit -= 1
+            user_bio = user['description'].lower()
+            if any(keyword in user_bio for keyword in bio_keywords):
+                account_username = user['username']
+                recipient_id = user['id']
+                dm_content = generate_meeting_request_dm(account_username)
+                send_standard_dm(api, recipient_id, dm_content)
+                daily_dm_limit -= 1
 
-                    if daily_dm_limit == 0:
-                        break
-    else:
-        print("Invalid response data from the API.")
-
+                if daily_dm_limit == 0:
+                    break
 
 
 #----------------------------------------------------------------------------------------------------------------
@@ -115,6 +112,7 @@ openai.api_key = api_key
 # Twitter API constant credentials
 consumer_key = 'TDRZejJIRUZXczMzTURYXzluTWk6MTpjaQ'
 consumer_secret = 'ETplZ_Jrp0dxDMME1E3d8vXeVolB55mtqvOHrBpGevDRq810u1'
+BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAOUPqgEAAAAAyZHqSFaw92wUz0KrwDzUcQfeRhQ%3DWEocFGkh76X0KrSmixBTOEZ8HvhCPfQJSDjmybtD9mzjoSrfL7'
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -141,4 +139,4 @@ for row in data:
     api = tweepy.API(auth)
 
     # Execute the DM-sending logic for each account
-    search_hashtag_filter_bio_and_send_dms(api, "#indie")
+    search_hashtag_filter_bio_and_send_dms(api, "#indiedev")
