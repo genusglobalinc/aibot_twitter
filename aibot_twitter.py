@@ -3,27 +3,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import openai
 import time
-from tweepy import RateLimitError  # Import the RateLimitError
-
-#----------------------------------------------------------------------------------------------------------------
-# Environment Setup:
-# Set up Google Sheets API credentials
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107ad8e6.json', scope)
-client = gspread.authorize(creds)
-
-# Access the spreadsheet by its title or URL
-spreadsheet = client.open('Twitter Accounts')
-
-# Select a specific worksheet
-worksheet = spreadsheet.worksheet('Sheet1')
-
-# Read Twitter API credentials from the spreadsheet
-data = worksheet.get_all_records()
-
-# Initialize OpenAI with your API key
-api_key = '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'
-openai.api_key = api_key
 
 #----------------------------------------------------------------------------------------------------------------
 # Function Definitions:
@@ -77,9 +56,27 @@ def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_
 #----------------------------------------------------------------------------------------------------------------
 # Main Code:
 
+# Initialize OpenAI with your API key
+api_key = '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'
+openai.api_key = api_key
+
 # Twitter API constant credentials
 consumer_key = '7G6aj7rnvqA26D6dwy2kvK2ui'
 consumer_secret = 'rX5mcADDJn8XswQ8bBiE6CdgUfFIh94Y8qcRyoLgHPyiRTL2MY'
+
+# Set up Google Sheets API credentials
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107ad8e6.json', scope)
+client = gspread.authorize(creds)
+
+# Access the spreadsheet by its title or URL
+spreadsheet = client.open('Twitter Accounts')
+
+# Select a specific worksheet
+worksheet = spreadsheet.worksheet('Sheet1')
+
+# Read Twitter API credentials from the spreadsheet
+data = worksheet.get_all_records()
 
 # Loop through the Twitter accounts and their access tokens
 for row in data:
