@@ -12,7 +12,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107
 client = gspread.authorize(creds)
 
 # Access the spreadsheet by its title or URL
-spreadsheet = client.open('https://docs.google.com/spreadsheets/d/1XGgqEm1L7Gkb4ucOaxyJ_wXTa8g1lYbbXXJfHHq8XC0/edit?usp=drive_link')
+spreadsheet = client.open('Twitter Accounts')
 
 # Select a specific worksheet
 worksheet = spreadsheet.worksheet('Sheet1')
