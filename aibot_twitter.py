@@ -1,5 +1,3 @@
-import requests
-from requests_oauthlib import OAuth1
 import tweepy
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -26,7 +24,7 @@ def send_standard_dm(api, recipient_id, message):
                 }
             }
         }
-        response = requests.post(url, json=data, auth=api)
+        response = api.request('POST', url, json=data)
         if response.status_code == 200:
             print(f"Direct message sent to recipient {recipient_id}")
         else:
@@ -65,7 +63,7 @@ def generate_meeting_request_dm(account_username):
 
 # Function to search for accounts using a hashtag, filter based on bio, and send DMs
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
-    for tweet in tweepy.Cursor(api.search_tweets, q=f"#{hashtag}", lang="en").items():
+    for tweet in tweepy.Cursor(api.search, q=f"#{hashtag}", lang="en").items():
         # Extract the user's screen name and user ID
         account_username = tweet.user.screen_name
         recipient_id = tweet.user.id
@@ -110,8 +108,9 @@ for row in data:
     access_token_secret = row["Access Token Secret"]
 
     # Initialize Twitter API for the current account
-    auth = OAuth1(consumer_key, consumer_secret, access_token, access_token_secret, signature_type='auth_header')
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
 
     # Execute the DM-sending logic for each account
-    search_hashtag_filter_bio_and_send_dms(api, "indie game dev")
+    search_hashtag_filter_bio_and_send_dms(api, "indiegamedev")
