@@ -3,6 +3,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import openai
 import time
+import requests
 
 #----------------------------------------------------------------------------------------------------------------
 # Function Definitions:
