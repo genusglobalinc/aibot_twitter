@@ -42,12 +42,7 @@ def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_
 
         if any(keyword in user_bio for keyword in bio_keywords):
             dm_content = generate_meeting_request_dm(account_username)
-            try:
-                send_standard_dm(api, recipient_id, dm_content)
-            except RateLimitError as e:
-                print(f"Rate limit exceeded. Waiting for 15 minutes.")
-                time.sleep(15 * 60)  # Sleep for 15 minutes before trying again
-
+            send_standard_dm(api, recipient_id, dm_content)
             daily_dm_limit -= 1
 
             if daily_dm_limit == 0:
@@ -86,7 +81,7 @@ for row in data:
     # Initialize Twitter API for the current account
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+    api = tweepy.API(auth)
 
     # Execute the DM-sending logic for each account
     search_hashtag_filter_bio_and_send_dms(api, "indie game dev")
