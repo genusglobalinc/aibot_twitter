@@ -141,4 +141,4 @@ for row in data:
     api = tweepy.API(auth)
 
     # Execute the DM-sending logic for each account
-    search_hashtag_filter_bio_and_send_dms(api, "indiedev")
+    search_hashtag_filter_bio_and_send_dms(api, "#indie")
