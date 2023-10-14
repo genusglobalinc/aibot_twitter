@@ -86,6 +86,7 @@ def search_users(api, keyword):
 
 
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40):
+    print (hashtag)
     users = search_users(api, hashtag)
     
     if users:
