@@ -73,7 +73,7 @@ def generate_meeting_request_dm(account_username):
 def search_users(api, keyword):
     search_params = {
         'query': keyword,
-        'max_results': 100,  # The number of results to retrieve
+        'max_results': 10,  # The number of results to retrieve
     }
     
     url = 'https://api.twitter.com/2/users'
