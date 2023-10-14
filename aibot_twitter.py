@@ -10,13 +10,28 @@ import time
 # Function to send a standard Direct Message using Twitter API v1.1
 def send_standard_dm(api, recipient_id, message):
     try:
-        api.send_direct_message(recipient_id=recipient_id, text=message)
-    except tweepy.TweepError as e:
-        print(f"Failed to send DM to recipient {recipient_id}: {e}")
-        if e.api_code == 88:  # Check for rate limit exceeded error code
-            print("Rate limit exceeded. Waiting for 15 minutes.")
-            time.sleep(15 * 60)  # Sleep for 15 minutes before trying again
+        url = f'https://api.twitter.com/1.1/direct_messages/events/new.json'
+        data = {
+            "event": {
+                "type": "message_create",
+                "message_create": {
+                    "target": {
+                        "recipient_id": recipient_id
+                    },
+                    "message_data": {
+                        "text": message
+                    }
+                }
+            }
+        }
+        response = requests.post(url, json=data, auth=api)
+        if response.status_code == 200:
+            print(f"Direct message sent to recipient {recipient_id}")
+        else:
+            print(f"Failed to send DM to recipient {recipient_id}. Status code: {response.status_code}")
 
+    except Exception as e:
+        print(f"Failed to send DM to recipient {recipient_id}: {e}")
 
 # Function to generate DM content using GPT-3
 def generate_meeting_request_dm(account_username):
@@ -34,7 +49,17 @@ def generate_meeting_request_dm(account_username):
 
     # Combine the template steps into the full message
     full_message = "\n".join(template.values())
-    return full_message
+    full_message
+
+    # Generate additional content using GPT-3
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=full_message,
+        max_tokens=100
+    )
+    generated_content = response.choices[0].text.strip()
+
+    return generated_content
 
 # Function to search for accounts using a hashtag, filter based on bio, and send DMs
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
@@ -83,8 +108,7 @@ for row in data:
     access_token_secret = row["Access Token Secret"]
 
     # Initialize Twitter API for the current account
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
+    auth = OAuth1(consumer_key, consumer_secret, access_token, access_token_secret)
     api = tweepy.API(auth)
 
     # Execute the DM-sending logic for each account
