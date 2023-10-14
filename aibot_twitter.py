@@ -81,23 +81,28 @@ def search_users(api, keyword):
 
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
     users = search_users(api, keyword=hashtag)
-
+    
     if users is None:
         print(f"No results found for hashtag: {hashtag}")
         return
-    
-    if users:
-        for user in users['data']:
-            user_bio = user['description'].lower()
-            if any(keyword in user_bio for keyword in bio_keywords):
-                account_username = user['username']
-                recipient_id = user['id']
-                dm_content = generate_meeting_request_dm(account_username)
-                send_standard_dm(api, recipient_id, dm_content)
-                daily_dm_limit -= 1
 
-                if daily_dm_limit == 0:
-                    break
+    if 'data' in users and isinstance(users['data'], list):
+        for user in users['data']:
+            # Validate user data here
+            if 'description' in user and 'username' in user:
+                user_bio = user['description'].lower()
+                if any(keyword in user_bio for keyword in bio_keywords):
+                    account_username = user['username']
+                    recipient_id = user['id']
+                    dm_content = generate_meeting_request_dm(account_username)
+                    send_standard_dm(api, recipient_id, dm_content)
+                    daily_dm_limit -= 1
+
+                    if daily_dm_limit == 0:
+                        break
+    else:
+        print("Invalid response data from the API.")
+
 
 
 #----------------------------------------------------------------------------------------------------------------
