@@ -85,8 +85,8 @@ def search_users(api, keyword):
         return None
 
 
-def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
-    users = search_users(api, keyword=hashtag)
+def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40):
+    users = search_users(api, hashtag)
     
     if users:
         for user in users['data']:
