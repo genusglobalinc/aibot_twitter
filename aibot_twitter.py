@@ -27,43 +27,42 @@ openai.api_key = api_key
 #----------------------------------------------------------------------------------------------------------------
 # Function Definitions:
 
+# Function to send a standard Direct Message using Twitter API v2
+def send_standard_dm(api, recipient_id, message):
+    try:
+        api.send_direct_message(recipient_id=recipient_id, text=message)
+    except tweepy.TweepError as e:
+        print(f"Failed to send DM to recipient {recipient_id}: {e}")
+
 # Function to generate DM content using GPT-3
 def generate_meeting_request_dm(account_username):
     # Define a structured message template
     template = {
         'intro': f"Hi {account_username}, I hope this message finds you well. I found you on Twitter and thought we could connect.",
-        'social_proof': "I actually specialize in [service].",
+        'social_proof': "I actually specialize in indie game development.",
         'mechanism': "What sets us apart is that our service not only covers ad spend but is also tailored to the gaming industry.",
         'cta': "Would you be interested in learning more? Here's a link to our Video Sales Letter (VSL): [insert VSL link]",
     }
 
     # Replace placeholders in the template with the account's username
     for key, value in template.items():
-        template[key] = value.replace('[service]', 'indie game development').format(account_username=account_username)
+        template[key] = value.format(account_username=account_username)
 
     # Combine the template steps into the full message
     full_message = "\n".join(template.values())
-
-    # Send the message template to GPT-3 for content generation
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=full_message,
-        max_tokens=100
-    )
-
-    # Retrieve the AI-generated content
-    generated_content = response.choices[0].text.strip()
-    return generated_content
+    return full_message
 
 # Function to search for accounts using a hashtag, filter based on bio, and send DMs
-def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_phrases=['indie game dev']):
+def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
     for tweet in tweepy.Cursor(api.search_tweets, q=f"#{hashtag}", lang="en").items():
+        # Extract the user's screen name and user ID
         account_username = tweet.user.screen_name
+        recipient_id = tweet.user.id
         user_bio = tweet.user.description.lower()
 
-        if any(phrase in user_bio for phrase in bio_phrases):
+        if any(keyword in user_bio for keyword in bio_keywords):
             dm_content = generate_meeting_request_dm(account_username)
-            api.send_direct_message(screen_name=account_username, text=dm_content)
+            send_standard_dm(api, recipient_id, dm_content)
             daily_dm_limit -= 1
 
             if daily_dm_limit == 0:
@@ -84,7 +83,7 @@ for row in data:
     # Initialize Twitter API for the current account
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
+    api = tweepy.API(auth, v=2, wait_on_rate_limit=True))
 
     # Execute the DM-sending logic for each account
     search_hashtag_filter_bio_and_send_dms(api, "indie game dev")
