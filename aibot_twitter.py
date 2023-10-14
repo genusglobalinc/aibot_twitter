@@ -76,8 +76,8 @@ def search_users(api, query):
         'max_results': 10,  # The number of results to retrieve
     }
     
-    url = 'https://api.twitter.com/2/tweets/search/all'
-    response = api.request('GET', url, params=search_params)
+    url = 'https://api.twitter.com/2/tweets/search/recent?query=' + query
+    response = api.request('GET', url)
     
     if response.status_code == 200:
         return response.json()
