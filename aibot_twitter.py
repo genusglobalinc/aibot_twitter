@@ -62,13 +62,14 @@ def generate_meeting_request_dm(account_username):
     return generated_content
 
 # Function to search for users based on keywords in their profiles
+# Replace the 'search_users' function with this updated function
 def search_users(api, keyword):
     search_params = {
-        'q': keyword,
-        'count': 100,  # The number of results to retrieve
+        'query': keyword,
+        'max_results': 100,  # The number of results to retrieve
     }
     
-    url = 'https://api.twitter.com/1.1/users/search.json'
+    url = 'https://api.twitter.com/2/users/search'
     response = api.request('GET', url, params=search_params)
     
     if response.status_code == 200:
@@ -76,15 +77,15 @@ def search_users(api, keyword):
     else:
         return None
 
-# Function to search for accounts using a hashtag, filter based on bio, and send DMs
+
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
     users = search_users(api, keyword=hashtag)
     
     if users:
-        for user in users:
+        for user in users['data']:
             user_bio = user['description'].lower()
             if any(keyword in user_bio for keyword in bio_keywords):
-                account_username = user['screen_name']
+                account_username = user['username']
                 recipient_id = user['id']
                 dm_content = generate_meeting_request_dm(account_username)
                 send_standard_dm(api, recipient_id, dm_content)
@@ -92,6 +93,7 @@ def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_
 
                 if daily_dm_limit == 0:
                     break
+
 
 #----------------------------------------------------------------------------------------------------------------
 # Main Code:
