@@ -57,18 +57,12 @@ def generate_meeting_request_dm(account_username):
 
 # Function to search for accounts using a hashtag, filter based on bio, and send DMs
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_phrases=['indie game dev']):
-    for tweet in tweepy.Cursor(api.search, q=f"#{hashtag}", lang="en").items():
-        # Extract the user's screen name
+    for tweet in tweepy.Cursor(api.search_tweets, q=f"#{hashtag}", lang="en").items():
         account_username = tweet.user.screen_name
-
-        # Check the user's bio for specified phrases
         user_bio = tweet.user.description.lower()
 
         if any(phrase in user_bio for phrase in bio_phrases):
-            # Generate DM content using the structured template
             dm_content = generate_meeting_request_dm(account_username)
-
-            # Send the DM
             api.send_direct_message(screen_name=account_username, text=dm_content)
             daily_dm_limit -= 1
 
