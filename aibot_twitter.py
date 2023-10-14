@@ -61,21 +61,37 @@ def generate_meeting_request_dm(account_username):
 
     return generated_content
 
+# Function to search for users based on keywords in their profiles
+def search_users(api, keyword):
+    search_params = {
+        'q': keyword,
+        'count': 100,  # The number of results to retrieve
+    }
+    
+    url = 'https://api.twitter.com/1.1/users/search.json'
+    response = api.request('GET', url, params=search_params)
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
 # Function to search for accounts using a hashtag, filter based on bio, and send DMs
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
-    for tweet in tweepy.Cursor(api.search, q=f"#{hashtag}", lang="en").items():
-        user = tweet.user
-        account_username = user.screen_name
-        recipient_id = user.id
-        user_bio = user.description.lower()
+    users = search_users(api, keyword=hashtag)
+    
+    if users:
+        for user in users:
+            user_bio = user['description'].lower()
+            if any(keyword in user_bio for keyword in bio_keywords):
+                account_username = user['screen_name']
+                recipient_id = user['id']
+                dm_content = generate_meeting_request_dm(account_username)
+                send_standard_dm(api, recipient_id, dm_content)
+                daily_dm_limit -= 1
 
-        if any(keyword in user_bio for keyword in bio_keywords):
-            dm_content = generate_meeting_request_dm(account_username)
-            send_standard_dm(api, recipient_id, dm_content)
-            daily_dm_limit -= 1
-
-            if daily_dm_limit == 0:
-                break
+                if daily_dm_limit == 0:
+                    break
 
 #----------------------------------------------------------------------------------------------------------------
 # Main Code:
