@@ -8,10 +8,10 @@ import requests
 #----------------------------------------------------------------------------------------------------------------
 # Function Definitions:
 
-# Function to send a standard Direct Message using Twitter API v1.1
+# Function to send a standard Direct Message using Twitter API v2
 def send_standard_dm(api, recipient_id, message):
     try:
-        url = f'https://api.twitter.com/1.1/direct_messages/events/new.json'
+        url = f'https://api.twitter.com/2/direct_messages/events'
         data = {
             "event": {
                 "type": "message_create",
@@ -26,7 +26,7 @@ def send_standard_dm(api, recipient_id, message):
             }
         }
         response = api.request('POST', url, json=data)
-        if response.status_code == 200:
+        if response.status_code == 201:
             print(f"Direct message sent to recipient {recipient_id}")
         else:
             print(f"Failed to send DM to recipient {recipient_id}. Status code: {response.status_code}")
