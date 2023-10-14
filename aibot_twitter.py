@@ -7,12 +7,16 @@ import time
 #----------------------------------------------------------------------------------------------------------------
 # Function Definitions:
 
-# Function to send a standard Direct Message using Twitter API v2
+# Function to send a standard Direct Message using Twitter API v1.1
 def send_standard_dm(api, recipient_id, message):
     try:
         api.send_direct_message(recipient_id=recipient_id, text=message)
     except tweepy.TweepError as e:
         print(f"Failed to send DM to recipient {recipient_id}: {e}")
+        if e.api_code == 88:  # Check for rate limit exceeded error code
+            print("Rate limit exceeded. Waiting for 15 minutes.")
+            time.sleep(15 * 60)  # Sleep for 15 minutes before trying again
+
 
 # Function to generate DM content using GPT-3
 def generate_meeting_request_dm(account_username):
