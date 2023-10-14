@@ -70,13 +70,13 @@ def generate_meeting_request_dm(account_username):
 
 # Function to search for users based on keywords in their profiles
 # Replace the 'search_users' function with this updated function
-def search_users(api, keyword):
+def search_users(api, query):
     search_params = {
-        'query': keyword,
+        'query': query,
         'max_results': 10,  # The number of results to retrieve
     }
     
-    url = 'https://api.twitter.com/2/users'
+    url = 'https://api.twitter.com/2/tweets/search/all'
     response = api.request('GET', url, params=search_params)
     
     if response.status_code == 200:
