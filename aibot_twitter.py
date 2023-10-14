@@ -1,3 +1,5 @@
+import requests
+from requests_oauthlib import OAuth1
 import tweepy
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -108,7 +110,7 @@ for row in data:
     access_token_secret = row["Access Token Secret"]
 
     # Initialize Twitter API for the current account
-    auth = OAuth1(consumer_key, consumer_secret, access_token, access_token_secret)
+    auth = OAuth1(consumer_key, consumer_secret, access_token, access_token_secret, signature_type='auth_header')
     api = tweepy.API(auth)
 
     # Execute the DM-sending logic for each account
