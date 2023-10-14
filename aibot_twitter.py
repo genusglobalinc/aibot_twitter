@@ -81,6 +81,10 @@ def search_users(api, keyword):
 
 def search_hashtag_filter_bio_and_send_dms(api, hashtag, daily_dm_limit=40, bio_keywords=['indie game dev']):
     users = search_users(api, keyword=hashtag)
+
+    if users is None:
+        print(f"No results found for hashtag: {hashtag}")
+        return
     
     if users:
         for user in users['data']:
