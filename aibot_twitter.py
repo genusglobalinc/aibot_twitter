@@ -38,100 +38,100 @@ scrapedUsers = worksheet.get_all_records()
 
 #---- 3. Get bio from usernames, and validate matches-------------------------------------------------------------
 def get_bio_and_validate_matches(usernames, keyword):
-    matched_usernames = []
-    
-    for username in usernames:
-        try:
-            user = api.get_user(screen_name=username)
-            bio = user.description  # Get user's bio from Twitter
-            if keyword in bio:
-                matched_usernames.append(username)
-        except tweepy.TweepError as e:
-            print(f"Error fetching user data for {username}: {str(e)}")
-    
-    return matched_usernames
+matched_usernames = []
+
+for username in usernames:
+	try:
+		user = api.get_user(screen_name=username)
+		bio = user.description  # Get user's bio from Twitter
+		if keyword in bio:
+			matched_usernames.append(username)
+	except tweepy.TweepError as e:
+		print(f"Error fetching user data for {username}: {str(e)}")
+
+return matched_usernames
 
 #----  4. Generate personalized Chat GPT response using DM format----------------------------------------
 def generate_meeting_request_dm(account_username):
-    # Define a structured message template
-    template = {
-        'intro': f"Hi {account_username}, I hope this message finds you well. I found you on Twitter and thought we could connect.",
-        'social_proof': "I actually specialize in indie game development.",
-        'mechanism': "What sets us apart is that our service not only covers ad spend but is also tailored to the gaming industry.",
-        'cta': "Would you be interested in learning more? Here's a link to our Video Sales Letter (VSL): [insert VSL link]",
-    }
+# Define a structured message template
+template = {
+	'intro': f"Hi {account_username}, I hope this message finds you well. I found you on Twitter and thought we could connect.",
+	'social_proof': "I actually specialize in indie game development.",
+	'mechanism': "What sets us apart is that our service not only covers ad spend but is also tailored to the gaming industry.",
+	'cta': "Would you be interested in learning more? Here's a link to our Video Sales Letter (VSL): [insert VSL link]",
+}
 
-    # Replace placeholders in the template with the account's username
-    for key, value in template.items():
-        template[key] = value.format(account_username=account_username)
+# Replace placeholders in the template with the account's username
+for key, value in template.items():
+	template[key] = value.format(account_username=account_username)
 
-    # Combine the template steps into the full message
-    full_message = "\n".join(template.values())
-    full_message
+# Combine the template steps into the full message
+full_message = "\n".join(template.values())
+full_message
 
-    # Generate additional content using GPT-3
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=full_message,
-        max_tokens=100
-    )
-    generated_content = response.choices[0].text.strip()
+# Generate additional content using GPT-3
+response = openai.Completion.create(
+	engine="davinci",
+	prompt=full_message,
+	max_tokens=100
+)
+generated_content = response.choices[0].text.strip()
 
-    return generated_content
+return generated_content
 
 #----  5. Send DMs to 40 accounts, marking them as messaged, and add date stamp----------------------------------------
 def send_dm_to_accounts(usernames, api):
-   
-   # Initialize total DM count
-    total_dm_count_cell = worksheet.find("Total DM Count")
-    total_dm_count = int(worksheet.cell(total_dm_count_cell.row, total_dm_count_cell.col + 1).value)
-	currentDM_count = 0
 
-    for username in usernames:
-        if currentDM_count >= 40:  # Check if the daily send limit is reached
-            break
+# Initialize total DM count
+total_dm_count_cell = worksheet.find("Total DM Count")
+total_dm_count = int(worksheet.cell(total_dm_count_cell.row, total_dm_count_cell.col + 1).value)
+currentDM_count = 0
 
-        dm_text = generate_meeting_request_dm(username)  # Generate DM text
-        try:
-            api.send_direct_message(username, text=dm_text)  # Send DM
-            print(f"Sent DM to {username}: {dm_text}")
+for username in usernames:
+	if currentDM_count >= 40:  # Check if the daily send limit is reached
+		break
 
-            # Update total DM count
-            currentDM_count += 1
+	dm_text = generate_meeting_request_dm(username)  # Generate DM text
+	try:
+		api.send_direct_message(username, text=dm_text)  # Send DM
+		print(f"Sent DM to {username}: {dm_text}")
 
-            # Mark the account as messaged by adding 'X' next to the username in the spreadsheet
-            cell_list = worksheet.findall(username)  # Find cells containing the username
-            if cell_list:
-                for cell in cell_list:
-                    # Get the row where the username is found and add 'X' in the adjacent cell
-                    row = worksheet.row_values(cell.row)
-                    row.append('X')
-                    row.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-                    worksheet.insert_row(row, index=cell.row)
+		# Update total DM count
+		currentDM_count += 1
 
-        except tweepy.TweepError as e:
-            print(f"Error sending DM to {username}: {str(e}")
+		# Mark the account as messaged by adding 'X' next to the username in the spreadsheet
+		cell_list = worksheet.findall(username)  # Find cells containing the username
+		if cell_list:
+			for cell in cell_list:
+				# Get the row where the username is found and add 'X' in the adjacent cell
+				row = worksheet.row_values(cell.row)
+				row.append('X')
+				row.append(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+				worksheet.insert_row(row, index=cell.row)
 
-    # Update the total DM count in the spreadsheet
-	total_dm_count += currentDM_count
-    worksheet.update(total_dm_count_cell.row, total_dm_count_cell.col + 1, total_dm_count)
+	except tweepy.TweepError as e:
+		print(f"Error sending DM to {username}: {str(e}")
+
+# Update the total DM count in the spreadsheet
+total_dm_count += currentDM_count
+worksheet.update(total_dm_count_cell.row, total_dm_count_cell.col + 1, total_dm_count)
 
 #----  6. Do this for 10 Twitter accounts----------------------------------------
 # Function to read Twitter account credentials from another sheet
 def get_twitter_credentials(sheet, credentials_sheet_name):
-    credentials_sheet = sheet.worksheet(credentials_sheet_name)
-    data = credentials_sheet.get_all_records()
-    credentials = []
+credentials_sheet = sheet.worksheet(credentials_sheet_name)
+data = credentials_sheet.get_all_records()
+credentials = []
 
-    for row in data:
-        credentials.append({
-            "consumer_key": row["Consumer Key"],
-            "consumer_secret": row["Consumer Secret"],
-            "access_token": row["Access Token"],
-            "access_token_secret": row["Access Token Secret"]
-        })
+for row in data:
+	credentials.append({
+		"consumer_key": row["Consumer Key"],
+		"consumer_secret": row["Consumer Secret"],
+		"access_token": row["Access Token"],
+		"access_token_secret": row["Access Token Secret"]
+	})
 
-    return credentials
+return credentials
 
 # Name of the sheet where you store Twitter account credentials
 credentials_sheet_name = 'Twitter Credentials'
@@ -142,18 +142,18 @@ twitter_accounts = get_twitter_credentials(spreadsheet, credentials_sheet_name)
 
 # Main program
 if __name__ == '__main__':
-    keyword = 'your_keyword'  # Replace with your target keyword
-    for _ in range(10):  # Repeat the process for 10 times
-        # Get Twitter account credentials from your sheet (replace 'Twitter Credentials' with the correct sheet name)
-        twitter_accounts = get_twitter_credentials(spreadsheet, 'Twitter Credentials')
+keyword = 'your_keyword'  # Replace with your target keyword
+for _ in range(10):  # Repeat the process for 10 times
+	# Get Twitter account credentials from your sheet (replace 'Twitter Credentials' with the correct sheet name)
+	twitter_accounts = get_twitter_credentials(spreadsheet, 'Twitter Credentials')
 
-        for account_credentials in twitter_accounts:
-            # Set up code's client auth using Tweepy for the current account
-            auth = tweepy.OAuthHandler(account_credentials["consumer_key"], account_credentials["consumer_secret"])
-            auth.set_access_token(account_credentials["access_token"], account_credentials["access_token_secret"])
-            api = tweepy.API(auth)
+	for account_credentials in twitter_accounts:
+		# Set up code's client auth using Tweepy for the current account
+		auth = tweepy.OAuthHandler(account_credentials["consumer_key"], account_credentials["consumer_secret"])
+		auth.set_access_token(account_credentials["access_token"], account_credentials["access_token_secret"])
+		api = tweepy.API(auth)
 
-            matched_usernames = get_bio_and_validate_matches(scrapedUsers, keyword)  # Step 3
-            send_dm_to_accounts(matched_usernames, api)  # Pass the API object for the current account
+		matched_usernames = get_bio_and_validate_matches(scrapedUsers, keyword)  # Step 3
+		send_dm_to_accounts(matched_usernames, api)  # Pass the API object for the current account
 
-            time.sleep(60)  # Sleep for 60 seconds (adjust as needed)
+		time.sleep(60)  # Sleep for 60 seconds (adjust as needed)
