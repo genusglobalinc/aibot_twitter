@@ -109,7 +109,7 @@ def send_dm_to_accounts(usernames, api):
 					worksheet.insert_row(row, index=cell.row)
 	
 		except tweepy.TweepError as e:
-			print(f"Error sending DM to {username}: {str(e}")
+			print(f"Error sending DM to {username}: {str(e)}")
 	
 	# Update the total DM count in the spreadsheet
 	total_dm_count += currentDM_count
