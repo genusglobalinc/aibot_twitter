@@ -57,7 +57,7 @@ def generate_meeting_request_dm(account_username):
 	template = {
 		'intro': f"Hi {account_username}, I'm looking to connect with other indie game devs on Twitter and thought we could chat!",
 		'social_proof': "I know this is random, but I actually specialize in boosting revenue using tailored funnels for game devs and streamers.",
-		'mechanism': "Since we're pretty unique to the gaming space, we not only cover ad spend for your first campaign, but really work with your brand to install a funnel that resonates with your buyers.",
+		'mechanism': "One thing that makes us so different is we're so sure of our process we give you free ad spend.",
 		'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [insert VSL link]",
 	}
 	
