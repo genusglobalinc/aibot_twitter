@@ -55,10 +55,10 @@ def get_bio_and_validate_matches(usernames, keyword):
 def generate_meeting_request_dm(account_username):
 	# Define a structured message template
 	template = {
-		'intro': f"Hi {account_username}, I was looking for other indie game devs on Twitter and thought we could connect.",
-		'social_proof': "I actually specialize in boosting wishlisters and revenue using tailored funnels for game devs and streamers.",
-		'mechanism': "What sets us apart is that our service not only covers ad spend for your first campaign with us, but is also tailored to the indie industry.",
-		'cta': "Would you be interested in learning more? Here's a link to our Video Sales Letter (VSL): [insert VSL link]",
+		'intro': f"Hi {account_username}, I'm looking to connect with other indie game devs on Twitter and thought we could chat!",
+		'social_proof': "I know this is random, but I actually specialize in boosting revenue using tailored funnels for game devs and streamers.",
+		'mechanism': "Since we're pretty unique to the gaming space, we not only cover ad spend for your first campaign, but really work with your brand to install a funnel that resonates with your buyers.",
+		'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [insert VSL link]",
 	}
 	
 	# Replace placeholders in the template with the account's username
