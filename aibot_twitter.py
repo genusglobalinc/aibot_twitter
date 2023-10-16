@@ -58,7 +58,7 @@ def generate_meeting_request_dm(account_username):
 		'intro': f"Hi {account_username}, I'm looking to connect with other indie game devs on Twitter and thought we could chat!",
 		'social_proof': "I know this is random, but I actually specialize in boosting revenue using tailored funnels for game devs and streamers.",
 		'mechanism': "One thing that makes us so different is we're so sure of our process we give you free ad spend.",
-		'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [insert VSL link]",
+		'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [https://rb.gy/vaypj]",
 	}
 	
 	# Replace placeholders in the template with the account's username
