@@ -1,7 +1,8 @@
-import gspread  # For Google Sheets
-import openai  # For ChatGPT
-import requests  # For making HTTP requests
-import stylegan2  # For image generation
+import gspread
+import openai
+import requests
+import stylegan2
+from PIL import Image, ImageDraw, ImageFont
 
 # Define your access tokens and URLs
 access_token = 'YOUR_INSTAGRAM_ACCESS_TOKEN'
@@ -24,6 +25,15 @@ def generate_text_with_gpt(prompt):
 network_pkl = 'your_pretrained_model.pkl'
 _G, _D, Gs = stylegan2.run.load_networks(network_pkl)
 
+# Function to add text overlay
+def add_text_overlay(image, text):
+    draw = ImageDraw.Draw(image)
+    position = (50, 50)  # Adjust the position as needed
+    font = ImageFont.load_default()
+    text_color = (255, 255, 255)  # White color
+    draw.text(position, text, fill=text_color, font=font)
+    return image
+
 # Generate and post images
 if __name__ == "__main__":
     prompts = get_prompts_from_google_sheets()
@@ -35,11 +45,15 @@ if __name__ == "__main__":
         latent_vector = stylegan2.run.generate_latent()
         image = Gs.run(latent_vector)
 
-        # Add the generated text to the image as a caption or overlay
+        # Add the generated text as an overlay
+        image_with_overlay = add_text_overlay(image, generated_text)
+
+        # Save the image with overlay
+        image_with_overlay.save('image_with_overlay.png')
 
         # Post the image to Instagram's story
         data = {
-            'image_url': 'URL_TO_YOUR_GENERATED_IMAGE',  # Replace with the generated image URL
+            'image_url': 'URL_TO_YOUR_GENERATED_IMAGE',  # Replace with the image with overlay URL
             'caption': generated_text,
         }
 
