@@ -3,27 +3,22 @@ import openai
 import requests
 import stylegan2
 from PIL import Image, ImageDraw, ImageFont
+import os
 
-# Define your access tokens and URLs
+# Set up Google Sheets API
+keyfile_path = 'path/to/your/keyfile.json'
+scope = ['https://www.googleapis.com/auth/spreadsheets']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, scope)
+gc = gspread.authorize(credentials)
+
+# Set up OpenAI API
+os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
+api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = api_key
+
+# Set up Instagram Graph API
 access_token = 'YOUR_INSTAGRAM_ACCESS_TOKEN'
 api_endpoint = 'https://graph.instagram.com/v12.0/me/media'
-
-# Set up Google Sheets API, OpenAI API, and StyleGAN2
-
-# Fetch prompts from Google Spreadsheet
-def get_prompts_from_google_sheets():
-    # Implement your Google Sheets API setup
-    # Fetch prompts and return a list
-
-# Generate text using ChatGPT
-def generate_text_with_gpt(prompt):
-    # Implement OpenAI GPT API setup
-    # Generate text based on the provided prompt
-    return generated_text
-
-# Load the pre-trained StyleGAN2 model
-network_pkl = 'your_pretrained_model.pkl'
-_G, _D, Gs = stylegan2.run.load_networks(network_pkl)
 
 # Function to add text overlay
 def add_text_overlay(image, text):
@@ -33,6 +28,25 @@ def add_text_overlay(image, text):
     text_color = (255, 255, 255)  # White color
     draw.text(position, text, fill=text_color, font=font)
     return image
+
+# Function to fetch prompts from Google Sheets
+def get_prompts_from_google_sheets():
+    worksheet = gc.open('Your Spreadsheet Name').sheet1
+    prompts = worksheet.col_values(1)  # Assuming prompts are in the first column
+    return prompts
+
+# Function to generate text with ChatGPT
+def generate_text_with_gpt(prompt):
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=100
+    )
+    return response.choices[0].text
+
+# Load the pre-trained StyleGAN2 model
+network_pkl = 'your_pretrained_model.pkl'
+_G, _D, Gs = stylegan2.run.load_networks(network_pkl)
 
 # Generate and post images
 if __name__ == "__main__":
