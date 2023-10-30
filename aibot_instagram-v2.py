@@ -28,6 +28,12 @@ worksheet = spreadsheet.get_worksheet(0)
 # Instagram Graph API access token
 access_token = 'your-instagram-access-token'
 
+# Proxy information
+proxy_ip = 'your-proxy-ip'
+proxy_port = 'your-proxy-port'
+proxy_user = 'your-username'
+proxy_pass = 'your-password'
+
 # Initialize the OpenAI API key
 openai.api_key = 'your-openai-api-key'
 
@@ -39,7 +45,14 @@ def validate_and_store_usernames():
 
         while next_url and len(retrieved_usernames) < max_posts:
             try:
-                response = requests.get(next_url)
+                # Create a session with the proxy
+                session = requests.Session()
+                session.proxies = {
+                    'http': f'http://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}',
+                    'https': f'http://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}'
+                }
+
+                response = session.get(next_url)
                 if response.status_code == 200:
                     data = response.json()
                     if 'data' in data:
@@ -91,7 +104,7 @@ def generate_and_send_dm(username, access_token):
     }
 
     # Send the DM using the Instagram Graph API
-    response = requests.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={access_token}', json=dm_data)
+    response = session.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={access_token}', json=dm_data)
 
     if response.status_code == 200:
         print(f'Sent DM to {username}: {generated_message}')
