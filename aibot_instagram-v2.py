@@ -31,16 +31,12 @@ access_token = 'your-instagram-access-token'
 # Initialize the OpenAI API key
 openai.api_key = 'your-openai-api-key'
 
-# Function to validate and store usernames
+# Function to validate and store usernames based on bio
 def validate_and_store_usernames():
-    # Run through different hashtags
     for _ in range(10):  # You can adjust the number of runs
-        # Randomly select a hashtag from the list
         hashtag = random.choice(hashtags)
-        
-        # Set up pagination
         next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={access_token}&count=10'
-        
+
         while next_url and len(retrieved_usernames) < max_posts:
             try:
                 response = requests.get(next_url)
@@ -48,12 +44,14 @@ def validate_and_store_usernames():
                     data = response.json()
                     if 'data' in data:
                         for post in data['data']:
-                            if 'username' in post['caption']:
-                                retrieved_usernames.add(post['caption']['username'])
-                    if 'paging' in data and 'next' in data['paging']:
-                        next_url = data['paging']['next']
-                    else:
-                        next_url = None
+                            if 'username' in post.get('caption', {}):
+                                username = post['caption']['username']
+                                bio = get_user_bio(username)
+                                keywords = ["indie game dev", "game dev"]
+                                bio_lower = bio.lower()
+                                if any(keyword in bio_lower for keyword in keywords):
+                                    retrieved_usernames.add(username)
+                    next_url = data['paging'].get('next')
                 else:
                     print("Failed to fetch post data.")
                     break
