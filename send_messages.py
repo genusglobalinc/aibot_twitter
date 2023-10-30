@@ -3,14 +3,24 @@ import gspread
 import time
 import openai
 
-# Your Instagram Graph API access token
-access_token = 'your-instagram-access-token'
-
 # Initialize the OpenAI API key
 openai.api_key = 'your-openai-api-key'
 
+# List of Instagram accounts
+instagram_accounts = [
+    {
+        'access_token': 'account1-access-token',
+        'username': 'account1-username',
+    },
+    {
+        'access_token': 'account2-access-token',
+        'username': 'account2-username',
+    },
+    # Add more Instagram accounts as needed
+]
+
 # Function to generate and send a DM message using ChatGPT
-def generate_and_send_dm(username, access_token):
+def generate_and_send_dm(username, account):
     # Define a structured message template
     template = {
         'intro': f"Hi {username}, I'm looking to connect with other indie game devs on Instagram and thought we could chat!",
@@ -40,14 +50,14 @@ def generate_and_send_dm(username, access_token):
         'message': generated_message
     }
 
-    # Send the DM using the Instagram Graph API
-    response = requests.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={access_token}', json=dm_data)
+    # Send the DM using the Instagram Graph API with the selected account's access token
+    response = requests.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={account["access_token"]}', json=dm_data)
 
     if response.status_code == 200:
-        print(f'Sent DM to {username}: {generated_message}')
+        print(f'Sent DM to {username} using {account["username"]}: {generated_message}')
         return True
     else:
-        print(f'Failed to send DM to {username}: {response.text}')
+        print(f'Failed to send DM to {username} using {account["username"]}: {response.text}')
         return False
 
 # Function to mark a username as "messaged" in the Google Sheets document
@@ -58,11 +68,17 @@ def mark_as_messaged(username):
 # Function to iterate through and process usernames
 def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
+    account_index = 0  # Initialize to the first account
+
     for username in usernames:
         if username != '' and username != 'Messaged':
-            if generate_and_send_dm(username, access_token):
+            account = instagram_accounts[account_index]
+            if generate_and_send_dm(username, account):
                 mark_as_messaged(username)
             time.sleep(60)  # Sleep to respect Instagram's rate limits
+
+            # Switch to the next account in a round-robin manner
+            account_index = (account_index + 1) % len(instagram_accounts)
 
 if __name__ == '__main':
     process_usernames()
