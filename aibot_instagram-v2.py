@@ -60,10 +60,10 @@ def validate_and_store_usernames():
                 break
 
 # Function to generate and send a DM message using ChatGPT
-def generate_and_send_dm(account_username, access_token):
+def generate_and_send_dm(username, access_token):
     # Define a structured message template
     template = {
-        'intro': f"Hi {account_username}, I'm looking to connect with other indie game devs on Instagram and thought we could chat!",
+        'intro': f"Hi {username}, I'm looking to connect with other indie game devs on Instagram and thought we could chat!",
         'social_proof': "I know this is random, but I actually specialize in boosting revenue using tailored funnels for game devs and streamers.",
         'mechanism': "One thing that makes us so different is we're so sure of our process we give you free ad spend.",
         'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [https://rb.gy/vaypj]",
@@ -71,11 +71,10 @@ def generate_and_send_dm(account_username, access_token):
 
     # Replace placeholders in the template with the account's username
     for key, value in template.items():
-        template[key] = value.format(account_username=account_username)
+        template[key] = value.format(username=username)
 
     # Combine the template steps into the full message
     full_message = "\n".join(template.values())
-    full_message
 
     # Generate additional content using GPT-3
     response = openai.Completion.create(
@@ -83,13 +82,23 @@ def generate_and_send_dm(account_username, access_token):
         prompt=full_message,
         max_tokens=100
     )
-    generated_content = response.choices[0].text.strip()
+    generated_message = response.choices[0].text.strip()
 
-    # Implement code to send the DM to the user using the Instagram API
-    # Replace this with actual code to send DMs
+    # Construct the DM data
+    dm_data = {
+        'recipient_user_id': username,
+        'message': generated_message
+    }
 
-    # Return True if the DM was successfully sent, or False if not
-    return True
+    # Send the DM using the Instagram Graph API
+    response = requests.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={access_token}', json=dm_data)
+
+    if response.status_code == 200:
+        print(f'Sent DM to {username}: {generated_message}')
+        return True
+    else:
+        print(f'Failed to send DM to {username}: {response.text}')
+        return False
 
 # Function to mark a username as "messaged" in the Google Sheets document
 def mark_as_messaged(username):
