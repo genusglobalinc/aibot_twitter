@@ -4,8 +4,34 @@ import gspread
 import time
 import openai
 
+# Define your Instagram accounts and proxy configurations
+accounts = [
+    {
+        "username": "account1",
+        "access_token": "access_token1",
+        "proxy": {
+            "ip": "proxy_ip1",
+            "port": "proxy_port1",
+            "username": "proxy_username1",
+            "password": "proxy_password1"
+        }
+    },
+    {
+        "username": "account2",
+        "access_token": "access_token2",
+        "proxy": {
+            "ip": "proxy_ip2",
+            "port": "proxy_port2",
+            "username": "proxy_username2",
+            "password": "proxy_password2"
+        },
+        # Add more accounts and proxy configurations here
+    }
+]
+
 # Your Instagram Graph API access token
-access_token = 'your-access-token'
+# Add more access tokens for your accounts if needed
+access_tokens = [account["access_token"] for account in accounts]
 
 # List of different hashtags
 hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
@@ -17,6 +43,7 @@ max_posts = 1000
 retrieved_usernames = set()
 
 # Set up Google Sheets API credentials
+# Replace with your actual Google Sheets credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('your-credentials.json', scope)
 client = gspread.authorize(creds)
@@ -25,15 +52,6 @@ client = gspread.authorize(creds)
 spreadsheet = client.open('Your Instagram Usernames Document')
 worksheet = spreadsheet.get_worksheet(0)
 
-# Instagram Graph API access token
-access_token = 'your-instagram-access-token'
-
-# Proxy information
-proxy_ip = 'your-proxy-ip'
-proxy_port = 'your-proxy-port'
-proxy_user = 'your-username'
-proxy_pass = 'your-password'
-
 # Initialize the OpenAI API key
 openai.api_key = 'your-openai-api-key'
 
@@ -41,15 +59,18 @@ openai.api_key = 'your-openai-api-key'
 def validate_and_store_usernames():
     for _ in range(10):  # You can adjust the number of runs
         hashtag = random.choice(hashtags)
-        next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={access_token}&count=10'
+        next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={random.choice(access_tokens)}&count=10'
 
         while next_url and len(retrieved_usernames) < max_posts:
             try:
+                account = random.choice(accounts)
+                access_token = account["access_token"]
+                proxy = account["proxy"]
                 # Create a session with the proxy
                 session = requests.Session()
                 session.proxies = {
-                    'http': f'http://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}',
-                    'https': f'http://{proxy_user}:{proxy_pass}@{proxy_ip}:{proxy_port}'
+                    'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
+                    'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
                 }
 
                 response = session.get(next_url)
@@ -72,8 +93,17 @@ def validate_and_store_usernames():
                 print(f"An error occurred: {str(e)}")
                 break
 
-# Function to generate and send a DM message using ChatGPT
-def generate_and_send_dm(username, access_token):
+# Function to send a DM using a specific account and proxy
+def send_dm(username, access_token, proxy_info):
+    proxy = proxy_info["proxy"]
+    session = requests.Session()
+
+    # Set up proxy for this request
+    session.proxies = {
+        'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
+        'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
+    }
+
     # Define a structured message template
     template = {
         'intro': f"Hi {username}, I'm looking to connect with other indie game devs on Instagram and thought we could chat!",
@@ -87,7 +117,7 @@ def generate_and_send_dm(username, access_token):
         template[key] = value.format(username=username)
 
     # Combine the template steps into the full message
-    full_message = "\n".join(template.values())
+    full_message = "\n".join(template.values)
 
     # Generate additional content using GPT-3
     response = openai.Completion.create(
@@ -123,8 +153,8 @@ def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
     for username in usernames:
         if username != '' and username != 'Messaged':
-            if generate_and_send_dm(username, access_token):
-                mark_as_messaged(username)
+            send_dm(username, access_token, proxy_info)
+            mark_as_messaged(username)
             time.sleep(60)  # Sleep to respect Instagram's rate limits
 
 # Main program
