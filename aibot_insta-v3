@@ -4,59 +4,88 @@ import gspread
 import time
 import openai
 from flask import Flask, request, jsonify
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
 
-# Define your Instagram accounts and proxy configurations
-# ... (the same as in your original code)
+# Your existing Instagram accounts and configurations
+accounts = [
+    {
+        "username": "account1",
+        "access_token": "access_token1",
+        # Add more details for this account
+    },
+    # Add more Instagram accounts
+]
 
-# Define your Dialogflow webhook server using Flask
-app = Flask(__name__)
+# Your Instagram Graph API access token
+access_tokens = [account["access_token"] for account in accounts]
 
-# Define your Instagram Graph API access token and credentials
-# ... (the same as in your original code)
+# List of different hashtags
+hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
+
+# Maximum number of posts to retrieve (adjust as needed)
+max_posts = 1000
+
+# Initialize a set to store retrieved usernames
+retrieved_usernames = set()
+
+# Set up Google Sheets API credentials
+# Replace with your actual Google Sheets credentials
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('your-credentials.json', scope)
+client = gspread.authorize(creds)
+
+# Open the Google Sheets document containing the list of usernames
+spreadsheet = client.open('Your Instagram Usernames Document')
+worksheet = spreadsheet.get_worksheet(0)
+
+# Initialize the OpenAI API key
+openai.api_key = 'your-openai-api-key'
+
+# Flask app for Dialogflow fulfillment
+app = Flask(__name)
 
 # Function to validate and store usernames based on bio
-# ... (the same as in your original code)
+def validate_and_store_usernames():
+    for _ in range(10):  # You can adjust the number of runs
+        hashtag = random.choice(hashtags)
+        next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={random.choice(access_tokens)}&count=10'
+        # ...
 
-# Function to send a DM using a specific account and proxy
-# ... (the same as in your original code)
+# Function to send a DM using a specific account
+def send_dm(username, access_token):
+    # ...
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=full_message,
+        max_tokens=100
+    )
+    generated_message = response.choices[0].text.strip()
+    # ...
 
 # Function to mark a username as "messaged" in the Google Sheets document
-# ... (the same as in your original code)
+def mark_as_messaged(username):
+    cell = worksheet.find(username)
+    worksheet.update_cell(cell.row, cell.col + 1, 'Messaged')
 
-# Function to handle the Dialogflow webhook request
+# Flask route for Dialogflow webhook
 @app.route('/dialogflow-webhook', methods=['POST'])
 def dialogflow_webhook():
-    req = request.get_json()
-    
-    # Extract intent and parameters from the Dialogflow request
-    intent = req['queryResult']['intent']['displayName']
-    params = req['queryResult']['parameters']
+    data = request.json
+    # Implement Dialogflow intent handling here
+    # Generate responses based on detected intents and entities
+    return jsonify({"fulfillmentText": "Response from your Flask server"})
 
-    if intent == 'SendDM':
-        username = params['username']  # Extract the username from Dialogflow parameters
-        # Find the corresponding account and proxy
-        for account in accounts:
-            if account['username'] == params['account']:
-                account_info = account
-                break
-        else:
-            return jsonify({'fulfillmentText': 'Sorry, I cannot find the specified account.'})
-
-        # Send DM using the specified account and proxy
-        success = send_dm(username, account_info['access_token'], account_info['proxy'])
-
-        if success:
-            # Mark the username as "messaged" in the Google Sheets document
+# Function to process usernames
+def process_usernames():
+    usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
+    for username in usernames:
+        if username != '' and username != 'Messaged':
+            send_dm(username, access_token)
             mark_as_messaged(username)
-            return jsonify({'fulfillmentText': f'Sent DM to {username}.'})
-        else:
-            return jsonify({'fulfillmentText': f'Failed to send DM to {username}.'})
-
-    # Handle other intents here if needed
+            time.sleep(60)  # Sleep to respect Instagram's rate limits
 
 # Main program
 if __name__ == '__main__':
-    # Start the Flask server on your AWS EC2 instance
-    app.run(host='0.0.0.0', port=80)
+    validate_and_store_usernames()
+    process_usernames()
+    # Start the Flask server for Dialogflow fulfillment
+    app.run(host='0.0.0.0', port=5000)
