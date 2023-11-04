@@ -1,12 +1,17 @@
-# Import necessary libraries
 import requests
 import random
 import gspread
+import time
 import openai
-from google.oauth2.service_account import ServiceAccountCredentials
-from flask import Flask
+import stylegan2
+import os
+import cv2
+import numpy as np
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from flask import Flask, request, jsonify
 
-# Define bot account info for all 10 bot accounts
+# Define your Instagram accounts and proxy configurations
 accounts = [
     {
         "username": "account1",
@@ -16,13 +21,24 @@ accounts = [
             "port": "proxy_port1",
             "username": "proxy_username1",
             "password": "proxy_password1"
-        },
+        }
     },
-    # Add details for the other 9 accounts
+    {
+        "username": "account2",
+        "password": "password2",
+        "proxy": {
+            "ip": "proxy_ip2",
+            "port": "proxy_port2",
+            "username": "proxy_username2",
+            "password": "proxy_password2"
+        },
+        # Add more accounts and proxy configurations here
+    }
 ]
 
-# Define IG Graph API access tokens
-access_tokens = ["access_token1", "access_token2", "access_token3"]  # Add more if needed
+# Your Instagram Graph API access token
+# Add more access tokens for your accounts if needed
+access_tokens = [account["access_token"] for account in accounts]
 
 # Define hashtags to search for
 hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
