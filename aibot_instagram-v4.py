@@ -158,6 +158,22 @@ def mark_as_messaged(username):
     cell = worksheet.find(username)
     worksheet.update_cell(cell.row, cell.col + 1, 'Messaged')
 
+# Process usernames and send messages
+def process_usernames():
+    usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
+    for username in usernames:
+        if username != '' and username != 'Messaged':
+            for account in accounts:
+                if account["username"] == params["account"]:
+                    account_info = account
+                    break
+            else:
+                continue  # Account not found, skip
+
+            send_dm(username, account_info['access_token'], account_info['proxy'])
+            mark_as_messaged(username)
+            time.sleep(60)  # Sleep to respect Instagram's rate limits
+
 # Function to add text overlay
 def add_text_overlay(image, text):
     draw = ImageDraw.Draw(image)
@@ -193,7 +209,7 @@ fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Video codec (change as needed)
 video_writer = cv2.VideoWriter('output_video.mp4', fourcc, 30.0, frame_size)  # Adjust the settings as needed
 
 if __name__ == "__main__":
-    validate_and store_usernames()
+    validate_and_store_usernames()
 
     prompts = get_prompts_from_google_sheets()
 
