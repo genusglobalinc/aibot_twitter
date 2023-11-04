@@ -20,3 +20,19 @@ Example:
 
  You might have to use wget to get the file.
 wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=YOUR_FILE_ID' -O FILE_NAME
+
+
+IMPORTANT!!!!
+To use this code, aibot_instagram-v4.py is the working rendition. 
+
+follow these instructions:
+1. Buy 10 aged instagram accounts
+2. Setup api access keys for accounts
+3. store account information in accessible google sheets doc
+4. create a dialogflow agent and define intents and webhooks
+5. create google sheets to store prospects 
+6. copy python script to EC2 instance 
+7. create control_panel.html template on EC2 instance
+8. set variables for one test cycle (4000dms run once)
+9. launch bot on server by running script from EC2 instance
+10. control bot from web interface 
