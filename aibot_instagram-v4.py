@@ -194,7 +194,8 @@ def dialogflow_webhook():
 if name == ‘main’:
     for account in accounts:
         find_and_store_usernames()  # Find and store usernames in Google Sheets
-        process_usernames()
         create_and_post_reel(bot, account, account[“proxy”])
+        
+    process_usernames()
     
     app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow
