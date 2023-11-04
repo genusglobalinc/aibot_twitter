@@ -158,15 +158,17 @@ def send_dm(username, account):
 def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
     contacted = worksheet.col_values(2)
-    dm_count = 0
     
-    for username in usernames:
-        if username != '' and contacted != 'Messaged':
+    for username, contacted_status in zip(usernames, contacted):
+        if username != '' and contacted_status != 'Messaged':
+            dm_count = 0  # Reset the dm_count for each new username
             for account in accounts:
-                if dm_count < 400:
-                    send_dm(username, account)
-                    time.sleep(60)  # Sleep to respect Instagram's rate limits
-                    break
+                if dm_count >= 400:
+                    break  # Switch to the next account if 400 messages have been sent
+                send_dm(username, account)
+                contacted_status = 'Messaged'  # Update the contacted status in the sheet
+                dm_count += 1
+                time.sleep(60)  # Sleep to respect Instagram's rate limits
                     
 # Function to create and post a reel
 def create_and_post_reel(bot, username, password, proxy_info):
