@@ -36,7 +36,7 @@ access_tokens = [account["access_token"] for account in accounts]
 hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
 
 # Define limit for prospecting usernames
-prospecting_limit = 400
+prospecting_limit = 4000
 
 # Initialize a set to temporarily store prospected usernames
 prospected_usernames = set()
@@ -250,9 +250,9 @@ def dialogflow_webhook():
 
 if name == ‘main’:
     for account in accounts:
-        find_and_store_usernames(account)  # Find and store usernames in Google Sheets
         create_and_post_reel(bot, account, account[“proxy”])
         
+    find_and_store_usernames()
     process_usernames()
     
     app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow
