@@ -85,10 +85,33 @@ def find_and_store_usernames():
                 proxy = account["proxy"]
 
                 # Implement code to find usernames and store them in Google Sheets
+                # Create a session with the proxy
+                session = requests.Session()
+                session.proxies = {
+                    'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
+                    'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
+                }
 
-                next_url = data['paging'].get('next')
+                response = session.get(next_url)
+                if response.status_code == 200:
+                    data = response.json()
+                    if 'data' in data:
+                        for post in data['data']:
+                            if 'username' in post.get('caption', {}):
+                                username = post['caption']['username']
+                                bio = get_user_bio(username)
+                                keywords = ["indie game dev", "game dev"]
+                                bio_lower = bio.lower()
+                                if any(keyword in bio_lower for keyword in keywords):
+                                    retrieved_usernames.add(username)
+                    next_url = data['paging'].get('next')
+                else:
+                    print("Failed to fetch post data.")
+                    break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
+                break
+                
                 
 # Function to send a DM using a specific account and proxy
 def send_dm(username, access_token, proxy_info):
