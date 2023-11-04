@@ -102,8 +102,8 @@ def find_and_store_usernames(account):
                 break
 
 # Function to send DM using ig username, same bot, and residential proxy to all 400 prospected usernames
-def send_dm(username, account, proxy_info):
-    proxy = proxy_info["proxy"]
+def send_dm(username, account):
+    proxy = account["proxy"]
     session = requests.Session()
 
     # Set up proxy for this request
