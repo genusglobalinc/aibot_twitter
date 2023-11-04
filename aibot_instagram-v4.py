@@ -248,11 +248,26 @@ def dialogflow_webhook():
         # Handle other intents here if needed
         return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
 
-if name == ‘main’:
+# Define your job to run your script
+def run_script():
     for account in accounts:
-        create_and_post_reel(bot, account, account[“proxy”])
-        
+        create_and post_reel(bot, account, account["proxy"])
     find_and_store_usernames()
     process_usernames()
-    
+
+if name == ‘main’:
     app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow
+
+# Define the interval (in seconds) between script runs (e.g., once a day)
+interval_seconds = 24 * 60 * 60  # 24 hours
+
+while True:
+    current_time = datetime.datetime.now()
+    
+    # Check if the current day is Monday (0) through Friday (4)
+    if current_time.weekday() < 5:
+        # Run the script
+        run_script()
+    
+    # Sleep for the defined interval
+    time.sleep(interval_seconds)
