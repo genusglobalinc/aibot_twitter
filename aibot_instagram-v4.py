@@ -7,6 +7,9 @@ import stylegan2
 from PIL import Image, ImageDraw, ImageFont
 import os
 import cv2
+import numpy as np
+from google.oauth2.service_account import ServiceAccountCredentials
+from flask import Flask, request, jsonify
 
 # Define your Instagram accounts and proxy configurations
 accounts = [
@@ -58,6 +61,9 @@ worksheet = spreadsheet.get_worksheet(0)
 
 # Initialize the OpenAI API key
 openai.api_key = 'your-openai-api-key'
+
+# Set up Flask for Dialogflow webhook
+app = Flask(__name__)
 
 # Function to validate and store usernames based on bio
 def validate_and_store_usernames():
@@ -180,15 +186,14 @@ def generate_text_with_gpt(prompt):
 network_pkl = 'your_pretrained_model.pkl'
 _G, _D, Gs = stylegan2.run.load_networks(network_pkl)
 
+# Create a VideoWriter for the output video
+frame_size = (width, height)  # Replace with the actual frame size
+fps = 30  # Frames per second
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Video codec (change as needed)
+video_writer = cv2.VideoWriter('output_video.mp4', fourcc, 30.0, frame_size)  # Adjust the settings as needed
 
 if __name__ == "__main__":
-    validate_and_store_usernames()
-    process_usernames()
-
-    # Create a VideoWriter for the output video
-    frame_size = (width, height)  # Replace with the actual frame size
-    fps = 30  # Frames per second
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Video codec (change as needed)
+    validate_and store_usernames()
 
     prompts = get_prompts_from_google_sheets()
 
@@ -208,3 +213,5 @@ if __name__ == "__main__":
 
     # Release the VideoWriter
     video_writer.release()
+
+    process_usernames()
