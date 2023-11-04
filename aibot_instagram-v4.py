@@ -57,12 +57,8 @@ openai.api_key = 'your-openai-api-key'
 app = Flask(__name__)
 
 # Flask route for DialogFlow webhook
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    # Implement intent handling here
-    # Generate response based on detected intent
-    return jsonify({'fulfillmentText': 'Response from DialogFlow'})
-    
+@app.route('/dialogflow_webhook', methods=['POST'])
+
 # Define a function to find and store 400 unique usernames to Google Sheets document
 def find_and_store_usernames():
     for _ in range(prospecting_limit):
