@@ -231,3 +231,7 @@ def dialogflow_webhook():
         # Handle other intents here if needed
         return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
 
+if __name__ == '__main__':
+    find_and_store_usernames()  # Find and store usernames in Google Sheets
+    process_usernames()  # Process stored usernames and send messages
+    app.run(host='0.0.0.0', port=80)  # Start the Flask server for DialogFlow
