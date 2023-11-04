@@ -16,6 +16,7 @@ accounts = [
     {
         "username": "account1",
         "password": "password1",
+        "access_token": "access_token1",
         "proxy": {
             "ip": "proxy_ip1",
             "port": "proxy_port1",
@@ -23,15 +24,6 @@ accounts = [
             "password": "proxy_password1"
         }
     },
-    {
-        "username": "account2",
-        "password": "password2",
-        "proxy": {
-            "ip": "proxy_ip2",
-            "port": "proxy_port2",
-            "username": "proxy_username2",
-            "password": "proxy_password2"
-        },
         # Add more accounts and proxy configurations here
     }
 ]
