@@ -56,6 +56,13 @@ openai.api_key = 'your-openai-api-key'
 # Set up Flask app for DialogFlow fulfillment
 app = Flask(__name__)
 
+# Define a simple data structure to store script state
+script_enabled = True
+
+# Define statistics variables
+meetings_booked = 0
+outreach_done = 0
+
 # Define a function to find and store 400 unique usernames to Google Sheets document
 def find_and_store_usernames(account):
     for _ in range(prospecting_limit):
@@ -244,6 +251,23 @@ def dialogflow_webhook():
     else:
         # Handle other intents here if needed
         return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
+
+# Routes for your control panel
+@app.route('/control_panel')
+def control_panel():
+    return render_template('control_panel.html', script_enabled=script_enabled, meetings_booked=meetings_booked, outreach_done=outreach_done)
+
+@app.route('/toggle_script', methods=['POST'])
+def toggle_script():
+    global script_enabled
+    script_enabled = not script_enabled
+    return redirect(url_for('control_panel'))
+
+@app.route('/increase_outreach', methods=['POST'])
+def increase_outreach():
+    global outreach_done
+    outreach_done += 1
+    return redirect(url_for('control_panel'))
 
 # Define your job to run your script
 def run_script():
