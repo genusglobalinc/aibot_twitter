@@ -101,6 +101,59 @@ def find_and_store_usernames(account):
                 print(f"An error occurred: {str(e)}")
                 break
 
+# Function to send DM using ig username, same bot, and residential proxy to all 400 prospected usernames
+def send_dm(username, account, proxy_info):
+    proxy = proxy_info["proxy"]
+    session = requests.Session()
+
+    # Set up proxy for this request
+    session.proxies = {
+        'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
+        'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
+    }
+
+    # Define a structured message template
+    template = {
+        'intro': f"Hi {username}, I'm looking to connect with other indie game devs on Instagram and thought we could chat!",
+        'social_proof': "I know this is random, but I actually specialize in boosting revenue using tailored funnels for game devs and streamers.",
+        'mechanism': "One thing that makes us so different is we're so sure of our process we give you free ad spend.",
+        'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [https://rb.gy/vaypj]",
+    }
+
+    # Replace placeholders in the template with the account's username
+    for key, value in template.items():
+        template[key] = value.format(username=username)
+
+    # Combine the template steps into the full message
+    full_message = "\n".join(template.values)
+
+    # Generate additional content using GPT-3
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=full_message,
+        max_tokens=100
+    )
+    generated_message = response.choices[0].text.strip()
+
+    # Construct the DM data
+    dm_data = {
+        'recipient_user_id': username,
+        'message': generated_message
+    }
+
+    # Send the DM using the Instagram Graph API
+    response = session.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={account["access_token"]}', json=dm_data)
+
+    if response.status_code == 200:
+        print(f'Sent DM to {username}: {generated_message}')
+        cell = worksheet.find(username)
+        worksheet.update_cell(cell.row, cell.col + 1, 'Messaged')
+        return True
+    else:
+        print(f'Failed to send DM to {username}: {response.text}')
+        return False
+
+
 # Function to process usernames and send messages
 def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
