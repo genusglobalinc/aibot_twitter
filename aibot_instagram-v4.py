@@ -36,7 +36,7 @@ access_tokens = [account["access_token"] for account in accounts]
 hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
 
 # Define limit for prospecting usernames
-prospecting_limit = 4000
+global prospecting_limit = 4000
 
 # Initialize a set to temporarily store prospected usernames
 prospected_usernames = set()
@@ -57,11 +57,11 @@ openai.api_key = 'your-openai-api-key'
 app = Flask(__name__)
 
 # Define a simple data structure to store script state
-script_enabled = True
+global script_enabled = True
 
 # Define statistics variables
-meetings_booked = 0
-outreach_done = 0
+global total_bookings = 0
+global outreach_done = 0
 
 # Define a function to find and store 400 unique usernames to Google Sheets document
 def find_and_store_usernames(account):
@@ -172,6 +172,7 @@ def process_usernames():
                 send_dm(username, account)
                 contacted_status = 'Messaged'  # Update the contacted status in the sheet
                 dm_count += 1
+                outreach_done += 1
                 time.sleep(60)  # Sleep to respect Instagram's rate limits
                     
 # Function to create and post a reel
@@ -244,6 +245,7 @@ def dialogflow_webhook():
         date = req['queryResult']['parameters']['date']
         time = req['queryResult']['parameters']['time']
         location = req['queryResult']['parameters']['location']
+        bookings += 1
         # You can now use the collected parameters to book the meeting and provide a response.
         return jsonify({
             'fulfillmentText': f'Great! We have scheduled a meeting on {date} at {time} at {location}.'
@@ -259,20 +261,18 @@ def control_panel():
     # Get actual data, e.g., script status, meetings booked, outreach count
     script_status = "Off"  # Replace with actual script status
     meetings_booked = 0  # Replace with actual data
-    outreach_count = 0  # Replace with actual data
+    outreach_count = outreach_done # Replace with actual data
 
     return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count)
     
 @app.route('/toggle_script', methods=['POST'])
 def toggle_script():
-    global script_enabled
     script_enabled = not script_enabled
     return redirect(url_for('control_panel'))
 
 @app.route('/increase_outreach', methods=['POST'])
 def increase_outreach():
-    global outreach_done
-    outreach_done += 1
+    prospecting_limit += 1
     return redirect(url_for('control_panel'))
 
 # Define your job to run your script
