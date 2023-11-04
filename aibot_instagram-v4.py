@@ -190,10 +190,6 @@ if __name__ == "__main__":
     fps = 30  # Frames per second
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Video codec (change as needed)
 
-    # Create a VideoWriter for the output video
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video_writer = cv2.VideoWriter('output_video.avi', fourcc, 30.0, (1920, 1080))  # Adjust the settings as needed
-
     prompts = get_prompts_from_google_sheets()
 
     for prompt in prompts:
