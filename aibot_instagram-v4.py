@@ -10,6 +10,7 @@ import numpy as np
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from flask import Flask, request, jsonify
+from ig_bot import Bot
 
 # Define your Instagram accounts and proxy configurations
 accounts = [
@@ -275,6 +276,7 @@ def increase_outreach():
 
 # Define your job to run your script
 def run_script():
+    bot = Bot()
     for account in accounts:
         create_and post_reel(bot, account, account["proxy"])
     find_and_store_usernames()
