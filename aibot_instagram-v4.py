@@ -60,14 +60,13 @@ app = Flask(__name__)
 @app.route('/dialogflow_webhook', methods=['POST'])
 
 # Define a function to find and store 400 unique usernames to Google Sheets document
-def find_and_store_usernames():
+def find_and_store_usernames(account):
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
         next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={random.choice(access_tokens)}&count=10'
 
         while next_url and len(prospected_usernames) < prospecting_limit:
             try:
-                account = random.choice(accounts)
                 username = account["username"]
                 password = account["password"]
                 proxy = account["proxy"]
@@ -193,7 +192,7 @@ def dialogflow_webhook():
 
 if name == ‘main’:
     for account in accounts:
-        find_and_store_usernames()  # Find and store usernames in Google Sheets
+        find_and_store_usernames(account)  # Find and store usernames in Google Sheets
         create_and_post_reel(bot, account, account[“proxy”])
         
     process_usernames()
