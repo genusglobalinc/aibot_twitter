@@ -164,7 +164,7 @@ def process_usernames():
         if username != '' and contacted != 'Messaged':
             for account in accounts:
                 if dm_count < 400:
-                    send_dm(username, account["access_token"], account["proxy"])
+                    send_dm(username, account)
                     time.sleep(60)  # Sleep to respect Instagram's rate limits
                     break
                     
