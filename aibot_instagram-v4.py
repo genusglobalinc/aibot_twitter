@@ -253,10 +253,16 @@ def dialogflow_webhook():
         return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
 
 # Routes for your control panel
+# Define route to display the control panel
 @app.route('/control_panel')
 def control_panel():
-    return render_template('control_panel.html', script_enabled=script_enabled, meetings_booked=meetings_booked, outreach_done=outreach_done)
+    # Get actual data, e.g., script status, meetings booked, outreach count
+    script_status = "Off"  # Replace with actual script status
+    meetings_booked = 0  # Replace with actual data
+    outreach_count = 0  # Replace with actual data
 
+    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count)
+    
 @app.route('/toggle_script', methods=['POST'])
 def toggle_script():
     global script_enabled
