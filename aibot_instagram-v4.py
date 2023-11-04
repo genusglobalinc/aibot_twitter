@@ -170,7 +170,6 @@ def process_usernames():
                 if dm_count >= 400:
                     break  # Switch to the next account if 400 messages have been sent
                 send_dm(username, account)
-                contacted_status = 'Messaged'  # Update the contacted status in the sheet
                 dm_count += 1
                 outreach_done += 1
                 time.sleep(60)  # Sleep to respect Instagram's rate limits
