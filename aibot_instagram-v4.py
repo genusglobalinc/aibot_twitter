@@ -157,10 +157,13 @@ def send_dm(username, account, proxy_info):
 # Function to process usernames and send messages
 def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
+    contacted = worksheet.col_values(2)
+    dm_count = 0
+    
     for username in usernames:
-        if username != '' and username != 'Messaged':
+        if username != '' and contacted != 'Messaged':
             for account in accounts:
-                if account["username"] == username:
+                if dm_count < 400:
                     send_dm(username, account["access_token"], account["proxy"])
                     time.sleep(60)  # Sleep to respect Instagram's rate limits
                     break
