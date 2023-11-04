@@ -72,8 +72,7 @@ def find_and_store_usernames():
                 password = account["password"]
                 proxy = account["proxy"]
 
-                # Implement code to find usernames and store them in Google Sheets
-                # Create a session with the proxy
+                # Implement code to find usernames and store them in Google Sheets and the set
                 session = requests.Session()
                 session.proxies = {
                     'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
@@ -91,7 +90,10 @@ def find_and_store_usernames():
                                 keywords = ["indie game dev", "game dev"]
                                 bio_lower = bio.lower()
                                 if any(keyword in bio_lower for keyword in keywords):
-                                    retrieved_usernames.add(username)
+                                    # Add the username to the set
+                                    prospected_usernames.add(username)
+                                    # Add the username to Google Sheets
+                                    worksheet.append_row([username])  # You can append additional information as needed
                     next_url = data['paging'].get('next')
                 else:
                     print("Failed to fetch post data.")
@@ -99,60 +101,7 @@ def find_and_store_usernames():
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
                 break
-                
-                
-# Function to send a DM using a specific account and proxy
-def send_dm(username, access_token, proxy_info):
-    proxy = proxy_info["proxy"]
-    session = requests.Session()
 
-    # Set up proxy for this request
-    session.proxies = {
-        'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
-        'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
-    }
-
-    # Define a structured message template
-    template = {
-        'intro': f"Hi {username}, I'm looking to connect with other indie game devs on Instagram and thought we could chat!",
-        'social_proof': "I know this is random, but I actually specialize in boosting revenue using tailored funnels for game devs and streamers.",
-        'mechanism': "One thing that makes us so different is we're so sure of our process we give you free ad spend.",
-        'cta': "And more revenue means more dev time! Here's a quick run down on how we do it: [https://rb.gy/vaypj]",
-    }
-
-    # Replace placeholders in the template with the account's username
-    for key, value in template.items():
-        template[key] = value.format(username=username)
-
-    # Combine the template steps into the full message
-    full_message = "\n".join(template.values)
-
-    # Generate additional content using GPT-3
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=full_message,
-        max_tokens=100
-    )
-    generated_message = response.choices[0].text.strip()
-
-    # Construct the DM data
-    dm_data = {
-        'recipient_user_id': username,
-        'message': generated_message
-    }
-
-    # Send the DM using the Instagram Graph API
-    response = session.post(f'https://graph.instagram.com/v13.0/me/media/abc123/messages?access_token={access_token}', json=dm_data)
-
-    if response.status_code == 200:
-        print(f'Sent DM to {username}: {generated_message}')
-        cell = worksheet.find(username)
-        worksheet.update_cell(cell.row, cell.col + 1, 'Messaged')
-        return True
-    else:
-        print(f'Failed to send DM to {username}: {response.text}')
-        return False
-        
 # Function to process usernames and send messages
 def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
@@ -245,11 +194,7 @@ def dialogflow_webhook():
 if name == ‘main’:
     for account in accounts:
         find_and_store_usernames()  # Find and store usernames in Google Sheets
-    
-        for username in prospected_usernames:
-            send_dm(username, account, account[“proxy”])
-            time.sleep(60)  # Sleep to respect Instagram’s rate limits
-        
+        process_usernames()
         create_and_post_reel(bot, account, account[“proxy”])
     
     app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow
