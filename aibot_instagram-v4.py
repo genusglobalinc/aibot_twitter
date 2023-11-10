@@ -274,6 +274,29 @@ def increase_outreach():
     prospecting_limit += 1
     return redirect(url_for('control_panel'))
 
+# Function to handle service fulfillment webhook
+@app.route('/service-fulfillment', methods=['POST'])
+def service_fulfillment():
+    req = request.get_json()
+
+    # Extract information from the received form
+    client_name = req['clientName']
+    pdf_file_url = req['pdfFileUrl']
+
+    # Add your logic here to customize DMs based on client information and PDF file
+    # You can integrate this logic with your existing functions or create new ones
+
+    # Example: Extract information from the PDF file
+    pdf_info = extract_pdf_info(pdf_file_url)
+    print(f"PDF Information: {pdf_info}")
+
+    # Example: Customize DMs based on the extracted information and send them
+    customize_and_send_dm(client_name, pdf_info)
+
+    # Return a response indicating successful fulfillment
+    return jsonify({'message': 'Service fulfilled successfully'})
+
+
 # Define your job to run your script
 def run_script():
     bot = Bot()
