@@ -34,7 +34,12 @@ Follow these instructions:
    -create google doc sheet
    
 5. create a dialogflow agent and define intents and webhooks
-6. copy python script to EC2 instance and set up environment
+   -create intent called "BookMeeting"
+   -activate and create webhook, using "<Copy and paste your full Public IPv4 DNS here>" + "/dialogflow-webhook" as the fulfillment URL
+   -add training phrases to indicate interest in booking a meeting
+   -create any needed intents, and edit code accordingly
+   
+7. copy python script to EC2 instance and set up environment
    -cd to directory
    -gpg --gen-key (create username and password)
    -
