@@ -30,7 +30,8 @@ Follow these instructions:
 2. Setup api access keys for accounts
    -download .json creds file to google drive to be accessed with wget later
    -enable DialogFlow api in Cloud Console: https://console.cloud.google.com/
-   -Enable the Dialogflow API:
+
+To enable the Dialogflow API:
 
    In the Cloud Console, navigate to the "APIs & Services" > "Dashboard" page.
    Click on "+ ENABLE APIS AND SERVICES."
@@ -69,4 +70,4 @@ Final command to run: wget --no-check-certificate "https://drive.google.com/file
 9. create control_panel.html template on EC2 instance
 10. set variables for one test cycle (4000dms run once)
 11. launch bot on server by running script from EC2 instance
-12. control bot from web interface 
+12. control bot from web interface: http://ec2-13-59-67-53.us-east-2.compute.amazonaws.com:5000 
