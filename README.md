@@ -15,8 +15,8 @@ Example:
 
  ssh -i "aibot_twitter_kp.pem" ubuntu@ec2-13-59-67-53.us-east-2.compute.amazonaws.com
 
-You might have to use wget to get the file:
-wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=YOUR_FILE_ID' -O FILE_NAME
+You might have to use wget to get the ".pem"  file:
+wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=YOUR_FILE_ID' -O FILE_NAME.pem
 
 
 IMPORTANT!!!!
