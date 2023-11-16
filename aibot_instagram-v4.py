@@ -40,6 +40,8 @@ accounts = [
         # Add more accounts and proxy configurations here
     }
 ]
+# Variable to store the script status
+script_enabled = False
 
 # Your Instagram Graph API access token
 # Add more access tokens for your accounts if needed
@@ -280,11 +282,12 @@ def extract_pdf_info(pdf_file_url):
 
 # Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
 def run_script():
-    bot = Bot()
-    for account in accounts:
-        create_and_post_reel(bot, account, account["proxy"])
-    find_and_store_usernames()
-    process_usernames()
+     if script_enabled:
+        bot = Bot()
+        for account in accounts:
+            create_and_post_reel(bot, account, account["proxy"])
+        find_and_store_usernames()
+        process_usernames()
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
@@ -335,12 +338,15 @@ def control_panel():
 
 @app.route('/toggle_script', methods=['POST'])
 def toggle_script():
+    global script_enabled
     script_enabled = not script_enabled
     return redirect(url_for('control_panel'))
 
 @app.route('/increase_outreach', methods=['POST'])
 def increase_outreach():
-    prospecting_limit += 1
+    global prospecting_limit
+    if script_enabled:
+        prospecting_limit += 1
     return redirect(url_for('control_panel'))
 
 # Function to handle service fulfillment webhook. This is for after meetings close. Extracts based off of email to fulfull service. TODO!
@@ -368,12 +374,12 @@ def service_fulfillment():
 #-------------------------------------------------------------------------------------------------------------------
 # Step 4: Run the program
 #-------------------------------------------------------------------------------------------------------------------
-if name == ‘main’:
+if __name__ == '__main__':
     # Set up a signal handler for graceful shutdown
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     
-    app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow request fulfillment
+    app.run(host='0.0.0.0', port=80)  # Start the Flask server for DialogFlow request fulfillment
 
 # Define the interval (in seconds) between script runs (e.g., once a day)
 interval_seconds = 24 * 60 * 60  # 24 hours
