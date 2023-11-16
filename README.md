@@ -23,7 +23,7 @@ wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=YOUR
 
 
 IMPORTANT!!!!
-To use this code, aibot_instagram-v4.py is the working rendition. 
+To properly install code, aibot_instagram-v4.py is the working rendition. 
 
 Follow these instructions:
 1. Buy 10 aged instagram accounts
@@ -84,7 +84,7 @@ Follow these instructions:
 12. control bot from web interface: http://ec2-13-59-67-53.us-east-2.compute.amazonaws.com:5000
 
 
-ACCESSING USING AWS MOBILE CLOUDSHELL CONSOLE:
+ACCESSING EC2 INSTANCE USING AWS MOBILE CLOUDSHELL CONSOLE:
 1. wget --no-check-certificate 'https://drive.google.com/file/d/1oZZ_guVtdaMHso89l-YBFZPM7FjhTGoA/view?usp=sharing' -O aibot_twitter_kp.pem
 2. OPTIONAL: upload file to cloudshell console
 3. ssh -i "aibot_twitter_kp.pem" ec2-user@ec2-13-59-67-53.us-east-2.compute.amazonaws.com
