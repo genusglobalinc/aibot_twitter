@@ -29,14 +29,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Define a simple data structure to store script state
-global script_enabled = False
+script_enabled = False
 
 # Define statistics variables
-global total_bookings = 0
-global outreach_done = 0
+total_bookings = 0
+outreach_done = 0
 
 # Define limit for prospecting usernames
-global prospecting_limit = 4000
+prospecting_limit = 4000
 
 # Initialize a set to temporarily store prospected usernames
 prospected_usernames = set()
