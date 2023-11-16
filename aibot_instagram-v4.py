@@ -308,6 +308,11 @@ def dialogflow_webhook():
         # Handle other intents here if needed
         return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
 
+#Function to gracefully shutdown for code updates
+def signal_handler(sig, frame):
+    print('Shutting down gracefully...')
+    # Perform cleanup tasks if necessary
+    sys.exit(0)
 #-------------------------------------------------------------------------------------------------------------------
 # Step 3: Define routes for your control panel
 #-------------------------------------------------------------------------------------------------------------------
@@ -356,6 +361,10 @@ def service_fulfillment():
 # Step 4: Run the program
 #-------------------------------------------------------------------------------------------------------------------
 if name == ‘main’:
+    # Set up a signal handler for graceful shutdown
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
     app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow request fulfillment
 
 # Define the interval (in seconds) between script runs (e.g., once a day)
