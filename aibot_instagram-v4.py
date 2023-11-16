@@ -1,3 +1,15 @@
+#-------------------------------------------------------------------------------------------------------------------
+# Author: Jyasi' Davis
+# Program Name: Aibot_Instagram-v4
+#
+# Program Purpose: To automate sending DM outreach, booking meetings with contacted ig accounts, closing 
+#                   the meetings with Air.ai, and fulfilling the service
+#-------------------------------------------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------
+# Step 1: Define Environment Variables
+#-------------------------------------------------------------------------------------------------------------------
+
 import requests
 import random
 import gspread
@@ -77,7 +89,10 @@ global prospecting_limit = 4000
 # Initialize a set to temporarily store prospected usernames
 prospected_usernames = set()
 
-# Define a function to find and store 400 unique usernames to Google Sheets document
+#-------------------------------------------------------------------------------------------------------------------
+# Step 2: Define functions
+#-------------------------------------------------------------------------------------------------------------------
+# Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
@@ -119,7 +134,7 @@ def find_and_store_usernames(account):
                 print(f"An error occurred: {str(e)}")
                 break
 
-# Function to send DM using ig username, same bot, and residential proxy to all 400 prospected usernames
+# Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
     proxy = account["proxy"]
     session = requests.Session()
@@ -172,7 +187,7 @@ def send_dm(username, account):
         return False
 
 
-# Function to process usernames and send messages
+# Sends the DMS to all unproccessed prospects in google sheets file
 def process_usernames():
     usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
     contacted = worksheet.col_values(2)
@@ -188,7 +203,7 @@ def process_usernames():
                 outreach_done += 1
                 time.sleep(60)  # Sleep to respect Instagram's rate limits
                     
-# Function to create and post a reel
+# Function to create and post a reel (TO BE COMPLETED!)
 def create_and_post_reel(bot, username, password, proxy_info):
     # Log in to an Instagram account
     bot.login(username=username, password=password, proxy=proxy_info)
@@ -218,7 +233,7 @@ def create_and_post_reel(bot, username, password, proxy_info):
     # Log out from the account
     bot.logout()
     
-# Function to generate a personalized message using ChatGPT
+# Function to generate a personalized message using ChatGPT, maintains conversation during DialogFlow conversation
 def generate_personalized_message(previous_message):
     global conversation_context
     conversation_context.append(previous_message)
@@ -235,7 +250,7 @@ def generate_personalized_message(previous_message):
     
     return response_message
 
-# Function to extract information from the PDF file (using pdfplumber as an example)
+# Function to extract information from the PDF file (using pdfplumber as an example), for fulfillment
 def extract_pdf_info(pdf_file_url):
     import pdfplumber
     import requests
@@ -254,6 +269,14 @@ def extract_pdf_info(pdf_file_url):
             text += page.extract_text()
 
     return {'text': text}
+
+# Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
+def run_script():
+    bot = Bot()
+    for account in accounts:
+        create_and_post_reel(bot, account, account["proxy"])
+    find_and_store_usernames()
+    process_usernames()
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
@@ -276,7 +299,8 @@ def dialogflow_webhook():
         time = req['queryResult']['parameters']['time']
         location = req['queryResult']['parameters']['location']
         bookings += 1
-        # You can now use the collected parameters to book the meeting and provide a response.
+       
+        # You can now use the collected parameters to book the meeting and provide a response. (TODO!! ADD CALENDLY INTEGRATION TO BOOK MEETING)
         return jsonify({
             'fulfillmentText': f'Great! We have scheduled a meeting on {date} at {time} at {location}.'
         })
@@ -284,7 +308,9 @@ def dialogflow_webhook():
         # Handle other intents here if needed
         return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
 
-# Routes for your control panel
+#-------------------------------------------------------------------------------------------------------------------
+# Step 3: Define routes for your control panel
+#-------------------------------------------------------------------------------------------------------------------
 # Define route to display the control panel
 @app.route('/control_panel')
 def control_panel():
@@ -304,7 +330,7 @@ def increase_outreach():
     prospecting_limit += 1
     return redirect(url_for('control_panel'))
 
-# Function to handle service fulfillment webhook
+# Function to handle service fulfillment webhook. This is for after meetings close. Extracts based off of email to fulfull service. TODO!
 @app.route('/service-fulfillment', methods=['POST'])
 def service_fulfillment():
     req = request.get_json()
@@ -326,17 +352,11 @@ def service_fulfillment():
     # Return a response indicating successful fulfillment
     return jsonify({'message': 'Service fulfilled successfully'})
 
-
-# Define your job to run your script
-def run_script():
-    bot = Bot()
-    for account in accounts:
-        create_and post_reel(bot, account, account["proxy"])
-    find_and_store_usernames()
-    process_usernames()
-
+#-------------------------------------------------------------------------------------------------------------------
+# Step 4: Run the program
+#-------------------------------------------------------------------------------------------------------------------
 if name == ‘main’:
-    app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow
+    app.run(host=‘0.0.0.0’, port=80)  # Start the Flask server for DialogFlow request fulfillment
 
 # Define the interval (in seconds) between script runs (e.g., once a day)
 interval_seconds = 24 * 60 * 60  # 24 hours
