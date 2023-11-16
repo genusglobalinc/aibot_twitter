@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Script Control Panel</title>
+</head>
+<body>
+    <h1>Script Control Panel</h1>
+    
+    <h2>Status</h2>
+    <p>Script Status: {{ script_status }}</p>
+    
+    <h2>Metrics</h2>
+    <p>Meetings Booked: {{ meetings_booked }}</p>
+    <p>Outreach Count: {{ outreach_count }}</p>
+    
+    <h2>Actions</h2>
+    <form action="/toggle_script" method="post">
+        <button type="submit">Toggle Script</button>
+    </form>
+    
+    <form action="/increase_outreach" method="post">
+        <button type="submit">Increase Outreach</button>
+    </form>
+</body>
+</html>
