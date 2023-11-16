@@ -306,7 +306,7 @@ def dialogflow_webhook():
         })
     else:
         # Handle other intents here if needed
-        return jsonify({'fulfillmentText': 'I am not sure how to respond to that.'})
+        return jsonify({'fulfillmentText': "I am not sure how to respond to that, but it's always easier to talk in person. Just click here, and pick the best time and method that works for you! Hope to chat soon: https://calendly.com/genusglobal/studios."})
 
 #Function to gracefully shutdown for code updates
 def signal_handler(sig, frame):
