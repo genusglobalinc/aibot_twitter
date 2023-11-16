@@ -46,7 +46,7 @@ accounts = [
 access_tokens = [account["access_token"] for account in accounts]
 
 # Path to your DialogFlow JSON key file
-DIALOGFLOW_KEY_FILE = 'path/to/dialogflow/keyfile.json'
+DIALOGFLOW_KEY_FILE = '/home/ubuntu/aibot_twitter/dialogflow_apiclient.json'
 
 # Initialize DialogFlow client
 try:
