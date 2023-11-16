@@ -66,7 +66,7 @@ Final command to run: wget --no-check-certificate "https://drive.google.com/file
    -edit api keys and access tokens for ig account(s), residential proxy service, and OpenAI, 
    -define hashtags, set Google Sheets name, and set desired prospecting limit
 
-8. create control_panel.html template on EC2 instance
-9. set variables for one test cycle (4000dms run once)
-10. launch bot on server by running script from EC2 instance
-11. control bot from web interface 
+9. create control_panel.html template on EC2 instance
+10. set variables for one test cycle (4000dms run once)
+11. launch bot on server by running script from EC2 instance
+12. control bot from web interface 
