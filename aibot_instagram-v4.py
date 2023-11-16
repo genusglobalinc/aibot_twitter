@@ -23,6 +23,10 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from flask import Flask, request, jsonify
 from ig_bot import Bot
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
 
 # Define a simple data structure to store script state
 global script_enabled = False
@@ -44,15 +48,20 @@ conversation_context = []
 hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
 
 # Initialize the OpenAI API key
-openai.api_key = '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'
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Set up Flask app for DialogFlow fulfillment
 app = Flask(__name__)
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107ad8e6.json', scope)
-client = gspread.authorize(creds)
+creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
+
+if creds_path:
+    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
+    client = gspread.authorize(creds)
+else:
+    print("Please set the GOOGLE_SHEETS_CREDS_PATH environment variable.")
 
 # Open the Google Sheets sheet housing Instagram accounts and proxy configurations
 spreadsheet_accounts = client.open('Prospected Usernames and Bot Accounts')
@@ -86,7 +95,7 @@ worksheet_usernames = spreadsheet_usernames.get_worksheet(0)  # Use the index of
 access_tokens = [account["access_token"] for account in accounts]
 
 # Path to your DialogFlow JSON key file
-DIALOGFLOW_KEY_FILE = '/home/ubuntu/aibot_twitter/dialogflow_apiclient.json'
+DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 
 # Initialize DialogFlow client
 try:
