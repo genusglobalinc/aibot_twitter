@@ -57,15 +57,15 @@ except google_auth_exceptions.GoogleAuthError as e:
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('your-credentials.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107ad8e6.json', scope)
 client = gspread.authorize(creds)
 
 # Open the Google Sheets document housing prospects
-spreadsheet = client.open('Your Google Sheets Document')
+spreadsheet = client.open('Prospected Usernames and Bot Accounts')
 worksheet = spreadsheet.get_worksheet(0)
 
 # Initialize the OpenAI API key
-openai.api_key = 'your-openai-api-key'
+openai.api_key = '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'
 
 # Set up Flask app for DialogFlow fulfillment
 app = Flask(__name__)
@@ -233,22 +233,30 @@ def create_and_post_reel(bot, username, password, proxy_info):
     # Log out from the account
     bot.logout()
     
-# Function to generate a personalized message using ChatGPT, maintains conversation during DialogFlow conversation
+# Function to generate a personalized message using ChatGPT, maintains conversation during DialogFlow conversation. Always tries to book a meeting.
 def generate_personalized_message(previous_message):
+    # Store the previous message in the conversation context
     global conversation_context
     conversation_context.append(previous_message)
 
-    # Use ChatGPT to create a response based on the conversation context
+    # Customize the message based on the previous context
+    template = {
+        'intro': f"Hello again! {previous_message} Let's continue our conversation.",
+        'book_meeting': "How about scheduling a meeting to discuss this further? It's 15-30 minutes, you can ask me any question, and I can actually answer them! You can pick a time that works for you here: [https://calendly.com/genusglobal/studios].",
+    }
+
+    # Combine the template steps into the full message
+    full_message = "\n".join(template.values())
+
+    # Generate additional content using GPT-3
     response = openai.Completion.create(
         engine="davinci",
-        messages=conversation_context,
-        max_tokens=50
+        messages=conversation_context,  # Include the entire conversation context
+        max_tokens=100
     )
+    generated_message = response.choices[0].text.strip()
 
-    # Extract the response message from ChatGPT
-    response_message = response.choices[0].message['content'].strip()
-    
-    return response_message
+    return generated_message
 
 # Function to extract information from the PDF file (using pdfplumber as an example), for fulfillment
 def extract_pdf_info(pdf_file_url):
