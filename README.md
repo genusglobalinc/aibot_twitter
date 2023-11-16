@@ -33,7 +33,7 @@ Follow these instructions:
 4. store account information in accessible google sheets doc
    -create google doc sheet
    
-5. create a dialogflow agent and define intents and webhooks
+5. create a dialogflow agent and define intents and webhooks on DialogFlow web console
    -create intent called "BookMeeting"
    -activate and create webhook, using "<Copy and paste your full Public IPv4 DNS here>" + "/dialogflow-webhook" as the fulfillment URL
    -add training phrases to indicate interest in booking a meeting
