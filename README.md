@@ -28,7 +28,25 @@ To use this code, aibot_instagram-v4.py is the working rendition.
 Follow these instructions:
 1. Buy 10 aged instagram accounts
 2. Setup api access keys for accounts
-   -download .json creds file to google drive
+   -download .json creds file to google drive to be accessed with wget later
+   -enable DialogFlow api in Cloud Console: https://console.cloud.google.com/
+   -Enable the Dialogflow API:
+
+   In the Cloud Console, navigate to the "APIs & Services" > "Dashboard" page.
+   Click on "+ ENABLE APIS AND SERVICES."
+   Search for "Dialogflow API" and enable it.
+   Create a Service Account:
+   
+   In the Cloud Console, navigate to the "APIs & Services" > "Credentials" page.
+   Click on "Create Credentials" and choose "Service account key."
+   Select or create a service account, choose a role (Dialogflow API Client would typically suffice), and choose JSON as the key type.
+   Click "Create" to download the JSON key file.
+   Set Environment Variable in Your Code:
+   
+   Upload the downloaded JSON key file to a location accessible to your code, for example, on your server or in your code repository.
+   Set the DIALOGFLOW_KEY_FILE variable in your Python code to the path of this file.
+
+Final command to run: wget --no-check-certificate "https://drive.google.com/file/d/1bAp_NapZjOkt0ZMkM_xRw3QEs7em6bRu/view?usp=drive_link" -O dialogflow_apiclient.json
    
 4. store account information in accessible google sheets doc
    -create google doc sheet
@@ -43,7 +61,7 @@ Follow these instructions:
    -cd to directory
    -gpg --gen-key (create username and password)
    -
-   -wget your .json file to your local directory to your saved google file creds
+   -wget --no-check-certificate 'https://drive.google.com/file/d/1VMZvgLzGTTrzKUbQ--34WYvzCpEp9dad/view?usp=sharing' -O googlejson.json
    -git pull https://github.com/genusglobalinc/aibot_twitter (clone for later edits)
    -edit api keys and access tokens for ig account(s), residential proxy service, and OpenAI, 
    -define hashtags, set Google Sheets name, and set desired prospecting limit
