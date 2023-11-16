@@ -86,3 +86,4 @@ ACCESSING EC2 INSTANCE USING AWS MOBILE CLOUDSHELL CONSOLE:
 2. OPTIONAL: upload file to cloudshell console
 3. ssh -i "aibot_twitter_kp.pem" ec2-user@ec2-13-59-67-53.us-east-2.compute.amazonaws.com
 
+when editing code on mobile, make sure you have the "Amazon AWS", "Github", and "ChatGPT" apps installed on your phone
