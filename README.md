@@ -25,14 +25,25 @@ wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=YOUR
 IMPORTANT!!!!
 To use this code, aibot_instagram-v4.py is the working rendition. 
 
-follow these instructions:
+Follow these instructions:
 1. Buy 10 aged instagram accounts
 2. Setup api access keys for accounts
-3. store account information in accessible google sheets doc
-4. create a dialogflow agent and define intents and webhooks
-5. create google sheets to store prospects 
-6. copy python script to EC2 instance 
-7. create control_panel.html template on EC2 instance
-8. set variables for one test cycle (4000dms run once)
-9. launch bot on server by running script from EC2 instance
-10. control bot from web interface 
+   -download .json creds file to google drive
+   
+4. store account information in accessible google sheets doc
+   -create google doc sheet
+   
+5. create a dialogflow agent and define intents and webhooks
+6. copy python script to EC2 instance and set up environment
+   -cd to directory
+   -gpg --gen-key (create username and password)
+   -
+   -wget your .json file to your local directory to your saved google file creds
+   -git pull https://github.com/genusglobalinc/aibot_twitter (clone for later edits)
+   -edit api keys and access tokens for ig account(s), residential proxy service, and OpenAI, 
+   -define hashtags, set Google Sheets name, and set desired prospecting limit
+
+8. create control_panel.html template on EC2 instance
+9. set variables for one test cycle (4000dms run once)
+10. launch bot on server by running script from EC2 instance
+11. control bot from web interface 
