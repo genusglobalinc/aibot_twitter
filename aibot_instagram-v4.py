@@ -24,24 +24,62 @@ from googleapiclient.discovery import build
 from flask import Flask, request, jsonify
 from ig_bot import Bot
 
+# Define a simple data structure to store script state
+global script_enabled = False
+
+# Define statistics variables
+global total_bookings = 0
+global outreach_done = 0
+
+# Define limit for prospecting usernames
+global prospecting_limit = 4000
+
+# Initialize a set to temporarily store prospected usernames
+prospected_usernames = set()
+
+# Variable to store the conversation context
+conversation_context = []
+
+# Define hashtags to search for
+hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
+
+# Initialize the OpenAI API key
+openai.api_key = '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'
+
+# Set up Flask app for DialogFlow fulfillment
+app = Flask(__name__)
+
+# Set up Google Sheets API credentials
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107ad8e6.json', scope)
+client = gspread.authorize(creds)
+
+# Open the Google Sheets sheet housing Instagram accounts and proxy configurations
+spreadsheet_accounts = client.open('Prospected Usernames and Bot Accounts')
+worksheet_accounts = spreadsheet_accounts.get_worksheet(1)  # Use the index of the sheet (0 for the first sheet, 1 for the second, and so on)
+
+# Read Instagram accounts and proxy configurations from the worksheet
+accounts_data = worksheet_accounts.get_all_records()
+
 # Define your Instagram accounts and proxy configurations
-accounts = [
-    {
-        "username": "account1",
-        "password": "password1",
-        "access_token": "access_token1",
+accounts = []
+for row in accounts_data:
+    account = {
+        "username": row["Username"],
+        "password": row["Password"],
+        "access_token": row["Access Token"],
         "proxy": {
-            "ip": "proxy_ip1",
-            "port": "proxy_port1",
-            "username": "proxy_username1",
-            "password": "proxy_password1"
+            "ip": row["Proxy IP"],
+            "port": row["Proxy Port"],
+            "username": row["Proxy Username"],
+            "password": row["Proxy Password"]
         }
-    },
-        # Add more accounts and proxy configurations here
     }
-]
-# Variable to store the script status
-script_enabled = False
+    accounts.append(account)
+
+# Open the Google Sheets sheet housing prospects
+spreadsheet_usernames = client.open('Prospected Usernames and Bot Accounts')  # Use the same document name
+worksheet_usernames = spreadsheet_usernames.get_worksheet(0)  # Use the index of the sheet (0 for the first sheet, 1 for the second, and so on)
 
 # Your Instagram Graph API access token
 # Add more access tokens for your accounts if needed
@@ -56,40 +94,6 @@ try:
     dialogflow_session_client = dialogflow.SessionsClient(credentials=credentials)
 except google_auth_exceptions.GoogleAuthError as e:
     print(f"Error initializing DialogFlow client: {e}")
-
-# Set up Google Sheets API credentials
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('ai-bot-twitter-08dd107ad8e6.json', scope)
-client = gspread.authorize(creds)
-
-# Open the Google Sheets document housing prospects
-spreadsheet = client.open('Prospected Usernames and Bot Accounts')
-worksheet = spreadsheet.get_worksheet(0)
-
-# Initialize the OpenAI API key
-openai.api_key = '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'
-
-# Set up Flask app for DialogFlow fulfillment
-app = Flask(__name__)
-
-# Variable to store the conversation context
-conversation_context = []
-
-# Define hashtags to search for
-hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
-
-# Define a simple data structure to store script state
-global script_enabled = True
-
-# Define statistics variables
-global total_bookings = 0
-global outreach_done = 0
-
-# Define limit for prospecting usernames
-global prospecting_limit = 4000
-
-# Initialize a set to temporarily store prospected usernames
-prospected_usernames = set()
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 2: Define functions
