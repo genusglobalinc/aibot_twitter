@@ -33,14 +33,15 @@ accounts = [
 # Add more access tokens for your accounts if needed
 access_tokens = [account["access_token"] for account in accounts]
 
-# Define hashtags to search for
-hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
+# Path to your DialogFlow JSON key file
+DIALOGFLOW_KEY_FILE = 'path/to/dialogflow/keyfile.json'
 
-# Define limit for prospecting usernames
-global prospecting_limit = 4000
-
-# Initialize a set to temporarily store prospected usernames
-prospected_usernames = set()
+# Initialize DialogFlow client
+try:
+    credentials, _ = google_auth_requests.default(DIALOGFLOW_KEY_FILE)
+    dialogflow_session_client = dialogflow.SessionsClient(credentials=credentials)
+except google_auth_exceptions.GoogleAuthError as e:
+    print(f"Error initializing DialogFlow client: {e}")
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -57,12 +58,24 @@ openai.api_key = 'your-openai-api-key'
 # Set up Flask app for DialogFlow fulfillment
 app = Flask(__name__)
 
+# Variable to store the conversation context
+conversation_context = []
+
+# Define hashtags to search for
+hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
+
 # Define a simple data structure to store script state
 global script_enabled = True
 
 # Define statistics variables
 global total_bookings = 0
 global outreach_done = 0
+
+# Define limit for prospecting usernames
+global prospecting_limit = 4000
+
+# Initialize a set to temporarily store prospected usernames
+prospected_usernames = set()
 
 # Define a function to find and store 400 unique usernames to Google Sheets document
 def find_and_store_usernames(account):
@@ -241,9 +254,6 @@ def extract_pdf_info(pdf_file_url):
             text += page.extract_text()
 
     return {'text': text}
-
-# Variable to store the conversation context
-conversation_context = []
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
