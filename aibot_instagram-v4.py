@@ -24,6 +24,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 from google.auth import credentials as google_auth_credentials
 from google.auth.exceptions import GoogleAuthError
+from google.auth.transport.requests import Request
 from flask import Flask, request, jsonify
 #from ig_bot import Bot
 from dotenv import load_dotenv
@@ -102,9 +103,12 @@ DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 
 # Initialize DialogFlow client
 try:
-    credentials, _ = google_auth_credentials.default(DIALOGFLOW_KEY_FILE)
+    credentials = service_account.Credentials.from_service_account_file(
+        DIALOGFLOW_KEY_FILE, scopes=scope
+    )
+    client = gspread.authorize(credentials)
 except GoogleAuthError as e:
-    print(f"Error initializing DialogFlow client: {e}")
+    print(f"Error initializing Google Sheets client: {e}")
 
 #try:
     #credentials, _ = google_auth_credentials.default(DIALOGFLOW_KEY_FILE)
