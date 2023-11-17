@@ -22,7 +22,6 @@ import numpy as np
 from google.oauth2 import service_account
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
-from google.auth import requests as google_auth_requests
 from google.auth import exceptions as google_auth_exceptions
 from flask import Flask, request, jsonify
 #from ig_bot import Bot
