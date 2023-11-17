@@ -101,7 +101,7 @@ DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 
 # Initialize DialogFlow client
 try:
-    credentials, _ = google_auth_requests.default(DIALOGFLOW_KEY_FILE)
+    credentials, _ = google_auth_exceptions.default(DIALOGFLOW_KEY_FILE)
     dialogflow_session_client = dialogflow.SessionsClient(credentials=credentials)
 except google_auth_exceptions.GoogleAuthError as e:
     print(f"Error initializing DialogFlow client: {e}")
