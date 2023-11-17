@@ -13,6 +13,7 @@
 import requests
 import random
 import gspread
+import signal
 import time
 import openai
 #import stylegan2
