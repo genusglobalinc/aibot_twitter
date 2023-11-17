@@ -15,14 +15,14 @@ import random
 import gspread
 import time
 import openai
-import stylegan2
+#import stylegan2
 import os
 import cv2
 import numpy as np
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from flask import Flask, request, jsonify
-from ig_bot import Bot
+#from ig_bot import Bot
 from dotenv import load_dotenv
 
 # Load environment variables from .env
@@ -219,34 +219,34 @@ def process_usernames():
                 time.sleep(60)  # Sleep to respect Instagram's rate limits
                     
 # Function to create and post a reel (TO BE COMPLETED!)
-def create_and_post_reel(bot, username, password, proxy_info):
+#def create_and_post_reel(bot, username, password, proxy_info):
     # Log in to an Instagram account
-    bot.login(username=username, password=password, proxy=proxy_info)
+    #bot.login(username=username, password=password, proxy=proxy_info)
 
     # Generate an image using StyleGAN2
-    latent_vector = stylegan2.run.generate_latent()
-    image = Gs.run(latent_vector)
+    #latent_vector = stylegan2.run.generate_latent()
+    #image = Gs.run(latent_vector)
 
     # Generate a caption using ChatGPT
-    generated_text = generate_text_with_gpt("Your prompt here")
+    #generated_text = generate_text_with_gpt("Your prompt here")
 
     # Add the generated text as an overlay to the image
-    image_with_overlay = add_text_overlay(image, generated_text)
+    #image_with_overlay = add_text_overlay(image, generated_text)
 
     # Convert the image to a frame and add it to the video
-    frame = cv2.cvtColor(np.array(image_with_overlay), cv2.COLOR_RGB2BGR)
-    video_writer.write(frame)
+    #frame = cv2.cvtColor(np.array(image_with_overlay), cv2.COLOR_RGB2BGR)
+    #video_writer.write(frame)
 
     # Release the VideoWriter
-    video_writer.release()
+    #video_writer.release()
 
-    video_path = 'output_video.mp4'  # Provide the path to your generated video
+    #video_path = 'output_video.mp4'  # Provide the path to your generated video
 
     # Upload the video to Instagram
-    bot.upload_reel(video_path, caption=generated_text)
+    #bot.upload_reel(video_path, caption=generated_text)
 
     # Log out from the account
-    bot.logout()
+    #bot.logout()
     
 # Function to generate a personalized message using ChatGPT, maintains conversation during DialogFlow conversation. Always tries to book a meeting.
 def generate_personalized_message(previous_message):
@@ -274,31 +274,31 @@ def generate_personalized_message(previous_message):
     return generated_message
 
 # Function to extract information from the PDF file (using pdfplumber as an example), for fulfillment
-def extract_pdf_info(pdf_file_url):
-    import pdfplumber
-    import requests
+#def extract_pdf_info(pdf_file_url):
+    #import pdfplumber
+    #import requests
 
     # Download the PDF file
-    response = requests.get(pdf_file_url)
-    with open('temp.pdf', 'wb') as temp_pdf:
-        temp_pdf.write(response.content)
+    #response = requests.get(pdf_file_url)
+    #with open('temp.pdf', 'wb') as temp_pdf:
+        #temp_pdf.write(response.content)
 
     # Extract information using pdfplumber
-    with pdfplumber.open('temp.pdf') as pdf:
+    #with pdfplumber.open('temp.pdf') as pdf:
         # Add your logic here to extract relevant information
         # For example, extracting text from the PDF
-        text = ''
-        for page in pdf.pages:
-            text += page.extract_text()
+        #text = ''
+        #for page in pdf.pages:
+            #text += page.extract_text()
 
-    return {'text': text}
+    #return {'text': text}
 
 # Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
 def run_script():
      if script_enabled:
-        bot = Bot()
-        for account in accounts:
-            create_and_post_reel(bot, account, account["proxy"])
+        #bot = Bot()
+        #for account in accounts:
+            #create_and_post_reel(bot, account, account["proxy"])
         find_and_store_usernames()
         process_usernames()
 
