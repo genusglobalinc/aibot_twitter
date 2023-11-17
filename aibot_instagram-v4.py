@@ -23,6 +23,7 @@ from google.oauth2 import service_account
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 from google.auth import credentials as google_auth_credentials
+from google.auth.exceptions import GoogleAuthError
 from flask import Flask, request, jsonify
 #from ig_bot import Bot
 from dotenv import load_dotenv
@@ -102,9 +103,14 @@ DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 # Initialize DialogFlow client
 try:
     credentials, _ = google_auth_credentials.default(DIALOGFLOW_KEY_FILE)
-    dialogflow_session_client = dialogflow.SessionsClient(credentials=credentials)
-except google_auth_credentials.GoogleAuthError as e:
+except GoogleAuthError as e:
     print(f"Error initializing DialogFlow client: {e}")
+
+#try:
+    #credentials, _ = google_auth_credentials.default(DIALOGFLOW_KEY_FILE)
+    #dialogflow_session_client = dialogflow.SessionsClient(credentials=credentials)
+#except google_auth_credentials.GoogleAuthError as e:
+    #print(f"Error initializing DialogFlow client: {e}")
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 2: Define functions
