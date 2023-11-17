@@ -62,6 +62,17 @@ Follow these instructions:
 6. copy python script to EC2 instance and set up environment
    -cd to directory
 
+   1.	Flask: sudo pip3 install flask
+	2.	gspread: sudo pip3 install gspread
+	3.	oauth2client: sudo pip3 install oauth2client
+	4.	googleapiclient: sudo pip3 install google-api-python-client
+	5.	openai: sudo pip3 install openai
+	6.	requests: sudo pip3 install requests
+	7.	pdfplumber: sudo pip3 install pdfplumber
+	8.	numpy: sudo pip3 install numpy
+	9.	cv2: sudo pip3 install opencv-python
+	10.	python-dotenv: sudo pip3 install python-dotenv
+
    -gpg --gen-key (create username and password)
 
    -wget --no-check-certificate 'https://drive.google.com/file/d/1VMZvgLzGTTrzKUbQ--34WYvzCpEp9dad/view?usp=sharing' -O googlejson.json
