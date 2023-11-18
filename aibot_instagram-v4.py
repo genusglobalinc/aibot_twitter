@@ -358,7 +358,7 @@ def control_panel():
     return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count)
 
 #route to send shutdown signal from control panel 
-@app.route('/shutdown', methods=['GET'])
+@app.route('/shutdown', methods=['POST'])
 def shutdown():
     print("Shutting down gracefully...")
     os.kill(os.getpid(), signal.SIGINT)
