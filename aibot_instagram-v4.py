@@ -82,14 +82,15 @@ for row in accounts_data:
         "username": row["Username"],
         "password": row["Password"],
         "access_token": row["Access Token"],
-        "proxy": {
-            "ip": row["Proxy IP"],
-            "port": row["Proxy Port"],
-            "username": row["Proxy Username"],
-            "password": row["Proxy Password"]
         }
     }
     accounts.append(account)
+
+#Setup residential proxy with Zenrows API
+zrowsAPI = os.environ.get(ZENROWSAPIKEY)
+res_proxy = "http://{zrowsAPI}:js_render=true&antibot=true@proxy.zenrows.com:8001"
+res_proxies = {"http": res_proxy, "https": res_proxy}
+
 
 # Open the Google Sheets sheet housing prospects
 spreadsheet_usernames = client.open('Prospected Usernames and Bot Accounts')  # Use the same document name
@@ -128,16 +129,12 @@ def find_and_store_usernames(account):
 
         while next_url and len(prospected_usernames) < prospecting_limit:
             try:
-                random_account = random.choice(accounts)
-                proxy = random_account["proxy"]
+                proxy = res_proxy
 
 
                 # Implement code to find usernames and store them in Google Sheets and the set
                 session = requests.Session()
-                session.proxies = {
-                    'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
-                    'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
-                }
+                session.proxies = res_proxies
 
                 response = session.get(next_url)
                 if response.status_code == 200:
@@ -164,14 +161,10 @@ def find_and_store_usernames(account):
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
-    proxy = account["proxy"]
     session = requests.Session()
 
     # Set up proxy for this request
-    session.proxies = {
-        'http': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}',
-        'https': f'http://{proxy["username"]}:{proxy["password"]}@{proxy["ip"]}:{proxy["port"]}'
-    }
+    session.proxies = res_proxies
 
     # Define a structured message template
     template = {
