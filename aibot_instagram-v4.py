@@ -28,6 +28,7 @@ from google.auth import credentials as google_auth_credentials
 from google.auth.exceptions import GoogleAuthError
 from google.auth.transport.requests import Request
 from flask import Flask, request, jsonify
+from flask import render_template
 #from ig_bot import Bot
 from dotenv import load_dotenv
 
