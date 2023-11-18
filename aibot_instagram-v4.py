@@ -11,6 +11,7 @@
 #-------------------------------------------------------------------------------------------------------------------
 
 import requests
+import sys
 import random
 import gspread
 import signal
