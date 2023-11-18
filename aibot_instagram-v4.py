@@ -152,7 +152,7 @@ def find_and_store_usernames(account):
                                     # Add the username to the set
                                     prospected_usernames.add(username)
                                     # Add the username to Google Sheets
-                                    worksheet.append_row([username])  # You can append additional information as needed
+                                    worksheet_usernames.append_row([username])  # You can append additional information as needed
                     next_url = data['paging'].get('next')
                 else:
                     print("Failed to fetch post data.")
@@ -202,8 +202,8 @@ def send_dm(username, account):
 
     if response.status_code == 200:
         print(f'Sent DM to {username}: {generated_message}')
-        cell = worksheet.find(username)
-        worksheet.update_cell(cell.row, cell.col + 1, 'Messaged')
+        cell = worksheet_usernames.find(username)
+        worksheet_usernames.update_cell(cell.row, cell.col + 1, 'Messaged')
         return True
     else:
         print(f'Failed to send DM to {username}: {response.text}')
@@ -212,8 +212,8 @@ def send_dm(username, account):
 
 # Sends the DMS to all unproccessed prospects in google sheets file
 def process_usernames():
-    usernames = worksheet.col_values(1)  # Assuming usernames are in the first column
-    contacted = worksheet.col_values(2)
+    usernames = worksheet_usernames.col_values(1)  # Assuming usernames are in the first column
+    contacted = worksheet_usernames.col_values(2)
     
     for username, contacted_status in zip(usernames, contacted):
         if username != '' and contacted_status != 'Messaged':
