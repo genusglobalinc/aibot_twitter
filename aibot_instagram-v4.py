@@ -83,7 +83,7 @@ for row in accounts_data:
         "password": row["Password"],
         "access_token": row["Access Token"],
         }
-    }
+    
     accounts.append(account)
 
 #Setup residential proxy with Zenrows API
