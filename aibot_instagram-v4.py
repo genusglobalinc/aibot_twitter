@@ -353,7 +353,9 @@ def signal_handler(sig, frame):
 @app.route('/control_panel')
 def control_panel():
     # Get actual data, e.g., script status, meetings booked, outreach count
-    script_status = "Off"  # Replace with actual script status
+    #script_status = "Off"  # Replace with actual script status
+    # Get the script status from the session variable
+    script_status = session.get('script_enabled', False)
     meetings_booked = 0  # Replace with actual data
     outreach_count = outreach_done  # Replace with actual data
     return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count)
@@ -367,8 +369,17 @@ def shutdown():
 
 @app.route('/toggle_script', methods=['POST'])
 def toggle_script():
-    global script_enabled
+    global script_enabled  # Declare script_enabled as global
+
+    # Retrieve the current script status from the session variable
+    script_enabled = session.get('script_enabled', False)
+
+    # Toggle the script status
     script_enabled = not script_enabled
+
+    # Update the session variable with the new script status
+    session['script_enabled'] = script_enabled
+
     return redirect(url_for('control_panel'))
 
 @app.route('/increase_outreach', methods=['POST'])
