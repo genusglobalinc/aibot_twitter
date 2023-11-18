@@ -87,7 +87,7 @@ for row in accounts_data:
     accounts.append(account)
 
 #Setup residential proxy with Zenrows API
-zrowsAPI = os.environ.get(ZENROWSAPIKEY)
+zrowsAPI = os.environ.get("ZENROWSAPIKEY")
 res_proxy = "http://{zrowsAPI}:js_render=true&antibot=true@proxy.zenrows.com:8001"
 res_proxies = {"http": res_proxy, "https": res_proxy}
 
