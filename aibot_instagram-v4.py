@@ -357,6 +357,13 @@ def control_panel():
     outreach_count = outreach_done  # Replace with actual data
     return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count)
 
+#route to send shutdown signal from control panel 
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    print("Shutting down gracefully...")
+    os.kill(os.getpid(), signal.SIGINT)
+    return 'Server shutting down...'
+
 @app.route('/toggle_script', methods=['POST'])
 def toggle_script():
     global script_enabled
