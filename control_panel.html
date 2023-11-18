@@ -1,35 +1,14 @@
+<!-- control_panel.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Script Control Panel</title>
-    <style>
-        body {
-            text-align: center;
-            font-size: 18px;
-            padding: 20px;
-        }
-
-        h1, h2 {
-            color: #333;
-        }
-
-        button {
-            margin: 10px;
-            padding: 15px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <!-- ... your head elements ... -->
 </head>
 <body>
     <h1>Script Control Panel</h1>
     
     <h2>Status</h2>
-    <p>Script Status: {{ script_status }}</p>
+    <p>Script Status: {% if script_status %}On{% else %}Off{% endif %}</p>
     
     <h2>Metrics</h2>
     <p>Meetings Booked: {{ meetings_booked }}</p>
