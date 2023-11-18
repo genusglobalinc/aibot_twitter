@@ -30,6 +30,8 @@ from google.auth.transport.requests import Request
 from flask import Flask, request, jsonify
 from flask import render_template
 from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, session
+from flask_session import Session
 #from ig_bot import Bot
 from dotenv import load_dotenv
 
@@ -60,6 +62,10 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Set up Flask app for DialogFlow fulfillment
 app = Flask(__name__)
+
+# Configure the Flask app to use the Session middleware
+app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type if needed
+Session(app)
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
