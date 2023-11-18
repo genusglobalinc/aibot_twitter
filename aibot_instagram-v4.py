@@ -29,6 +29,7 @@ from google.auth.exceptions import GoogleAuthError
 from google.auth.transport.requests import Request
 from flask import Flask, request, jsonify
 from flask import render_template
+from flask import Flask, render_template, redirect, url_for
 #from ig_bot import Bot
 from dotenv import load_dotenv
 
