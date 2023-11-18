@@ -21,5 +21,16 @@
     <form action="/increase_outreach" method="post">
         <button type="submit">Increase Outreach</button>
     </form>
+
+    <!-- Shutdown button -->
+    <button onclick="shutdownServer()">Shutdown Server</button>
+
+    <!-- JavaScript function to handle the shutdown button -->
+    <script>
+        function shutdownServer() {
+            // Redirect to the shutdown URL
+            window.location.href = 'http://13.59.67.53/shutdown';
+        }
+    </script>
 </body>
 </html>
