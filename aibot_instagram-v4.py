@@ -67,6 +67,9 @@ app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type if needed
 Session(app)
 
+# Add a global variable for status
+global_status = "Idle"
+
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
@@ -132,6 +135,9 @@ except GoogleAuthError as e:
 #-------------------------------------------------------------------------------------------------------------------
 # Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
+    global global_status
+    global_status = 'Prospecting started...'
+    
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
         next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={random.choice(access_tokens)}&count=10'
@@ -167,6 +173,7 @@ def find_and_store_usernames(account):
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
                 break
+    global_status = 'Prospecting finished. Ready for outreach!'
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
