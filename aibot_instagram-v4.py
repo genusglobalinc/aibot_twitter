@@ -321,7 +321,7 @@ def run_script():
         #for account in accounts:
             #create_and_post_reel(bot, account, account["proxy"])
         update_global_status("Starting prospecting..")
-        find_and_store_usernames(account[0])
+        find_and_store_usernames(accounts[0])
         update_global_status("Prospecting complete, starting outreach")
         process_usernames()
         update_global_status("Outreach complete. Run again?")
