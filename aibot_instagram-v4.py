@@ -383,12 +383,13 @@ def signal_handler(sig, frame):
 # Define route to display the control panel
 @app.route('/control_panel')
 def control_panel():
+    global g_status
     # Get actual data, e.g., script status, meetings booked, outreach count
     #script_status = "Off"  # Replace with actual script status
     
     # Get the script status from the session variable
     script_status = session.get('script_enabled', False)
-    global_status = session.get('global_status', g_status)
+    global_status = g_status
 
     meetings_booked = 0  # Replace with actual data
     outreach_count = outreach_done  # Replace with actual data
