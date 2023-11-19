@@ -55,7 +55,7 @@ prospected_usernames = set()
 conversation_context = []
 
 # Define hashtags to search for
-hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
+hashtags = ['indiegamedev', 'indiedev', 'gamedev']
 
 # Initialize the OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
