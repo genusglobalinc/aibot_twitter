@@ -135,8 +135,7 @@ except GoogleAuthError as e:
 #-------------------------------------------------------------------------------------------------------------------
 # Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
-    global global_status
-    global_status = 'Prospecting started...'
+    update_global_status("Debug message: Prospecting started...")
     
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
@@ -173,7 +172,7 @@ def find_and_store_usernames(account):
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
                 break
-    global_status = 'Prospecting finished. Ready for outreach!'
+    update_global_status("Debug message: Prospecting finished. Ready for outreach!")
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
@@ -367,11 +366,21 @@ def signal_handler(sig, frame):
 def control_panel():
     # Get actual data, e.g., script status, meetings booked, outreach count
     #script_status = "Off"  # Replace with actual script status
+    
     # Get the script status from the session variable
     script_status = session.get('script_enabled', False)
+    global_status = session.get('global_status', "No status available")
+
     meetings_booked = 0  # Replace with actual data
     outreach_count = outreach_done  # Replace with actual data
-    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count)
+    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count, global_status=global_status)
+
+# Example route to update the global status
+@app.route('/update_global_status/<status>')
+def update_global_status(status):
+    # Update the global status
+    session['global_status'] = status
+    return redirect(url_for('control_panel'))
 
 #route to send shutdown signal from control panel 
 @app.route('/shutdown', methods=['POST'])
