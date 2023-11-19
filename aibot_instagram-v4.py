@@ -38,6 +38,8 @@ from dotenv import load_dotenv
 # Load environment variables from .env
 load_dotenv()
 
+os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
+
 # Define a simple data structure to store script state
 script_enabled = False
 
