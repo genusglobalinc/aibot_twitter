@@ -176,7 +176,7 @@ def find_and_store_usernames(account):
                 else:
                     print()
                     print(f"Failed to fetch post data. Status Code: {response.status_code}")
-                    print(f"Message: {response.text})
+                    print(f"Message: {response.text}")
                     print()
                     break
             except Exception as e:
