@@ -176,6 +176,7 @@ def find_and_store_usernames(account):
                     update_global_status("Error: " + response.status_code)
                     print("Failed to fetch post data. Status Code: {response.status_code}")
                     print()
+                    print()
                     break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
