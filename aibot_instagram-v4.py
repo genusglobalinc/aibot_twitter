@@ -106,7 +106,8 @@ for row in accounts_data:
 
 #Setup residential proxy with Zenrows API
 zrowsAPI = os.environ.get("ZENROWSAPIKEY")
-res_proxy = f"http://{zrowsAPI}:js_render=true&antibot=true@proxy.zenrows.com:8001"
+#print(f"Key set: {zrosAPI}")
+res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
 res_proxies = {"http": res_proxy, "https": res_proxy}
 
 
