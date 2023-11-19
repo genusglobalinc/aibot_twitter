@@ -48,8 +48,8 @@ os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 script_enabled = False
 
 # Define statistics variables
-global total_bookings = 0
-global outreach_done = 0
+total_bookings = 0
+outreach_done = 0
 
 # Define limit for prospecting usernames
 prospecting_limit = 4000
@@ -238,6 +238,7 @@ def send_dm(username, account):
 
 # Sends the DMS to all unproccessed prospects in google sheets file
 def process_usernames():
+    global outreach_done
     usernames = worksheet_usernames.col_values(1)  # Assuming usernames are in the first column
     contacted = worksheet_usernames.col_values(2)
     
