@@ -68,7 +68,7 @@ app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type
 Session(app)
 
 # Add a global variable for status
-global_status = "Idle"
+g_status = "Idle"
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -369,7 +369,7 @@ def control_panel():
     
     # Get the script status from the session variable
     script_status = session.get('script_enabled', False)
-    global_status = session.get('global_status', "No status available")
+    global_status = session.get('global_status', g_status)
 
     meetings_booked = 0  # Replace with actual data
     outreach_count = outreach_done  # Replace with actual data
