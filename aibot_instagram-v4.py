@@ -392,7 +392,7 @@ def control_panel():
 
     meetings_booked = 0  # Replace with actual data
     outreach_count = outreach_done  # Replace with actual data
-    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count, global_status=global_status)
+    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count, global_status=g_status)
 
 # Example route to update the global status
 @app.route('/update_global_status/<status>')
