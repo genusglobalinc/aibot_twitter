@@ -55,7 +55,7 @@ prospected_usernames = set()
 conversation_context = []
 
 # Define hashtags to search for
-hashtags = ['indiegamedev', 'indiedev', 'gamedev']
+hashtags = ['hashtag1', 'hashtag2', 'hashtag3']
 
 # Initialize the OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -156,6 +156,9 @@ def find_and_store_usernames(account):
                     if 'data' in data:
                         for post in data['data']:
                             if 'username' in post.get('caption', {}):
+                                #Debug
+                                update_global_status("Found ig user: " + username)
+                                
                                 username = post['caption']['username']
                                 bio = get_user_bio(username)
                                 keywords = ["indie game dev", "game dev"]
