@@ -34,6 +34,10 @@ from flask import Flask, render_template, redirect, url_for, session
 from flask_session import Session
 #from ig_bot import Bot
 from dotenv import load_dotenv
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+# Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # Load environment variables from .env
 load_dotenv()
