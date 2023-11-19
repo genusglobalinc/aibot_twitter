@@ -173,14 +173,14 @@ def find_and_store_usernames(account):
                                     worksheet_usernames.append_row([username])  # You can append additional information as needed
                     next_url = data['paging'].get('next')
                 else:
-                    update_global_status("Error: {response.status_code}")
-                    print("Failed to fetch post data. Status Code: {response.status_code}")
+                    print(f"Failed to fetch post data. Status Code: {response.status_code}")
                     print()
                     print()
                     break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
                 break
+    
     update_global_status("Debug message: Prospecting finished. Ready for outreach!")
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
