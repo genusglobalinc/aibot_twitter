@@ -48,8 +48,8 @@ os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 script_enabled = False
 
 # Define statistics variables
-total_bookings = 0
-outreach_done = 0
+global total_bookings = 0
+global outreach_done = 0
 
 # Define limit for prospecting usernames
 prospecting_limit = 4000
