@@ -382,7 +382,9 @@ def control_panel():
 @app.route('/update_global_status/<status>')
 def update_global_status(status):
     # Update the global status
-    session['global_status'] = status
+    g_status = status
+    print(g_status)
+    session['global_status'] = g_status
     return redirect(url_for('control_panel'))
 
 #route to send shutdown signal from control panel 
