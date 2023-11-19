@@ -149,9 +149,6 @@ def find_and_store_usernames(account):
 
         while next_url and len(prospected_usernames) < prospecting_limit:
             try:
-                proxy = res_proxy
-
-
                 # Implement code to find usernames and store them in Google Sheets and the set
                 session = requests.Session()
                 session.proxies = res_proxies
