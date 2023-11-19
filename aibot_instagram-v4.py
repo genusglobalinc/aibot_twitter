@@ -156,7 +156,7 @@ def find_and_store_usernames(account):
                 session = requests.Session()
                 session.proxies = res_proxies
 
-                response = session.get(next_url, proxies=proxies, verify=False)
+                response = session.get(next_url, proxies=res_proxies, verify=False)
                 if response.status_code == 200:
                     data = response.json()
                     if 'data' in data:
