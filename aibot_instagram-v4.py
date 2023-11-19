@@ -340,7 +340,7 @@ def run_script():
         find_and_store_usernames(accounts[0])
         update_global_status("Prospecting complete, starting outreach")
         process_usernames()
-        update_global_status("Outreach complete. Run again?")
+        #update_global_status("Outreach complete. Run again?")
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
