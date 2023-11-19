@@ -320,8 +320,11 @@ def run_script():
         #bot = Bot()
         #for account in accounts:
             #create_and_post_reel(bot, account, account["proxy"])
+        update_global_status("Starting prospecting..")
         find_and_store_usernames()
+        update_global_status("Prospecting complete, starting outreach")
         process_usernames()
+        update_global_status("Outreach complete. Run again?")
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
@@ -398,6 +401,10 @@ def toggle_script():
 
     # Toggle the script status
     script_enabled = not script_enabled
+    
+    # Run the script if it's enabled
+    if script_enabled:
+        run_script()
 
     # Update the session variable with the new script status
     session['script_enabled'] = script_enabled
