@@ -251,6 +251,8 @@ def process_usernames():
                 dm_count += 1
                 outreach_done += 1
                 time.sleep(60)  # Sleep to respect Instagram's rate limits
+    
+    update_global_status(f"Outreach ended. Total outreach = {dm_count}")
                     
 # Function to create and post a reel (TO BE COMPLETED!)
 #def create_and_post_reel(bot, username, password, proxy_info):
