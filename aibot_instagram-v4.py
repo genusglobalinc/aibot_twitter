@@ -143,12 +143,13 @@ except GoogleAuthError as e:
 # Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
     update_global_status("Debug message: Prospecting started...")
+    prospecting_failed = False
     
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
         next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={random.choice(access_tokens)}&count=10'
 
-        while next_url and len(prospected_usernames) < prospecting_limit:
+        while next_url and len(prospected_usernames) < prospecting_limit and not prospecting_failed:
             try:
                 # Implement code to find usernames and store them in Google Sheets and the set
                 session = requests.Session()
@@ -178,12 +179,13 @@ def find_and_store_usernames(account):
                     print(f"Failed to fetch post data. Status Code: {response.status_code}")
                     print(f"Message: {response.text}")
                     print()
+                    prospecting_failed = True
                     break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
                 break
     
-    update_global_status("Debug message: Prospecting finished. Ready for outreach!")
+    update_global_status("Debug message: Prospecting process has ended. Ready for outreach!")
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
