@@ -173,9 +173,9 @@ def find_and_store_usernames(account):
                                     worksheet_usernames.append_row([username])  # You can append additional information as needed
                     next_url = data['paging'].get('next')
                 else:
+                    update_global_status("Error: " + response.status_code)
                     print("Failed to fetch post data. Status Code: {response.status_code}")
                     break
-                    update_global_status("Error: " + response.status_code)
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
                 break
