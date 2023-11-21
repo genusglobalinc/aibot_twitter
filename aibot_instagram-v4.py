@@ -40,6 +40,12 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 # Load environment variables from .env
 load_dotenv()
 
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
+zrowsAPI = os.environ.get("ZENROWSAPIKEY")
+zyteAPI = os.environ.get("zyteAPI")
+zyte_creds_path = os.environ.get("ZYTEPATH")
+DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
 # Define statistics variables
@@ -59,14 +65,6 @@ conversation_context = []
 
 # Define hashtags to search for
 hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
-
-# Initialize the .env variables
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
-zrowsAPI = os.environ.get("ZENROWSAPIKEY")
-zyteAPI = os.environ.get("zyteAPI")
-zyte_creds_path = os.environ.get("ZYTEPATH")
-DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
