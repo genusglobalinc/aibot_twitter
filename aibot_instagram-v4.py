@@ -179,12 +179,11 @@ def find_and_store_usernames(account):
                     print(f"Failed to fetch post data. Status Code: {response.status_code}")
                     print(f"Message: {response.text}")
                     print()
-                    prospecting_failed = True
-                    toggle_script()
+                    update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
+                    print()
                     break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
-                toggle_script()
                 break
     
     update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
