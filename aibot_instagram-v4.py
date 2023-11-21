@@ -140,7 +140,7 @@ def find_and_store_usernames(account):
     
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
-        next_url = f'https://graph.instagram.com/v13.0/tags/{hashtag}/recent_media?access_token={random.choice(access_tokens)}&count=10'
+        next_url = f'{https://www.instagram.com/explore/search/keyword/?q={hashtag}'
 
         while next_url and len(prospected_usernames) < prospecting_limit and not prospecting_failed:
             try:
