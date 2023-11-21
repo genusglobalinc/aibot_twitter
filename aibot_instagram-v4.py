@@ -48,24 +48,6 @@ zyte_creds_path = os.environ.get("ZYTEPATH")
 DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
-# Define statistics variables
-total_bookings = 0
-outreach_done = 0
-script_enabled = False
-prospecting_limit = 5
-global g_status
-g_status = "Idle"
-
-# Initialize a set to temporarily store prospected usernames
-prospected_usernames = set()
-prospecting_failed = False
-
-# Variable to store the conversation context
-conversation_context = []
-
-# Define hashtags to search for
-hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
-
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
@@ -127,6 +109,24 @@ app = Flask(__name__)
 # Configure the Flask app to use the Session middleware
 app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type if needed
 Session(app)
+
+# Define statistics variables
+total_bookings = 0
+outreach_done = 0
+script_enabled = False
+prospecting_limit = 5
+global g_status
+g_status = "Idle"
+
+# Initialize a set to temporarily store prospected usernames
+prospected_usernames = set()
+prospecting_failed = False
+
+# Variable to store the conversation context
+conversation_context = []
+
+# Define hashtags to search for
+hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 2: Define functions
