@@ -62,10 +62,14 @@ hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
 
 # Initialize the OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
+zrowsAPI = os.environ.get("ZENROWSAPIKEY")
+zyteAPI = os.environ.get("zyteAPI")
+zyte_creds_path = os.environ.get("ZYTEPATH")
+DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
 
 if creds_path:
     creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
@@ -100,18 +104,12 @@ for row in accounts_data:
 access_tokens = [account["access_token"] for account in accounts]
 
 #Setup residential proxy with Zenrows API
-zrowsAPI = os.environ.get("ZENROWSAPIKEY")
 #print(f"Key set: {zrosAPI}")
 res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
 res_proxies = {"http": res_proxy, "https": res_proxy}
 
 #Zyte proxy info
 global zyteAPI, zyte_creds_path
-zyteAPI = os.environ.get("zyteAPI")
-zyte_creds_path = os.environ.get("ZYTEPATH")
-
-# Path to your DialogFlow JSON key file
-DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 
 # Initialize DialogFlow client
 try:
