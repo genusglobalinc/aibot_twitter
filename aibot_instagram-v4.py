@@ -144,7 +144,7 @@ except GoogleAuthError as e:
 # Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
     #update_global_status("Debug message: Prospecting started...")
-    #prospecting_failed = False
+    prospecting_failed = False
     
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
