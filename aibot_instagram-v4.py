@@ -114,6 +114,10 @@ zrowsAPI = os.environ.get("ZENROWSAPIKEY")
 res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
 res_proxies = {"http": res_proxy, "https": res_proxy}
 
+#Zyte proxy info
+global zyteAPI, zyte_creds_path
+zyteAPI = os.environ.get("ZENROWSAPIKEY")
+zyte_creds_path = os.environ.get("ZENROWSAPIKEY")
 
 # Path to your DialogFlow JSON key file
 DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
@@ -149,12 +153,24 @@ def find_and_store_usernames(account):
         while next_url and len(prospected_usernames) < prospecting_limit and not prospecting_failed:
             try:
                 # Implement code to find usernames and store them in Google Sheets and the set
-                session = requests.Session()
-                session.proxies = res_proxies
+                #session = requests.Session()
+                #session.proxies = res_proxies
+                #response = session.get(next_url, proxies=res_proxies, verify=False)
 
-                response = session.get(next_url, proxies=res_proxies, verify=False)
+                response = requests.get(
+                    next_url,
+                    proxies={
+                        f"{scheme}": "http://{zyteAPI}:@api.zyte.com:8011/"
+                        for scheme in ("http", "https")
+                    },
+                    verify=zyte_creds_path,
+                )
+                
                 if response.status_code == 200:
-                    data = response.json()
+                    http_response_body: bytes = response.content
+                    #print(http_response_body.decode())
+                    data = json.loads(http_response_body.decode())
+                    #data = response.json()
                     if 'data' in data:
                         for post in data['data']:
                             if 'username' in post.get('caption', {}):
