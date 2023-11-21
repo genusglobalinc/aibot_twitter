@@ -116,8 +116,8 @@ res_proxies = {"http": res_proxy, "https": res_proxy}
 
 #Zyte proxy info
 global zyteAPI, zyte_creds_path
-zyteAPI = os.environ.get("ZENROWSAPIKEY")
-zyte_creds_path = os.environ.get("ZENROWSAPIKEY")
+zyteAPI = os.environ.get("zyteAPI")
+zyte_creds_path = os.environ.get("ZYTEPATH")
 
 # Path to your DialogFlow JSON key file
 DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
