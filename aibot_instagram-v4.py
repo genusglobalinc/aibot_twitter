@@ -60,7 +60,7 @@ conversation_context = []
 # Define hashtags to search for
 hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
 
-# Initialize the OpenAI API key
+# Initialize the .env variables
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
 zrowsAPI = os.environ.get("ZENROWSAPIKEY")
