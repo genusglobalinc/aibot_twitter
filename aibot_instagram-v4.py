@@ -48,7 +48,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 total_bookings = 0
 outreach_done = 0
 script_enabled = False
-prospecting_limit = 1000
+prospecting_limit = 5
 global g_status
 g_status = "Idle"
 
