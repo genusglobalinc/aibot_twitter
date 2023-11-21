@@ -180,16 +180,19 @@ def find_and_store_usernames(account):
                     print(f"Message: {response.text}")
                     print()
                     prospecting_failed = True
-                    update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
-                    print()
+                    #update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
+                    #print()
                     break
             except Exception as e:
                 prospecting_failed = True
-                update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
+                #update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
                 print(f"An error occurred: {str(e)}")
                 break
     
-    update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
+    if prospecting_failed = True:
+        update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
+        print()
+        toggle_script()
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
