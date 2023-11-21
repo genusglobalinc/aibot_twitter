@@ -49,6 +49,7 @@ total_bookings = 0
 outreach_done = 0
 script_enabled = False
 prospecting_limit = 1000
+global g_status
 g_status = "Idle"
 
 # Initialize a set to temporarily store prospected usernames
