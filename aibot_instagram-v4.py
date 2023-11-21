@@ -180,11 +180,11 @@ def find_and_store_usernames(account):
                     print(f"Message: {response.text}")
                     print()
                     prospecting_failed = True
-                    script_enabled = False
+                    toggle_script()
                     break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
-                script_enabled = False
+                toggle_script()
                 break
     
     update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
