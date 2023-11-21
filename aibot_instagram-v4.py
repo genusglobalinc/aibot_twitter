@@ -192,8 +192,9 @@ def find_and_store_usernames(account):
                 break
     
     if prospecting_failed == True:
-        update_global_status(f"Debug message: Prospecting process has failed. {len(prospected_usernames)} prospects found.")
+        update_global_status(f"Debug message: Prospecting process has failed. {len(prospected_usernames)} prospects found. "You'll have to try it again")
         print()
+        global script_enabled = not script_enabled
     else:
         update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
         print()
