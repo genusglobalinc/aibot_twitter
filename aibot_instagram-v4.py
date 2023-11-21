@@ -355,7 +355,7 @@ def close_meetings():
     #run air.ai for all numbers not proccessed
     
     #mark the messaged as contacted with result, and update control panel
-    global_status_update("Meetings Closed.")
+    update_global_status("Meetings Closed.")
     
 # Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
 def run_script():
@@ -369,7 +369,7 @@ def run_script():
             update_global_status("Prospecting complete, starting outreach")
             process_usernames()
             #update_global_status("Outreach complete. Run again?")
-        close_meetings()
+            close_meetings()
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
