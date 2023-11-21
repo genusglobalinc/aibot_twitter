@@ -159,7 +159,7 @@ def find_and_store_usernames(account):
                 )
                 
                 if response.status_code == 200:
-                    http_response_body: bytes = response.content
+                    http_response_body: bytes = response.text
                     #print(http_response_body.decode())
                     data = json.loads(http_response_body.decode())
                     #data = response.json()
