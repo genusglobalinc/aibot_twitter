@@ -5,11 +5,6 @@
 # Program Purpose: To automate sending DM outreach, booking meetings with contacted ig accounts, closing 
 #                   the meetings with Air.ai, and fulfilling the service
 #-------------------------------------------------------------------------------------------------------------------
-
-#-------------------------------------------------------------------------------------------------------------------
-# Step 1: Define Environment Variables
-#-------------------------------------------------------------------------------------------------------------------
-
 import requests
 import sys
 import random
@@ -36,6 +31,9 @@ from flask_session import Session
 from dotenv import load_dotenv
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+#-------------------------------------------------------------------------------------------------------------------
+# Step 1: Define Environment Variables
+#-------------------------------------------------------------------------------------------------------------------
 # Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -64,13 +62,6 @@ hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
 
 # Initialize the OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-
-# Set up Flask app for DialogFlow fulfillment
-app = Flask(__name__)
-
-# Configure the Flask app to use the Session middleware
-app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type if needed
-Session(app)
 
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -136,6 +127,13 @@ except GoogleAuthError as e:
     #dialogflow_session_client = dialogflow.SessionsClient(credentials=credentials)
 #except google_auth_credentials.GoogleAuthError as e:
     #print(f"Error initializing DialogFlow client: {e}")
+
+# Set up Flask app for DialogFlow fulfillment
+app = Flask(__name__)
+
+# Configure the Flask app to use the Session middleware
+app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type if needed
+Session(app)
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 2: Define functions
@@ -355,6 +353,16 @@ def generate_personalized_message(previous_message):
 
     #return {'text': text}
 
+#Close meetings using air.ai
+def close_meetings():
+    #run once a day 
+    
+    #Get google sheet with numbers
+    
+    #run air.ai for all numbers not proccessed
+    
+    #mark the messaged as contacted with result, and update control panel
+
 # Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
 def run_script():
      if script_enabled:
@@ -367,6 +375,7 @@ def run_script():
             update_global_status("Prospecting complete, starting outreach")
             process_usernames()
             #update_global_status("Outreach complete. Run again?")
+        close_meetings()
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
