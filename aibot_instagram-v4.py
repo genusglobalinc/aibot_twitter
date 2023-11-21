@@ -355,7 +355,8 @@ def close_meetings():
     #run air.ai for all numbers not proccessed
     
     #mark the messaged as contacted with result, and update control panel
-
+    global_status_update("Meetings Closed.")
+    
 # Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
 def run_script():
      if script_enabled:
