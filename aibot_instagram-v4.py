@@ -159,10 +159,10 @@ def find_and_store_usernames(account):
                 )
                 
                 if response.status_code == 200:
-                    http_response_body: bytes = response.text
+                    #http_response_body: bytes = response.text
                     #print(http_response_body.decode())
-                    data = json.loads(http_response_body)
-                    #data = response.json()
+                    #data = json.loads(http_response_body)
+                    data = response.json()
                     if 'data' in data:
                         for post in data['data']:
                             if 'username' in post.get('caption', {}):
