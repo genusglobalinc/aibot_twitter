@@ -151,7 +151,7 @@ def find_and_store_usernames(account):
                 response = requests.get(
                     next_url,
                     proxies={
-                        f"{scheme}": "http://{zyteAPI}:@api.zyte.com:8011/"
+                        f"{scheme}": f"http://{zyteAPI}:@api.zyte.com:8011/"
                         for scheme in ("http", "https")
                     },
                     verify=zyte_creds_path,
