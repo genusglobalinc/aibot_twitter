@@ -56,6 +56,7 @@ prospecting_limit = 4000
 
 # Initialize a set to temporarily store prospected usernames
 prospected_usernames = set()
+prospecting_failed = False
 
 # Variable to store the conversation context
 conversation_context = []
@@ -143,7 +144,7 @@ except GoogleAuthError as e:
 # Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
     #update_global_status("Debug message: Prospecting started...")
-    prospecting_failed = False
+    #prospecting_failed = False
     
     for _ in range(prospecting_limit):
         hashtag = random.choice(hashtags)
@@ -192,7 +193,6 @@ def find_and_store_usernames(account):
     if prospecting_failed == True:
         update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
         print()
-        toggle_script()
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
@@ -346,7 +346,7 @@ def run_script():
             #create_and_post_reel(bot, account, account["proxy"])
         #update_global_status("Starting prospecting..")
         find_and_store_usernames(accounts[0])
-        if script_enabled:
+        if not prospecting_failed:
             update_global_status("Prospecting complete, starting outreach")
             process_usernames()
             #update_global_status("Outreach complete. Run again?")
