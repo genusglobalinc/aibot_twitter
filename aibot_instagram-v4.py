@@ -39,7 +39,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # Load environment variables from .env
 load_dotenv()
-
+global zyteAPI, zyte_creds_path
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
 zrowsAPI = os.environ.get("ZENROWSAPIKEY")
@@ -105,9 +105,6 @@ access_tokens = [account["access_token"] for account in accounts]
 #print(f"Key set: {zrosAPI}")
 res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
 res_proxies = {"http": res_proxy, "https": res_proxy}
-
-#Zyte proxy info
-global zyteAPI, zyte_creds_path
 
 # Initialize DialogFlow client
 try:
