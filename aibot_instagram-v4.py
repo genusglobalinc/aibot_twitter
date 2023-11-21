@@ -142,7 +142,7 @@ except GoogleAuthError as e:
 #-------------------------------------------------------------------------------------------------------------------
 # Define a function to find and store a defined number unique usernames to Google Sheets document (Currently: 4000)
 def find_and_store_usernames(account):
-    update_global_status("Debug message: Prospecting started...")
+    #update_global_status("Debug message: Prospecting started...")
     prospecting_failed = False
     
     for _ in range(prospecting_limit):
@@ -180,12 +180,14 @@ def find_and_store_usernames(account):
                     print(f"Message: {response.text}")
                     print()
                     prospecting_failed = True
+                    global script_enabled = False
                     break
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
+                global script_enabled = False
                 break
     
-    update_global_status("Debug message: Prospecting process has ended. Ready for outreach!")
+    update_global_status(f"Debug message: Prospecting process has ended. {len(prospected_usernames)} prospects found.")
 
 # Function to send a customized DM using ig username, bot, and residential proxy to a prospected username to book a meeting
 def send_dm(username, account):
@@ -238,6 +240,7 @@ def send_dm(username, account):
 
 # Sends the DMS to all unproccessed prospects in google sheets file
 def process_usernames():
+    #update_global_status("Started Outreach..")
     global outreach_done
     usernames = worksheet_usernames.col_values(1)  # Assuming usernames are in the first column
     contacted = worksheet_usernames.col_values(2)
@@ -336,11 +339,12 @@ def run_script():
         #bot = Bot()
         #for account in accounts:
             #create_and_post_reel(bot, account, account["proxy"])
-        update_global_status("Starting prospecting..")
+        #update_global_status("Starting prospecting..")
         find_and_store_usernames(accounts[0])
-        update_global_status("Prospecting complete, starting outreach")
-        process_usernames()
-        #update_global_status("Outreach complete. Run again?")
+        if script_enabled:
+            update_global_status("Prospecting complete, starting outreach")
+            process_usernames()
+            #update_global_status("Outreach complete. Run again?")
 
 # Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
