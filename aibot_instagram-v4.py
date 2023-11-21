@@ -44,15 +44,12 @@ load_dotenv()
 
 os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
-# Define a simple data structure to store script state
-script_enabled = False
-
 # Define statistics variables
 total_bookings = 0
 outreach_done = 0
-
-# Define limit for prospecting usernames
-prospecting_limit = 4000
+script_enabled = False
+prospecting_limit = 1000
+g_status = "Idle"
 
 # Initialize a set to temporarily store prospected usernames
 prospected_usernames = set()
@@ -74,9 +71,6 @@ app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'  # You can choose another session type if needed
 Session(app)
 
-# Add a global variable for status
-g_status = "Idle"
-
 # Set up Google Sheets API credentials
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
@@ -94,6 +88,10 @@ worksheet_accounts = spreadsheet_accounts.get_worksheet(1)  # Use the index of t
 # Read Instagram accounts and proxy configurations from the worksheet
 accounts_data = worksheet_accounts.get_all_records()
 
+# Open the Google Sheets sheet housing prospects
+spreadsheet_usernames = client.open('Prospected Usernames and Bot Accounts')  # Use the same document name
+worksheet_usernames = spreadsheet_usernames.get_worksheet(0)  # Use the index of the sheet (0 for the first sheet, 1 for the second, and so on)
+
 # Define your Instagram accounts and proxy configurations
 accounts = []
 for row in accounts_data:
@@ -105,20 +103,16 @@ for row in accounts_data:
     
     accounts.append(account)
 
+# Your Instagram Graph API access token
+# Add more access tokens for your accounts if needed
+access_tokens = [account["access_token"] for account in accounts]
+
 #Setup residential proxy with Zenrows API
 zrowsAPI = os.environ.get("ZENROWSAPIKEY")
 #print(f"Key set: {zrosAPI}")
 res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
 res_proxies = {"http": res_proxy, "https": res_proxy}
 
-
-# Open the Google Sheets sheet housing prospects
-spreadsheet_usernames = client.open('Prospected Usernames and Bot Accounts')  # Use the same document name
-worksheet_usernames = spreadsheet_usernames.get_worksheet(0)  # Use the index of the sheet (0 for the first sheet, 1 for the second, and so on)
-
-# Your Instagram Graph API access token
-# Add more access tokens for your accounts if needed
-access_tokens = [account["access_token"] for account in accounts]
 
 # Path to your DialogFlow JSON key file
 DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
@@ -482,17 +476,3 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, signal_handler)
     
     app.run(host='0.0.0.0', port=80)  # Start the Flask server for DialogFlow request fulfillment
-
-# Define the interval (in seconds) between script runs (e.g., once a day)
-interval_seconds = 24 * 60 * 60  # 24 hours
-
-while True:
-    current_time = datetime.datetime.now()
-    
-    # Check if the current day is Monday (0) through Friday (4)
-    if current_time.weekday() < 5:
-        # Run the script
-        run_script()
-    
-    # Sleep for the defined interval
-    time.sleep(interval_seconds)
