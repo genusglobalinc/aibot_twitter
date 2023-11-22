@@ -20,52 +20,76 @@ requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.
 # Your existing initialization of variables, functions, and routes
 # ...
 # Placeholder variables, replace with actual logic
-project_sheet_data = {}
-posts_sheet_data = {}
-comment_sheet_data = {}
-bots_sheet_data = {}
-hashtags_sheet_data = {}
+project_sheet_data = get_google_sheets_data("project_sheet")
+posts_sheet_data = get_google_sheets_data("posts_sheet")
+comment_sheet_data = get_google_sheets_data("comment_sheet")
+bots_sheet_data = get_google_sheets_data("bots_sheet")
+hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
 
 # Placeholder functions, replace with actual implementations
 def get_google_sheets_data(sheet_name):
     # Implement logic to fetch data from Google Sheets
-    return {}
+    # Example: Use gspread library and service account credentials
+    gc = gspread.service_account(filename='path/to/credentials.json')
+    sh = gc.open(sheet_name)
+    return sh.get_all_records()
 
 def get_instagram_data(endpoint, params):
     # Implement logic to fetch data from Instagram Graph API
-    return {}
+    # Example: Use requests library to make API calls
+    url = f'https://graph.instagram.com/v12.0/{endpoint}'
+    response = requests.get(url, params=params)
+    return response.json()
 
 def search_posts_by_hashtag(hashtag):
     # Implement logic to search recent posts by hashtag
-    return {}
+    # Example: Use Instagram Graph API to search for posts
+    params = {'q': hashtag, 'access_token': 'your_access_token'}
+    return get_instagram_data('ig_hashtag_search', params)
 
 def process_comments(media_id, keyword):
     # Implement logic to process comments and store prospects
-    pass
+    # Example: Fetch comments for a given media id and check if keyword is in bio
+    comments_data = get_instagram_data(f'{media_id}/comments', {'access_token': 'your_access_token'})
+    for comment in comments_data['data']:
+        if keyword in comment.get('text', '').lower():
+            # Store username in prospects sheet and update red flag value
+            prospect_username = comment['username']
+            # Example: Update prospects sheet using gspread
 
 def generate_comments_and_mark_contacted(username):
     # Implement logic to generate comments and mark as contacted
-    pass
+    # Example: Fetch user posts, generate comments, and mark as contacted
+    user_posts = get_instagram_data(f'{username}/media', {'access_token': 'your_access_token'})
+    # Example: Generate comments
+    generated_comments = ["Great post!", "Keep it up!", "Awesome content!"]
+    # Example: Mark as contacted in the comment sheet
 
 def check_and_respond_to_dm_inquiries(bot_account):
     # Implement logic to check and respond to DM inquiries
-    pass
+    # Example: Fetch messages from bot account and check for inquiries using DialogFlow
+    messages = get_instagram_data(f'{bot_account}/messages', {'access_token': 'your_access_token'})
+    for message in messages['data']:
+        # Example: Use DialogFlow to check for inquiries and respond accordingly
 
 def follow_up_with_usernames(uncontacted_usernames, contacted_usernames):
     # Implement logic to follow up with usernames
-    pass
+    # Example: Generate comments and schedule follow-ups
+    for username in uncontacted_usernames:
+        user_posts = get_instagram_data(f'{username}/media', {'access_token': 'your_access_token'})
+        # Example: Generate comments and schedule follow-ups
 
 def post_ad_posts_with_tensorflow():
     # Implement logic to post ad posts with TensorFlow model
-    pass
+    # Example: Use TensorFlow model to generate ad posts and post them
 
 def generate_and_post_story():
     # Implement logic to generate and post a story
-    pass
+    # Example: Use Instagram Graph API to post a story
 
 def schedule_posts(posts_type, schedule_date):
     # Implement logic to schedule posts
-    pass
+    # Example: Schedule posts based on specified type and date
 
 # Main script to execute the Instagram Graph API workflow
 def instagram_graph_api_script():
@@ -80,6 +104,8 @@ def instagram_graph_api_script():
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
             # Store relevant data in posts sheet
+
+    # ... (Continue with the existing logic)
 
     # ... (Continue with the existing logic)
 
