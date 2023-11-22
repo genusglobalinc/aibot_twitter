@@ -54,6 +54,9 @@ prospecting_failed = False
 # Variable to store the conversation context
 conversation_context = []
 
+#-------------------------------------------------------------------------------------------------------------------
+# Step 2: Define functions
+#----------------------------------------------------------------------------------------------------
 def get_instagram_data(endpoint, params):
     # Implement logic to fetch data from Instagram Graph API
     # Example: Use requests library to make API calls
