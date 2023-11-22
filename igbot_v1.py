@@ -91,6 +91,12 @@ def schedule_posts(posts_type, schedule_date):
     # Implement logic to schedule posts
     # Example: Schedule posts based on specified type and date
 
+# ... (Existing code)
+
+# Placeholder variable for uncontacted and contacted usernames
+uncontacted_usernames = [...]  # Replace with actual data
+contacted_usernames = [...]  # Replace with actual data
+
 # Main script to execute the Instagram Graph API workflow
 def instagram_graph_api_script():
     # ... (Existing code)
@@ -104,10 +110,37 @@ def instagram_graph_api_script():
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
             # Store relevant data in posts sheet
+        #Set date to run again. 
 
-    # ... (Continue with the existing logic)
+    # 8. Process comments and store prospects
+    for post_data in posts_sheet_data:
+        process_comments(post_data['media_id'], "keyword")
 
-    # ... (Continue with the existing logic)
+    # 9. Generate comments and mark as contacted
+    for username in comment_sheet_data:
+        generate_comments_and_mark_contacted(username)
+
+    # 10. 4x a day, get messages from bot account and respond to inquiries
+    for _ in range(4):
+        check_and_respond_to_dm_inquiries(bots_sheet_data['bot_account'])
+
+    # 11. For each uncontacted username, get two random posts, generate comment on one, and mark follow-up date
+    follow_up_with_usernames(uncontacted_usernames, contacted_usernames)
+
+    # 12. Check if any contacted usernames have a follow-up
+    # (Implementation depends on your specific logic for follow-ups)
+
+    # 13. Post batch of ad posts with TensorFlow model
+    post_ad_posts_with_tensorflow()
+
+    # 14. Generate and post story
+    generate_and_post_story()
+
+    # 15. Check to see if new comments, posts, or stories need to be scheduled
+    schedule_posts("comments", datetime.now() + timedelta(days=1))
+    schedule_posts("posts", datetime.now() + timedelta(days=2))
+    schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
+
 
 # Flask app for DialogFlow fulfillment
 app = Flask(__name__)
