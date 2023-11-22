@@ -1,30 +1,15 @@
 # Import necessary libraries
-from flask import Flask, render_template, redirect, url_for, jsonify, request, session
+from flask import Flask, jsonify, request, session
 import requests
-import os
-import json
-from google.oauth2 import service_account
 import gspread
-import openai
-import signal
-import time
+from google.oauth2 import service_account
+from datetime import datetime, timedelta
 import random
+import signal
 import sys
 
 # Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-
-# Your existing environment variable setup
-# ...
-
-# Your existing initialization of variables, functions, and routes
-# ...
-# Placeholder variables, replace with actual logic
-project_sheet_data = get_google_sheets_data("project_sheet")
-posts_sheet_data = get_google_sheets_data("posts_sheet")
-comment_sheet_data = get_google_sheets_data("comment_sheet")
-bots_sheet_data = get_google_sheets_data("bots_sheet")
-hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
 
 # Placeholder functions, replace with actual implementations
 def get_google_sheets_data(sheet_name):
@@ -91,7 +76,12 @@ def schedule_posts(posts_type, schedule_date):
     # Implement logic to schedule posts
     # Example: Schedule posts based on specified type and date
 
-# ... (Existing code)
+# Flask app for DialogFlow fulfillment
+app = Flask(__name__)
+
+# Set up a session for storing script and global status
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 # Placeholder variable for uncontacted and contacted usernames
 uncontacted_usernames = [...]  # Replace with actual data
@@ -99,8 +89,6 @@ contacted_usernames = [...]  # Replace with actual data
 
 # Main script to execute the Instagram Graph API workflow
 def instagram_graph_api_script():
-    # ... (Existing code)
-
     # Loop for 30 times (Step 7)
     for _ in range(30):
         # 6. If no hashtag id next to hashtag in sheet, get hashtag id
@@ -110,7 +98,7 @@ def instagram_graph_api_script():
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
             # Store relevant data in posts sheet
-        #Set date to run again. 
+        # Set date to run again.
 
     # 8. Process comments and store prospects
     for post_data in posts_sheet_data:
@@ -142,17 +130,7 @@ def instagram_graph_api_script():
     schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
 
 
-# Flask app for DialogFlow fulfillment
-app = Flask(__name__)
-
-# Set up a session for storing script and global status
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
-
-# Rest of your existing code, including routes, functions, and server setup
-# ...
-
-# Example# Example: Function to handle the Dialogflow webhook request
+# Example: Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
 def dialogflow_webhook():
     req = request.get_json()
@@ -168,15 +146,13 @@ def dialogflow_webhook():
 
     return jsonify({'fulfillmentText': fulfillment_text})
 
-# ... (Existing code)
+
 # Function to gracefully shutdown Flask server for code updates
 def signal_handler(sig, frame):
     print('Shutting down gracefully...')
     # Perform cleanup tasks if necessary
     sys.exit(0)
 
-# Rest of your existing code, including routes, functions, and server setup
-# ...
 
 # Start the Flask server
 if __name__ == '__main__':
@@ -185,5 +161,5 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, signal_handler)
     
     app.run(host='0.0.0.0', port=80)  # Start the Flask server for DialogFlow request fulfillment
-       # Run the Instagram Graph API script
+    # Run the Instagram Graph API script
     instagram_graph_api_script()
