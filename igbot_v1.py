@@ -41,7 +41,7 @@ def search_posts_by_hashtag(hashtag):
     params = {'q': hashtag, 'access_token': 'your_access_token'}
     return get_instagram_data('ig_hashtag_search', params)
 
-#KPI 2 - Get prospects
+#KPI 2 - Get prospects from posts
 def process_comments(media_id, keyword):
     # Implement logic to process comments and store prospects
     # Example: Fetch comments for a given media id and check if keyword is in bio
