@@ -112,6 +112,17 @@ def schedule_posts(posts_type, schedule_date):
     # Implement logic to schedule posts
     # Example: Schedule posts based on specified type and date
 
+ meetings using air.ai
+def close_meetings():
+    #run once a day 
+    
+    #Get google sheet with numbers
+    
+    #run air.ai for all numbers not proccessed
+    
+    #mark the messaged as contacted with result, and update control panel
+    update_global_status("Meetings Closed.")
+    
 # Flask app for DialogFlow fulfillment
 app = Flask(__name__)
 
@@ -174,6 +185,21 @@ def instagram_graph_api_script():
     schedule_posts("comments", datetime.now() + timedelta(days=1))
     schedule_posts("posts", datetime.now() + timedelta(days=2))
     schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
+
+# Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
+def run_script():
+     if script_enabled:
+        #bot = Bot()
+        #for account in accounts:
+            #create_and_post_reel(bot, account, account["proxy"])
+        #update_global_status("Starting prospecting..")
+        #find_and_store_usernames(accounts[0])
+        instagram_graph_api_script()
+        if not prospecting_failed:
+            #update_global_status("Prospecting complete, starting outreach")
+            #process_usernames()
+            #update_global_status("Outreach complete. Run again?")
+            close_meetings()
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 3: Define routes for your control panel
