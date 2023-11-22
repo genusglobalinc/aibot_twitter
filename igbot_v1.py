@@ -34,12 +34,14 @@ def get_instagram_data(endpoint, params):
     response = requests.get(url, params=params)
     return response.json()
 
+#KPI 1 - Get posts
 def search_posts_by_hashtag(hashtag):
     # Implement logic to search recent posts by hashtag
     # Example: Use Instagram Graph API to search for posts
     params = {'q': hashtag, 'access_token': 'your_access_token'}
     return get_instagram_data('ig_hashtag_search', params)
 
+#KPI 2 - Get prospects
 def process_comments(media_id, keyword):
     # Implement logic to process comments and store prospects
     # Example: Fetch comments for a given media id and check if keyword is in bio
@@ -50,6 +52,7 @@ def process_comments(media_id, keyword):
             prospect_username = comment['username']
             # Example: Update prospects sheet using gspread
 
+#KPI 3 - Tier 1 Outreach
 def generate_comments_and_mark_contacted(username):
     # Implement logic to generate comments and mark as contacted
     # Example: Fetch user posts, generate comments, and mark as contacted
@@ -58,6 +61,7 @@ def generate_comments_and_mark_contacted(username):
     generated_comments = ["Great post!", "Keep it up!", "Awesome content!"]
     # Example: Mark as contacted in the comment sheet
 
+#KPI 4 - Tier 2 Outreach
 def check_and_respond_to_dm_inquiries(bot_account):
     # Implement logic to check and respond to DM inquiries
     # Example: Fetch messages from bot account and check for inquiries using DialogFlow
@@ -102,21 +106,21 @@ def instagram_graph_api_script():
         # 6. If no hashtag id next to hashtag in sheet, get hashtag id
         # (Implementation depends on your specific setup with Instagram Graph API)
 
-        # 7. Search recent posts by hashtag and store data in posts sheets
+        # 7. KPI#1: Search recent posts by hashtag and store data in posts sheets
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
             # Store relevant data in posts sheet
         # Set date to run again.
 
-    # 8. Process comments and store prospects
+    # 8. KPI#2: Process comments and store prospects
     for post_data in posts_sheet_data:
         process_comments(post_data['media_id'], "keyword")
 
-    # 9. Generate comments and mark as contacted
+    # 9. KPI#3: Generate comments and mark as contacted
     for username in comment_sheet_data:
         generate_comments_and_mark_contacted(username)
 
-    # 10. 4x a day, get messages from bot account and respond to inquiries
+    # 10. KPI#4: 4x a day, get messages from bot account and respond to inquiries
     for _ in range(4):
         check_and_respond_to_dm_inquiries(bots_sheet_data['bot_account'])
 
