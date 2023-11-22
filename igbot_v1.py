@@ -20,7 +20,7 @@ def get_google_sheets_data(sheet_name):
     return sh.get_all_records()
 
 # Placeholder variables, replace with actual logic
-project_sheet_data = get_google_sheets_data("project_sheet")
+#project_sheet_data = get_google_sheets_data("project_sheet")
 posts_sheet_data = get_google_sheets_data("posts_sheet")
 comment_sheet_data = get_google_sheets_data("comment_sheet")
 bots_sheet_data = get_google_sheets_data("bots_sheet")
