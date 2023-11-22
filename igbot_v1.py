@@ -118,7 +118,7 @@ def schedule_posts(posts_type, schedule_date):
     # Implement logic to schedule posts
     # Example: Schedule posts based on specified type and date
 
- meetings using air.ai
+#meetings using air.ai
 def close_meetings():
     #run once a day 
     
