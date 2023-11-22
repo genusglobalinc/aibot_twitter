@@ -8,6 +8,9 @@ import random
 import signal
 import sys
 
+#-------------------------------------------------------------------------------------------------------------------
+# Step 1: Define Environment Variables
+#------------------------------------------------------------------------------------
 # Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
