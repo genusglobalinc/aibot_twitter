@@ -1,136 +1,152 @@
+# Import necessary libraries
+from flask import Flask, render_template, redirect, url_for, jsonify, request, session
 import requests
-import sys
-import random
+import os
+import json
+from google.oauth2 import service_account
 import gspread
+import openai
 import signal
 import time
-import openai
-import os
-from google.oauth2 import service_account
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
-from flask_session import Session
-from dotenv import load_dotenv
+import random
+import sys
 
+# Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-load_dotenv()
-os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
+# Your existing environment variable setup
+# ...
 
-script_enabled = False
-total_bookings = 0
-outreach_done = 0
-prospecting_limit = 4000
-prospected_usernames = set()
-conversation_context = []
-hashtags = ['indiegamedev', 'indiedev', 'gamedev', 'solodev']
+# Your existing initialization of variables, functions, and routes
+# ...
+# Function to retrieve data from Google Sheets
+def get_google_sheets_data(sheet_name):
+    # Implementation depends on your specific setup with Google Sheets API
+    # Use gspread library and service account credentials
 
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+# Function to retrieve data from Instagram Graph API
+def get_instagram_data(endpoint, params):
+    # Implementation depends on your specific setup with Instagram Graph API
+    # Use requests library to make API calls
 
+# Function to search recent posts by hashtag
+def search_posts_by_hashtag(hashtag):
+    # Implementation to search recent posts by hashtag using Instagram Graph API
+    # Return relevant data from the API response
+
+# Function to process comments and store prospects
+def process_comments(media_id, keyword):
+    # Implementation to get edge comments for a given media id
+    # Check if a comment's username's bio matches the keyword
+    # Store usernames in the prospects sheet and update red flag value
+
+# Function to generate comments and mark as contacted
+def generate_comments_and_mark_contacted(username):
+    # Implementation to get user posts, generate comments, and mark as contacted
+
+# Function to check and respond to DM inquiries
+def check_and_respond_to_dm_inquiries(bot_account):
+    # Implementation to get messages from bot account and check for inquiry in intent with DialogFlow
+    # If inquiry found, send DM to book a meeting with a link and mark username as DMd
+
+# Function to follow up with usernames
+def follow_up_with_usernames(uncontacted_usernames, contacted_usernames):
+    # Implementation to generate comments and schedule follow-ups for uncontacted and contacted usernames
+
+# Function to post batch of ad posts with TensorFlow model
+def post_ad_posts_with_tensorflow():
+    # Implementation to post a batch of ad posts with TensorFlow model
+
+# Function to generate and post a story
+def generate_and_post_story():
+    # Implementation to generate and post a story
+
+# Function to schedule posts
+def schedule_posts(posts_type, schedule_date):
+    # Implementation to schedule posts based on the specified type and date
+
+# Main script to execute the Instagram Graph API workflow
+def instagram_graph_api_script():
+    # 1-5. Get project, posts, comment, bots, and hashtags sheets data from Google Drive
+    project_sheet_data = get_google_sheets_data("project_sheet")
+    posts_sheet_data = get_google_sheets_data("posts_sheet")
+    comment_sheet_data = get_google_sheets_data("comment_sheet")
+    bots_sheet_data = get_google_sheets_data("bots_sheet")
+    hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
+
+    # Loop for 30 times (Step 7)
+    for _ in range(30):
+        # 6. If no hashtag id next to hashtag in sheet, get hashtag id
+        # (Implementation depends on your specific setup with Instagram Graph API)
+
+        # 7. Search recent posts by hashtag and store data in posts sheets
+        for hashtag in hashtags_sheet_data:
+            posts_data = search_posts_by_hashtag(hashtag)
+            # Store relevant data in posts sheet
+
+    # 8. Process comments and store prospects
+    for post_data in posts_sheet_data:
+        process_comments(post_data['media_id'], "keyword")
+
+    # 9. Generate comments and mark as contacted
+    for username in comment_sheet_data:
+        generate_comments_and_mark_contacted(username)
+
+    # 10. 4x a day, get messages from bot account and respond to inquiries
+    for _ in range(4):
+        check_and_respond_to_dm_inquiries(bots_sheet_data['bot_account'])
+
+    # 11. For each uncontacted username, get two random posts, generate comment on one, and mark follow-up date
+    follow_up_with_usernames(uncontacted_usernames, contacted_usernames)
+
+    # 12. Check if any contacted usernames have a follow-up
+    # (Implementation depends on your specific logic for follow-ups)
+
+    # 13. Post batch of ad posts with TensorFlow model
+    post_ad_posts_with_tensorflow()
+
+    # 14. Generate and post story
+    generate_and_post_story()
+
+    # 15. Check to see if new comments, posts, or stories need to be scheduled
+    schedule_posts("comments", datetime.now() + timedelta(days=1))
+    schedule_posts("posts", datetime.now() + timedelta(days=2))
+    schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
+
+
+# Flask app for DialogFlow fulfillment
 app = Flask(__name__)
+
+# Set up a session for storing script and global status
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-g_status = "Idle"
+# Rest of your existing code, including routes, functions, and server setup
+# ...
 
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')
-
-if creds_path:
-    creds = service_account.Credentials.from_json_keyfile_name(creds_path, scope)
-    client = gspread.authorize(creds)
-else:
-    print("Please set the GOOGLE_SHEETS_CREDS_PATH environment variable.")
-
-spreadsheet_accounts = client.open('Prospected Usernames and Bot Accounts')
-worksheet_accounts = spreadsheet_accounts.get_worksheet(1)
-
-accounts_data = worksheet_accounts.get_all_records()
-accounts = [{"username": row["Username"], "password": row["Password"], "access_token": row["Access Token"]} for row in accounts_data]
-
-zrowsAPI = os.environ.get("ZENROWSAPIKEY")
-res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
-res_proxies = {"http": res_proxy, "https": res_proxy}
-
-spreadsheet_usernames = client.open('Prospected Usernames and Bot Accounts')
-worksheet_usernames = spreadsheet_usernames.get_worksheet(0)
-access_tokens = [account["access_token"] for account in accounts]
-DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
-
-try:
-    credentials = service_account.Credentials.from_service_account_file(DIALOGFLOW_KEY_FILE, scopes=scope)
-    client = gspread.authorize(credentials)
-except GoogleAuthError as e:
-    print(f"Error initializing Google Sheets client: {e}")
-
+# Example: Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
 def dialogflow_webhook():
     req = request.get_json()
-    intent = req['queryResult']['intent']['displayName']
+    
+    # Your existing code for handling Dialogflow intents
+    # ...
 
-    if intent == 'BookMeeting':
-        personalized_message = generate_personalized_message(req['queryResult']['queryText'])
-        return jsonify({'fulfillmentText': personalized_message})
-    elif intent == 'CollectMeetingDetails':
-        date, time, location = req['queryResult']['parameters']['date'], req['queryResult']['parameters']['time'], req['queryResult']['parameters']['location']
-        bookings += 1
-        return jsonify({'fulfillmentText': f'Great! We have scheduled a meeting on {date} at {time} at {location}.'})
-    else:
-        return jsonify({'fulfillmentText': "I am not sure how to respond to that, but it's always easier to talk in person. Just click here, and pick the best time and method that works for you! Hope to chat soon: https://calendly.com/genusglobal/studios."})
-
+# Function to gracefully shutdown Flask server for code updates
 def signal_handler(sig, frame):
     print('Shutting down gracefully...')
+    # Perform cleanup tasks if necessary
     sys.exit(0)
 
-@app.route('/control_panel')
-def control_panel():
-    script_status = session.get('script_enabled', False)
-    global_status = session.get('global_status', g_status)
-    meetings_booked = 0
-    outreach_count = outreach_done
-    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count, global_status=global_status)
+# Rest of your existing code, including routes, functions, and server setup
+# ...
 
-@app.route('/update_global_status/<status>')
-def update_global_status(status):
-    global g_status
-    g_status = status
-    session['global_status'] = g_status
-    return redirect(url_for('control_panel'))
-
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    print("Shutting down gracefully...")
-    os.kill(os.getpid(), signal.SIGINT)
-    return 'Server shutting down...'
-
-@app.route('/toggle_script', methods=['POST'])
-def toggle_script():
-    global script_enabled
-    script_enabled = not script_enabled
-
-    if script_enabled:
-        run_script()
-
-    session['script_enabled'] = script_enabled
-    return redirect(url_for('control_panel'))
-
-@app.route('/increase_outreach', methods=['POST'])
-def increase_outreach():
-    global prospecting_limit
-    if script_enabled:
-        prospecting_limit += 1
-    return redirect(url_for('control_panel'))
-
+# Start the Flask server
 if __name__ == '__main__':
+    # Set up a signal handler for graceful shutdown
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    app.run(host='0.0.0.0', port=80)
-
-interval_seconds = 24 * 60 * 60
-
-while True:
-    current_time = datetime.datetime.now()
-
-    if current_time.weekday() < 5:
-        run_script()
-
-    time.sleep(interval_seconds)
+    
+    app.run(host='0.0.0.0', port=80)  # Start the Flask server for DialogFlow request fulfillment
+       # Run the Instagram Graph API script
+    instagram_graph_api_script()
