@@ -161,6 +161,57 @@ def instagram_graph_api_script():
     schedule_posts("posts", datetime.now() + timedelta(days=2))
     schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
 
+#-------------------------------------------------------------------------------------------------------------------
+# Step 3: Define routes for your control panel
+#-------------------------------------------------------------------------------------------------------------------
+# Define route to display the control panel
+@app.route('/control_panel')
+def control_panel():
+    # Get actual data, e.g., script status, meetings booked, outreach count
+    #script_status = "Off"  # Replace with actual script status
+    
+    # Get the script status from the session variable
+    script_status = session.get('script_enabled', False)
+    global_status = session.get('global_status', g_status)
+
+    meetings_booked = 0  # Replace with actual data
+    outreach_count = outreach_done  # Replace with actual data
+    return render_template('control_panel.html', script_status=script_status, meetings_booked=meetings_booked, outreach_count=outreach_count, global_status=global_status)
+
+# Example route to update the global status
+@app.route('/update_global_status/<status>')
+def update_global_status(status):
+    # Update the global status
+    g_status = status
+    print(g_status)
+    session['global_status'] = g_status
+    return redirect(url_for('control_panel'))
+
+#route to send shutdown signal from control panel 
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    print("Shutting down gracefully...")
+    os.kill(os.getpid(), signal.SIGINT)
+    return 'Server shutting down...'
+
+@app.route('/toggle_script', methods=['POST'])
+def toggle_script():
+    global script_enabled  # Declare script_enabled as global
+
+    # Retrieve the current script status from the session variable
+    script_enabled = session.get('script_enabled', False)
+
+    # Toggle the script status
+    script_enabled = not script_enabled
+    
+    # Run the script if it's enabled
+    if script_enabled:
+        run_script()
+
+    # Update the session variable with the new script status
+    session['script_enabled'] = script_enabled
+
+    return redirect(url_for('control_panel'))
 
 # Example: Function to handle the Dialogflow webhook request
 @app.route('/dialogflow-webhook', methods=['POST'])
