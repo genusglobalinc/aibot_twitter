@@ -19,8 +19,18 @@ def get_google_sheets_data(sheet_name):
     sh = gc.open(sheet_name)
     return sh.get_all_records()
 
+def update_google_sheet(sheet_name, data):
+    # Implement logic to update data in Google Sheets
+    # Example: Use gspread library to update a sheet
+    gc = gspread.service_account(filename='path/to/credentials.json')
+    sh = gc.open(sheet_name)
+    worksheet = sh.get_worksheet(0)  # Assumes data is stored in the first worksheet
+
+    # Append the data to the worksheet
+    worksheet.append_table([list(data.values())])
+
 # Placeholder variables, replace with actual logic
-#project_sheet_data = get_google_sheets_data("project_sheet")
+# project_sheet_data = get_google_sheets_data("project_sheet")
 posts_sheet_data = get_google_sheets_data("posts_sheet")
 comment_sheet_data = get_google_sheets_data("comment_sheet")
 bots_sheet_data = get_google_sheets_data("bots_sheet")
@@ -110,6 +120,16 @@ def instagram_graph_api_script():
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
             # Store relevant data in posts sheet
+            for post in posts_data.get('data', []):
+                data_to_store = {
+                    'media_id': post.get('id'),
+                    'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'user_id': post.get('user', {}).get('id'),
+                    'username': post.get('user', {}).get('username'),
+                    'caption': post.get('caption', {}).get('text', '')
+                }
+                update_google_sheet('posts_sheet', data_to_store)
+
         # Set date to run again.
 
     # 8. KPI#2: Process comments and store prospects
