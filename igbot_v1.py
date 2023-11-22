@@ -126,6 +126,13 @@ def close_meetings():
     
     #run air.ai for all numbers not proccessed
     
+    #if lead purchased service, fulfill service
+    #Service Fulfillment:
+    
+    #if lead scheduled again, verify booking 
+    
+    #else just mark notes
+    
     #mark the messaged as contacted with result, and update control panel
     update_global_status("Meetings Closed.")
     
