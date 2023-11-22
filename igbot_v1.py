@@ -126,8 +126,8 @@ def dialogflow_webhook():
 
     # Placeholder code, replace with actual DialogFlow intent handling
     intent = req['queryResult']['intent']['displayName']
-    if intent == 'YourIntentName':
-        # Implement logic for handling the specific intent
+    if intent == 'Inquiry':
+        # Implement logic for handling the specific intent, send booking link with chat GPT format
         fulfillment_text = 'Your fulfillment text here.'
     else:
         # Handle other intents if needed
