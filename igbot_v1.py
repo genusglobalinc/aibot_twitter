@@ -36,6 +36,20 @@ comment_sheet_data = get_google_sheets_data("comment_sheet")
 bots_sheet_data = get_google_sheets_data("bots_sheet")
 hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
 
+# Define statistics variables
+total_bookings = 0
+outreach_done = 0
+script_enabled = False
+prospecting_limit = 5
+global g_status
+g_status = "Idle"
+
+# Initialize a set to temporarily store prospected usernames
+prospected_usernames = set()
+prospecting_failed = False
+
+# Variable to store the conversation context
+conversation_context = []
 
 def get_instagram_data(endpoint, params):
     # Implement logic to fetch data from Instagram Graph API
