@@ -72,15 +72,26 @@ def search_posts_by_hashtag(hashtag):
     return get_instagram_data('ig_hashtag_search', params)
 
 #KPI 2 - Get prospects from posts
-def process_comments(media_id, keyword):
-    # Implement logic to process comments and store prospects
-    # Example: Fetch comments for a given media id and check if keyword is in bio
-    comments_data = get_instagram_data(f'{media_id}/comments', {'access_token': 'your_access_token'})
+def process_comments(media_id, keyword, access_token):
+    global prospect_username  # Assuming you have a global variable for the Google Sheet
+
+    # Fetch comments for a given media id
+    comments_data = get_instagram_data(f'{media_id}/comments', {'access_token': access_token})
+
+    # Process comments and update Google Sheets when keyword is found in the user's bio
     for comment in comments_data['data']:
-        if keyword in comment.get('text', '').lower():
-            # Store username in prospects sheet and update red flag value
-            prospect_username = comment['username']
-            # Example: Update prospects sheet using gspread
+        username = comment['username']
+
+        # Fetch user bio using Instagram Graph API
+        user_data = get_instagram_data(username, {'fields': 'biography', 'access_token': access_token})
+        user_bio = user_data.get('biography', 'Bio not available')
+
+        # Check if the keyword is in the user's bio
+        if keyword in user_bio.lower():
+            prospect_username = username
+            # Update prospects sheet using the global variable (replace this with your actual logic)
+            print(f"Updating prospects sheet with Username: '{prospect_username}', Bio: '{user_bio}'.")
+            
 
 #KPI 3 - Tier 1 Outreach
 def generate_comments_and_mark_contacted(username):
