@@ -90,7 +90,8 @@ def process_comments(media_id, keyword, access_token):
         if keyword in user_bio.lower():
             prospect_username = username
             # Update prospects sheet using the global variable (replace this with your actual logic)
-            print(f"Updating prospects sheet with Username: '{prospect_username}', Bio: '{user_bio}'.")
+            update_google_sheet(prospect_username, username)
+            update_global_status(f"Updating prospects sheet with Username: '{username}', Bio: '{user_bio}'.")
             
 
 #KPI 3 - Tier 1 Outreach
