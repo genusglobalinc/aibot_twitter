@@ -94,7 +94,7 @@ def get_instagram_data(endpoint, params):
     
 def post_comment(post_id, context, access_token):
     # Instagram Graph API request to post a comment
-    api_url = INSTAGRAM_API_COMMENT_ENDPOINT.format(post_id=post_id)
+    api_url = f"https://graph.instagram.com/v12.0/{post_id}/comments"
     
     # Customize the message based on the previous context
     template = {
