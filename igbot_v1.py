@@ -14,16 +14,6 @@ import os
 #-------------------------------------------------------------------------------------------------------------------
 # Step 1: Define Environment Variables
 #------------------------------------------------------------------------------------
-# Placeholder variables, replace with actual logic
-# project_sheet_data = get_google_sheets_data("project_sheet")
-posts_sheet_data = get_google_sheets_data("posts_sheet")
-comment_sheet_data = get_google_sheets_data("comment_sheet")
-bots_sheet_data = get_google_sheets_data("bots_sheet")
-hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
-
-# Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
-requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-
 # Load environment variables from .env
 load_dotenv()
 global zyteAPI, zyte_creds_path
@@ -34,6 +24,15 @@ zyte_creds_path = os.environ.get("ZYTEPATH")
 DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
 os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
+# Google sheets variables 
+# project_sheet_data = get_google_sheets_data("project_sheet")
+posts_sheet_data = get_google_sheets_data("posts_sheet")
+comment_sheet_data = get_google_sheets_data("comment_sheet")
+bots_sheet_data = get_google_sheets_data("bots_sheet")
+hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
+
+# Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 #Setup residential proxy with Zenrows API
 #print(f"Key set: {zrosAPI}")
