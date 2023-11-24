@@ -49,6 +49,22 @@ comment_sheet_data = get_google_sheets_data("comment_sheet")
 bots_sheet_data = get_google_sheets_data("bots_sheet")
 hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
 
+accounts]
+
+#Setup residential proxy with Zenrows API
+#print(f"Key set: {zrosAPI}")
+res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
+res_proxies = {"http": res_proxy, "https": res_proxy}
+
+# Initialize DialogFlow client
+try:
+    credentials = service_account.Credentials.from_service_account_file(
+        DIALOGFLOW_KEY_FILE, scopes=scope
+    )
+    client = gspread.authorize(credentials)
+except GoogleAuthError as e:
+    print(f"Error initializing Google Sheets client: {e}")
+
 # Define statistics variables
 total_bookings = 0
 outreach_done = 0
