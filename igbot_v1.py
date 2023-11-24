@@ -14,6 +14,16 @@ import sys
 # Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
+# Load environment variables from .env
+load_dotenv()
+global zyteAPI, zyte_creds_path
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
+zyteAPI = os.environ.get("zyteAPI")
+zyte_creds_path = os.environ.get("ZYTEPATH")
+DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
+os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
+
 # Placeholder functions, replace with actual implementations
 def get_google_sheets_data(sheet_name):
     # Implement logic to fetch data from Google Sheets
