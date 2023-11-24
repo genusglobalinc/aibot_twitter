@@ -14,24 +14,6 @@ import os
 #-------------------------------------------------------------------------------------------------------------------
 # Step 1: Define Environment Variables
 #------------------------------------------------------------------------------------
-# Placeholder functions, replace with actual implementations
-def get_google_sheets_data(sheet_name):
-    # Implement logic to fetch data from Google Sheets
-    # Example: Use gspread library and service account credentials
-    gc = gspread.service_account(filename='path/to/credentials.json')
-    sh = gc.open(sheet_name)
-    return sh.get_all_records()
-
-def update_google_sheet(sheet_name, data):
-    # Implement logic to update data in Google Sheets
-    # Example: Use gspread library to update a sheet
-    gc = gspread.service_account(filename='path/to/credentials.json')
-    sh = gc.open(sheet_name)
-    worksheet = sh.get_worksheet(0)  # Assumes data is stored in the first worksheet
-
-    # Append the data to the worksheet
-    worksheet.append_table([list(data.values())])
-
 # Placeholder variables, replace with actual logic
 # project_sheet_data = get_google_sheets_data("project_sheet")
 posts_sheet_data = get_google_sheets_data("posts_sheet")
@@ -96,6 +78,30 @@ conversation_context = []
 #-------------------------------------------------------------------------------------------------------------------
 # Step 2: Define functions
 #----------------------------------------------------------------------------------------------------
+# Placeholder functions, replace with actual implementations
+def get_google_sheets_data(sheet_name):
+    # Implement logic to fetch data from Google Sheets
+    # Example: Use gspread library and service account credentials
+    gc = gspread.service_account(filename='path/to/credentials.json')
+    sh = gc.open(sheet_name)
+    return sh.get_all_records()
+
+def update_google_sheet(sheet_name, data):
+    # Implement logic to update data in Google Sheets
+    # Example: Use gspread library to update a sheet
+    gc = gspread.service_account(filename='path/to/credentials.json')
+    sh = gc.open(sheet_name)
+    worksheet = sh.get_worksheet(0)  # Assumes data is stored in the first worksheet
+
+    # Append the data to the worksheet
+    worksheet.append_table([list(data.values())])
+
+# Function to gracefully shutdown Flask server for code updates
+def signal_handler(sig, frame):
+    print('Shutting down gracefully...')
+    # Perform cleanup tasks if necessary
+    sys.exit(0)
+
 def get_instagram_data(endpoint, params):
     # Implement logic to fetch data from Instagram Graph API
     # Example: Use requests library to make API calls
@@ -367,13 +373,6 @@ def dialogflow_webhook():
         fulfillment_text = 'Default fulfillment text.'
 
     return jsonify({'fulfillmentText': fulfillment_text})
-
-
-# Function to gracefully shutdown Flask server for code updates
-def signal_handler(sig, frame):
-    print('Shutting down gracefully...')
-    # Perform cleanup tasks if necessary
-    sys.exit(0)
 
 
 # Start the Flask server
