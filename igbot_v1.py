@@ -103,7 +103,7 @@ def get_instagram_data(endpoint, params):
     response = requests.get(url, params=params)
     return response.json()
     
-def post_comment(post_id, context, access_token):
+def post_comment(post_id, context, access_token, previous_message):
     # Instagram Graph API request to post a comment
     api_url = f"https://graph.instagram.com/v12.0/{post_id}/comments"
     
@@ -114,12 +114,12 @@ def post_comment(post_id, context, access_token):
     }
 
     # Combine the template steps into the full message
-    full_message = "\n".join(template.values())
+    full_message = f"{context} {template[context]}"
 
-    # Generate additional content using GPT-3
+    # Format content by defining GPT-3 role when generating comment
     response = openai.Completion.create(
         engine="davinci",
-        messages=full_message,  # Include the entire conversation context. Fix or remove soon
+        messages=[{'role': 'system', 'content': 'You are a helpful assistant.'}, {'role': 'user', 'content': full_message}],
         max_tokens=100
     )
     generated_message = response.choices[0].text.strip()
