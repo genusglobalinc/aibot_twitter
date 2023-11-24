@@ -64,11 +64,28 @@ def get_instagram_data(endpoint, params):
     response = requests.get(url, params=params)
     return response.json()
     
-def post_comment(post_id, comment_text, access_token):
+def post_comment(post_id, context, access_token):
     # Instagram Graph API request to post a comment
     api_url = INSTAGRAM_API_COMMENT_ENDPOINT.format(post_id=post_id)
-    params = {'access_token': access_token, 'message': comment_text}
+    
+    # Customize the message based on the previous context
+    template = {
+        'intro': f"Hello again! {previous_message} Let's continue our conversation.",
+        'book_meeting': "How about scheduling a meeting to discuss this further? It's 15-30 minutes, you can ask me any question, and I can actually answer them! You can pick a time that works for you here: [https://calendly.com/genusglobal/studios].",
+    }
 
+    # Combine the template steps into the full message
+    full_message = "\n".join(template.values())
+
+    # Generate additional content using GPT-3
+    response = openai.Completion.create(
+        engine="davinci",
+        messages=context,  # Include the entire conversation context. Fix or remove soon
+        max_tokens=100
+    )
+    generated_message = response.choices[0].text.strip()
+    
+    params = {'access_token': access_token, 'generated_message': comment_text}
     response = requests.post(api_url, params=params)
 
     # Check for successful comment posting
