@@ -97,12 +97,23 @@ def process_comments(media_id, keyword, access_token):
 #KPI 3 - Tier 1 Outreach
 def generate_comments_and_mark_contacted(username):
     # Implement logic to generate comments and mark as contacted
+    global outreach_done
     # Example: Fetch user posts, generate comments, and mark as contacted
     user_posts = get_instagram_data(f'{username}/media', {'access_token': 'your_access_token'})
-    # Example: Generate comments
-    generated_comments = ["Great post!", "Keep it up!", "Awesome content!"]
-    # Example: Mark as contacted in the comment sheet
-
+    
+    #pick three random posts
+    
+    #Leave a comment on one
+    
+    #leave a CTA on another
+    
+    #schedule the last
+    
+    #mark as contacted
+    outreach_done += 1
+    update_global_status(f"Tier 1 Outreach complete. Current Outreach: {outreach_done}")
+    
+    
 #KPI 4 - Tier 2 Outreach
 def check_and_respond_to_dm_inquiries(bot_account):
     # Implement logic to check and respond to DM inquiries
