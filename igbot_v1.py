@@ -282,21 +282,7 @@ def instagram_graph_api_script():
     schedule_posts("comments", datetime.now() + timedelta(days=1))
     schedule_posts("posts", datetime.now() + timedelta(days=2))
     schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
-
-# Define your job to run your script, posts 1 reel for each bot account stored, prospects leads, and contacts them to book
-def run_script():
-     if script_enabled:
-        #bot = Bot()
-        #for account in accounts:
-            #create_and_post_reel(bot, account, account["proxy"])
-        #update_global_status("Starting prospecting..")
-        #find_and_store_usernames(accounts[0])
-        instagram_graph_api_script()
-        if not prospecting_failed:
-            #update_global_status("Prospecting complete, starting outreach")
-            #process_usernames()
-            #update_global_status("Outreach complete. Run again?")
-            close_meetings()
+            
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 3: Define routes for your control panel
@@ -343,7 +329,7 @@ def toggle_script():
     
     # Run the script if it's enabled
     if script_enabled:
-        run_script()
+        instagram_graph_api_script()
 
     # Update the session variable with the new script status
     session['script_enabled'] = script_enabled
