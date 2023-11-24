@@ -1,5 +1,5 @@
 # Import necessary libraries
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request, session, render_template, url_for, redirect
 import requests
 import gspread
 from google.oauth2 import service_account
@@ -7,6 +7,9 @@ from datetime import datetime, timedelta
 import random
 import signal
 import sys
+from dotenv import load_dotenv
+import openai  # Make sure to have OpenAI Python library installed
+import os
 
 #-------------------------------------------------------------------------------------------------------------------
 # Step 1: Define Environment Variables
