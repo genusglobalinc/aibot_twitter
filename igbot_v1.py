@@ -59,6 +59,17 @@ for row in bots_sheets_data:
     
     bots.append(bot)
 
+# Flask app for DialogFlow fulfillment
+app = Flask(__name__)
+
+# Set up a session for storing script and global status
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
+# Placeholder variable for uncontacted and contacted usernames
+#uncontacted_usernames = [...]  # Replace with actual data
+#contacted_usernames = [...]  # Replace with actual data
+
 # Define statistics variables
 total_bookings = 0
 outreach_done = 0
@@ -243,16 +254,6 @@ def close_meetings():
     #mark the messaged as contacted with result, and update control panel
     update_global_status("Meetings Closed.")
     
-# Flask app for DialogFlow fulfillment
-app = Flask(__name__)
-
-# Set up a session for storing script and global status
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
-
-# Placeholder variable for uncontacted and contacted usernames
-uncontacted_usernames = [...]  # Replace with actual data
-contacted_usernames = [...]  # Replace with actual data
 
 # Main script to execute the Instagram Graph API workflow
 def instagram_graph_api_script():
