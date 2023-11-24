@@ -63,6 +63,19 @@ def get_instagram_data(endpoint, params):
     url = f'https://graph.instagram.com/v12.0/{endpoint}'
     response = requests.get(url, params=params)
     return response.json()
+    
+def post_comment(post_id, comment_text, access_token):
+    # Instagram Graph API request to post a comment
+    api_url = INSTAGRAM_API_COMMENT_ENDPOINT.format(post_id=post_id)
+    params = {'access_token': access_token, 'message': comment_text}
+
+    response = requests.post(api_url, params=params)
+
+    # Check for successful comment posting
+    if response.status_code == 200:
+        print(f"Comment posted successfully on post {post_id}")
+    else:
+        print(f"Error posting comment on post {post_id}. Status code: {response.status_code}")
 
 #KPI 1 - Get posts
 def search_posts_by_hashtag(hashtag):
@@ -101,14 +114,21 @@ def generate_comments_and_mark_contacted(username):
     # Example: Fetch user posts, generate comments, and mark as contacted
     user_posts = get_instagram_data(f'{username}/media', {'access_token': 'your_access_token'})
     
-    #pick three random posts
-    
-    #Leave a comment on one
-    
-    #leave a CTA on another
-    
-    #schedule the last
-    
+    # Pick three random posts
+    selected_posts = random.sample(user_posts, 3)
+
+    # Leave a comment on one post
+    comment_text = "Great post! Keep it up."
+    post_comment(selected_posts[0]['id'], comment_text, access_token)
+
+    # Leave a call-to-action (CTA) on another post
+    cta_text = "Check out my profile for exciting content!"
+    post_comment(selected_posts[1]['id'], cta_text, access_token)
+
+    # Schedule a comment for the third post
+    scheduled_comment = "Looking forward to more posts!"
+    post_comment(selected_posts[2]['id'], scheduled_comment, access_token)
+
     #mark as contacted
     outreach_done += 1
     update_global_status(f"Tier 1 Outreach complete. Current Outreach: {outreach_done}")
