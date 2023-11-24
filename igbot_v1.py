@@ -108,13 +108,13 @@ def post_comment(post_id, context, access_token):
     # Generate additional content using GPT-3
     response = openai.Completion.create(
         engine="davinci",
-        messages=context,  # Include the entire conversation context. Fix or remove soon
+        messages=full_message,  # Include the entire conversation context. Fix or remove soon
         max_tokens=100
     )
     generated_message = response.choices[0].text.strip()
     
-    params = {'access_token': access_token, 'generated_message': comment_text}
-    response = requests.post(api_url, params=params)
+    params = {'access_token': access_token, 'message': generated_message}
+    response = requests.post(api_url, params=params)#post comment
 
     # Check for successful comment posting
     if response.status_code == 200:
