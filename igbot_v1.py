@@ -250,9 +250,6 @@ contacted_usernames = [...]  # Replace with actual data
 def instagram_graph_api_script():
     # Loop for 30 times (Step 7)
     for _ in range(30):
-        # 6. If no hashtag id next to hashtag in sheet, get hashtag id
-        # (Implementation depends on your specific setup with Instagram Graph API)
-
         # 7. KPI#1: Search recent posts by hashtag and store data in posts sheets
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
@@ -267,31 +264,35 @@ def instagram_graph_api_script():
                 }
                 update_google_sheet('posts_sheet', data_to_store)
 
-        # Set date to run again.
+    # Set date to run again.
 
+    update_global_status("Weekly API calls used. Initial prospecting complete.")
+    
     # 8. KPI#2: Process comments and store prospects
     for post_data in posts_sheet_data:
         process_comments(post_data['media_id'], "keyword")
-
+    update_global_status("Usernames generated. Ready for outreach")
+    
     # 9. KPI#3: Generate comments and mark as contacted
     for username in comment_sheet_data:
         generate_comments_and_mark_contacted(username)
-
+    update_global_status("Outreach completed. Stats updated.")
+    
     # 10. KPI#4: 4x a day, get messages from bot account and respond to inquiries
     for _ in range(4):
         check_and_respond_to_dm_inquiries(bots_sheet_data['bot_account'])
 
     # 11. For each uncontacted username, get two random posts, generate comment on one, and mark follow-up date
-    follow_up_with_usernames(uncontacted_usernames, contacted_usernames)
+    #follow_up_with_usernames(uncontacted_usernames, contacted_usernames)
 
     # 12. Check if any contacted usernames have a follow-up
     # (Implementation depends on your specific logic for follow-ups)
 
     # 13. Post batch of ad posts with TensorFlow model
-    post_ad_posts_with_tensorflow()
+    #post_ad_posts_with_tensorflow()
 
     # 14. Generate and post story
-    generate_and_post_story()
+    #generate_and_post_story()
 
     # 15. Check to see if new comments, posts, or stories need to be scheduled
     schedule_posts("comments", datetime.now() + timedelta(days=1))
