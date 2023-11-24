@@ -27,7 +27,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 # Google sheets variables 
 # project_sheet_data = get_google_sheets_data("project_sheet")
 posts_sheet_data = get_google_sheets_data("posts_sheet")
-comment_sheet_data = get_google_sheets_data("comment_sheet")
+prospects_sheet_data = get_google_sheets_data("comment_sheet")
 bots_sheet_data = get_google_sheets_data("bots_sheet")
 hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
 
@@ -164,7 +164,7 @@ def process_comments(media_id, keyword, access_token):
         if keyword in user_bio.lower():
             prospect_username = username
             # Update prospects sheet using the global variable (replace this with your actual logic)
-            update_google_sheet(prospect_username, username)
+            update_google_sheet(prospects_sheet_data, username)
             update_global_status(f"Updating prospects sheet with Username: '{username}', Bio: '{user_bio}'.")
             
 
