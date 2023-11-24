@@ -49,8 +49,6 @@ comment_sheet_data = get_google_sheets_data("comment_sheet")
 bots_sheet_data = get_google_sheets_data("bots_sheet")
 hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
 
-accounts]
-
 #Setup residential proxy with Zenrows API
 #print(f"Key set: {zrosAPI}")
 res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
