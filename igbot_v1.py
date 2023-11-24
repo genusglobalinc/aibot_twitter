@@ -177,18 +177,21 @@ def generate_comments_and_mark_contacted(username):
     
     # Pick three random posts
     selected_posts = random.sample(user_posts, 3)
-
+    post1 = selected_posts[0]
+    post2 = selected_posts[1]
+    post3 = selected_posts[2]
+    
     # Leave a comment on one post
-    comment_text = "Great post! Keep it up."
-    post_comment(selected_posts[0]['id'], comment_text, access_token)
+    comment_text = get_instagram_data(f'{post1[id]}/caption', {'access_token': 'your_access_token'})
+    post_comment(post1['id'], comment_text, access_token)
 
     # Leave a call-to-action (CTA) on another post
-    cta_text = "Check out my profile for exciting content!"
-    post_comment(selected_posts[1]['id'], cta_text, access_token)
+    cta_text = get_instagram_data(f'{post2[id]}/caption', {'access_token': 'your_access_token'})
+    post_comment(post2['id'], cta_text, access_token)
 
     # Schedule a comment for the third post
-    scheduled_comment = "Looking forward to more posts!"
-    post_comment(selected_posts[2]['id'], scheduled_comment, access_token)
+    scheduled_comment = get_instagram_data(f'{post3[id]}/caption', {'access_token': 'your_access_token'})
+    post_comment(post3['id'], scheduled_comment, access_token)
 
     #mark as contacted
     outreach_done += 1
