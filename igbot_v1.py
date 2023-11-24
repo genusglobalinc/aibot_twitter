@@ -67,6 +67,17 @@ try:
 except GoogleAuthError as e:
     print(f"Error initializing Google Sheets client: {e}")
 
+# Define your Instagram accounts and proxy configurations
+bots = []
+for row in bots_sheets_data:
+    bots = {
+        "username": row["Username"],
+        "password": row["Password"],
+        "access_token": row["Access Token"],
+        }
+    
+    bots.append(bot)
+
 # Define statistics variables
 total_bookings = 0
 outreach_done = 0
