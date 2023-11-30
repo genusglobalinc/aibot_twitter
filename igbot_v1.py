@@ -61,7 +61,7 @@ except GoogleAuthError as e:
 
 # Define your Instagram accounts and proxy configurations
 bots = []
-for row in bots_sheets_data:
+for row in bots_sheet_data:
     bot = {
         "username": row["Username"],
         "password": row["Password"],
