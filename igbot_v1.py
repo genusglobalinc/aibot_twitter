@@ -45,8 +45,8 @@ requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.
 
 #Setup residential proxy with Zenrows API
 #print(f"Key set: {zrosAPI}")
-res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
-res_proxies = {"http": res_proxy, "https": res_proxy}
+#res_proxy = f"http://{zrowsAPI}:premium_proxy=true&proxy_country=us@proxy.zenrows.com:8001"
+#res_proxies = {"http": res_proxy, "https": res_proxy}
 
 # Initialize DialogFlow client
 try:
