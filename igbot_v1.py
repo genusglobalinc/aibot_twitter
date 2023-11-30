@@ -50,6 +50,7 @@ requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.
 #res_proxies = {"http": res_proxy, "https": res_proxy}
 
 # Initialize DialogFlow client
+scope = ['https://www.googleapis.com/auth/dialogflow']
 try:
     credentials = service_account.Credentials.from_service_account_file(
         DIALOGFLOW_KEY_FILE, scopes=scope
