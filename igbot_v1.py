@@ -211,8 +211,6 @@ def generate_comments_and_mark_contacted(username):
     
 #KPI 4 - Tier 2 Outreach
 def check_and_respond_to_dm_inquiries(bot_account):
-    # Implement logic to check and respond to DM inquiries
-    # Example: Fetch messages from bot account and check for inquiries using DialogFlow
     messages = get_instagram_data(f'{bot_account}/messages', {'access_token': 'your_access_token'})
     for message in messages['data']:
         # Example: Use DialogFlow to check for inquiries and respond accordingly
