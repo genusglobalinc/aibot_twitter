@@ -24,7 +24,8 @@ def get_google_sheets_data(sheet_name):
 # Load environment variables from .env
 load_dotenv()
 global zyteAPI, zyte_creds_path
-creds_sheet = get_google_sheets_data("Code Setup")
+creds_file = get_google_sheets_data("Prospected Usernames and Bot Accounts")
+creds_sheet = creds_file.get_worksheet(3)  # Use the index of the sheet (0 for the prospects, 1 for bot accounts, and 3 for code setup)
 openai.api_key = creds_sheet.cell(0, 1).value
 DIALOGFLOW_KEY_FILE = creds_sheet.cell(1, 1).value
 zyteAPI = creds_sheet.cell(2, 1).value
