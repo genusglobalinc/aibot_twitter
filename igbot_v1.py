@@ -218,8 +218,6 @@ def check_and_respond_to_dm_inquiries(bot_account):
         # Example: Use DialogFlow to check for inquiries and respond accordingly
 
 def follow_up_with_usernames(uncontacted_usernames, contacted_usernames):
-    # Implement logic to follow up with usernames
-    # Example: Generate comments and schedule follow-ups
     for username in uncontacted_usernames:
         user_posts = get_instagram_data(f'{username}/media', {'access_token': 'your_access_token'})
         # Example: Generate comments and schedule follow-ups
