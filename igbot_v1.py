@@ -17,18 +17,18 @@ import os
 def get_google_sheets_data(sheet_name):
     # Implement logic to fetch data from Google Sheets
     # Example: Use gspread library and service account credentials
-    gc = gspread.service_account(filename='path/to/credentials.json')
+    gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
     sh = gc.open(sheet_name)
     return sh.get_all_records()
 
 # Load environment variables from .env
 load_dotenv()
 global zyteAPI, zyte_creds_path
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-creds_path = os.environ.get('GOOGLE_SHEETS_CREDS_PATH')  # Set this environment variable in your .env file
-zyteAPI = os.environ.get("zyteAPI")
-zyte_creds_path = os.environ.get("ZYTEPATH")
-DIALOGFLOW_KEY_FILE = os.environ.get("DIALOGFLOW_KEY_FILE")
+creds_sheet = get_google_sheets_data("Code Setup")
+openai.api_key = creds_sheet.cell(0, 1).value
+DIALOGFLOW_KEY_FILE = creds_sheet.cell(1, 1).value
+zyteAPI = creds_sheet.cell(2, 1).value
+zyte_creds_path = creds_sheet.cell(2, 1).value
 os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
 # Google sheets variables 
