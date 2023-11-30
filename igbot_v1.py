@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, session, render_template, url_for, re
 import requests
 import gspread
 from google.oauth2 import service_account
+from google.auth.exceptions import GoogleAuthError
 from datetime import datetime, timedelta
 import random
 import signal
