@@ -19,7 +19,8 @@ def get_google_sheets_data(sheet_name):
     # Example: Use gspread library and service account credentials
     gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
     sh = gc.open(sheet_name)
-    return sh.get_all_records()
+    #return sh.get_all_records()
+    return sh
 
 # Load environment variables from .env
 load_dotenv()
