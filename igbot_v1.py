@@ -1,6 +1,6 @@
 # Import necessary libraries
 from flask import Flask, jsonify, request, session, render_template, url_for, redirect
-from flask import Flask, session
+from flask import Flask, session, Session
 import requests
 import gspread
 from google.oauth2 import service_account
