@@ -26,7 +26,7 @@ def get_google_sheets_data(sheet_name):
 load_dotenv()
 global zyteAPI, zyte_creds_path
 creds_file = get_google_sheets_data("Prospected Usernames and Bot Accounts")
-creds_sheet = creds_file.get_worksheet(3)  # Use the index of the sheet (0 for the prospects, 1 for bot accounts, and 2 for code setup)
+creds_sheet = creds_file.get_worksheet(0)  # Use the index of the sheet (0 for code setup, 1 for bot accounts, and 2 for prospects)
 openai.api_key = creds_sheet.cell(0, 1).value
 DIALOGFLOW_KEY_FILE = creds_sheet.cell(1, 1).value
 zyteAPI = creds_sheet.cell(2, 1).value
@@ -35,10 +35,10 @@ os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
 # Google sheets variables 
 # project_sheet_data = get_google_sheets_data("project_sheet")
-posts_sheet_data = get_google_sheets_data("posts_sheet")
-prospects_sheet_data = get_google_sheets_data("comment_sheet")
-bots_sheet_data = get_google_sheets_data("bots_sheet")
-hashtags_sheet_data = get_google_sheets_data("hashtags_sheet")
+posts_sheet_data = creds_file.get_worksheet(2)
+prospects_sheet_data = creds_file.get_worksheet(3)
+bots_sheet_data = creds_file.get_worksheet(1)
+#hashtags_sheet_data = creds_file.get_worksheet(3)
 
 # Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
