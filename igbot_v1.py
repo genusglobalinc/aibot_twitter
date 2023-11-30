@@ -75,7 +75,7 @@ app = Flask(__name__)
 
 # Set up a session for storing script and global status
 app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+session = Session(app)
 
 # Placeholder variable for uncontacted and contacted usernames
 #uncontacted_usernames = [...]  # Replace with actual data
