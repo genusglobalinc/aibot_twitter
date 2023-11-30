@@ -1,6 +1,7 @@
 # Import necessary libraries
 from flask import Flask, jsonify, request, session, render_template, url_for, redirect
-from flask import Flask, session, Session
+from flask import Flask, session
+from flask_session import Session
 import requests
 import gspread
 from google.oauth2 import service_account
@@ -76,7 +77,7 @@ app = Flask(__name__)
 
 # Set up a session for storing script and global status
 app.config['SESSION_TYPE'] = 'filesystem'
-session = Session(app)
+Session(app)
 
 # Placeholder variable for uncontacted and contacted usernames
 #uncontacted_usernames = [...]  # Replace with actual data
