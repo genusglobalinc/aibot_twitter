@@ -17,13 +17,44 @@ import os
 #-------------------------------------------------------------------------------------------------------------------
 # Step 1: Define Environment Variables
 #------------------------------------------------------------------------------------
-def get_google_sheets_data(sheet_name):
-    # Implement logic to fetch data from Google Sheets
-    # Example: Use gspread library and service account credentials
+def initialize_sheet(sheet_number):
     gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
-    sh = gc.open(sheet_name)
-    #return sh.get_all_records()
-    return sh
+    
+    sheet_names = [
+        "Prospected Usernames and Bot Accounts",
+        "project_sheet",
+        # Add more sheet names as needed
+    ]
+
+    sheet_headers = {
+        0: ["Header1", "Header2", ...],  # Headers for the first sheet
+        1: ["HeaderA", "HeaderB", ...],  # Headers for the second sheet
+        # Add more headers for other sheets
+    }
+
+    try:
+        sheet_name = sheet_names[sheet_number]
+        headers = sheet_headers.get(sheet_number, [])  # Get headers for the specified sheet
+
+        sh = gc.open(sheet_name)
+        worksheet = sh.sheet1  # Use sheet1 or specify the desired sheet
+        values = worksheet.get_all_values()
+
+        if not values or len(values) == 1:
+            # If the sheet is empty or has only headers, initialize with headers
+            worksheet.append_row(headers)
+    except (gspread.SpreadsheetNotFound, IndexError):
+        # If the sheet doesn't exist or if sheet_number is out of range, create it with headers
+        print(f"Sheet with number {sheet_number} not found or out of range. Creating a new sheet.")
+        sh = gc.create(sheet_name)
+        worksheet = sh.sheet1
+        worksheet.append_row(headers)
+
+# Initialize sheets with headers based on sheet numbers
+initialize_sheet(0)  # Replace with the desired sheet number
+initialize_sheet(1)  # Replace with the desired sheet number
+initialize_sheet(2)  # Replace with the desired sheet number
+initialize_sheet(3)  # Replace with the desired sheet number
 
 # Load environment variables from .env
 load_dotenv()
