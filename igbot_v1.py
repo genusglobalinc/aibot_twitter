@@ -224,14 +224,17 @@ def follow_up_with_usernames(uncontacted_usernames, contacted_usernames):
 def post_ad_posts_with_tensorflow():
     # Implement logic to post ad posts with TensorFlow model
     # Example: Use TensorFlow model to generate ad posts and post them
+    update_global_status("Feature undeveloped. Current logic sound.")
 
 def generate_and_post_story():
     # Implement logic to generate and post a story
     # Example: Use Instagram Graph API to post a story
+    update_global_status("Feature undeveloped. Current logic sound.")
 
 def schedule_posts(posts_type, schedule_date):
     # Implement logic to schedule posts
     # Example: Schedule posts based on specified type and date
+    update_global_status("Feature undeveloped. Current logic sound.")
 
 #meetings using air.ai
 def close_meetings():
