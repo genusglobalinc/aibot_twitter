@@ -14,6 +14,13 @@ import os
 #-------------------------------------------------------------------------------------------------------------------
 # Step 1: Define Environment Variables
 #------------------------------------------------------------------------------------
+def get_google_sheets_data(sheet_name):
+    # Implement logic to fetch data from Google Sheets
+    # Example: Use gspread library and service account credentials
+    gc = gspread.service_account(filename='path/to/credentials.json')
+    sh = gc.open(sheet_name)
+    return sh.get_all_records()
+
 # Load environment variables from .env
 load_dotenv()
 global zyteAPI, zyte_creds_path
@@ -88,14 +95,6 @@ conversation_context = []
 #-------------------------------------------------------------------------------------------------------------------
 # Step 2: Define functions
 #----------------------------------------------------------------------------------------------------
-# Placeholder functions, replace with actual implementations
-def get_google_sheets_data(sheet_name):
-    # Implement logic to fetch data from Google Sheets
-    # Example: Use gspread library and service account credentials
-    gc = gspread.service_account(filename='path/to/credentials.json')
-    sh = gc.open(sheet_name)
-    return sh.get_all_records()
-
 def update_google_sheet(sheet_name, data):
     # Implement logic to update data in Google Sheets
     # Example: Use gspread library to update a sheet
