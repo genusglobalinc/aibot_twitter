@@ -22,7 +22,6 @@ def initialize_sheet(sheet_number):
     
     sheet_names = [
         "Prospected Usernames and Bot Accounts",
-        "project_sheet",
         # Add more sheet names as needed
     ]
 
@@ -250,6 +249,7 @@ def check_and_respond_to_dm_inquiries(bot_account):
     messages = get_instagram_data(f'{bot_account}/messages', {'access_token': 'your_access_token'})
     for message in messages['data']:
         # Example: Use DialogFlow to check for inquiries and respond accordingly
+        #Dialogflow implementation
         update_global_status("Feature undeveloped. Current logic sound.")
 
 def follow_up_with_usernames(uncontacted_usernames, contacted_usernames):
