@@ -318,7 +318,7 @@ def instagram_graph_api_script():
         process_comments(post_data['media_id'], "keyword")
     update_global_status("Usernames generated. Ready for outreach")
     
-    # 9. KPI#3: Generate comments and mark as contacted
+    # 9. KPI#3: Generate comments and mark as contacted, outreach lvl 1
     for username in comment_sheet_data:
         generate_comments_and_mark_contacted(username)
     update_global_status("Outreach completed. Stats updated.")
@@ -326,6 +326,7 @@ def instagram_graph_api_script():
     # 10. KPI#4: 4x a day, get messages from bot account and respond to inquiries
     for _ in range(4):
         check_and_respond_to_dm_inquiries(bots_sheet_data['bot_account'])
+    update_global_status("Inbox processed.")
 
     # 11. For each uncontacted username, get two random posts, generate comment on one, and mark follow-up date
     #follow_up_with_usernames(uncontacted_usernames, contacted_usernames)
@@ -340,9 +341,9 @@ def instagram_graph_api_script():
     #generate_and_post_story()
 
     # 15. Check to see if new comments, posts, or stories need to be scheduled
-    schedule_posts("comments", datetime.now() + timedelta(days=1))
-    schedule_posts("posts", datetime.now() + timedelta(days=2))
-    schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
+    #schedule_posts("comments", datetime.now() + timedelta(days=1))
+    #schedule_posts("posts", datetime.now() + timedelta(days=2))
+    #schedule_posts("stories", datetime.now() + timedelta(days=random.randint(1, 3)))
             
 
 #-------------------------------------------------------------------------------------------------------------------
