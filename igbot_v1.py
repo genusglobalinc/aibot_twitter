@@ -154,7 +154,8 @@ def get_instagram_data(endpoint, params):
     response = requests.get(url, params=params)
     return response.json()
     
-def post_comment(post_id, context, access_token, previous_message):
+#Function to post comment
+def post_comment(post_id, context, access_token):
     # Instagram Graph API request to post a comment
     api_url = f"https://graph.instagram.com/v12.0/{post_id}/comments"
     
@@ -212,7 +213,7 @@ def process_comments(media_id, keyword, access_token):
             # Update prospects sheet using the global variable (replace this with your actual logic)
             update_google_sheet(prospects_sheet_data, username)
             update_global_status(f"Updating prospects sheet with Username: '{username}', Bio: '{user_bio}'.")
-            
+            post_comment(mediaObj, caption, accesstoken) #Executes KPI#2
 
 #KPI 3 - Tier 1 Outreach
 def generate_comments_and_mark_contacted(username):
