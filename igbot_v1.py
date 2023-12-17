@@ -185,22 +185,6 @@ def post_comment(post_id, context, access_token):
     else:
         print(f"Error posting comment on post {post_id}. Status code: {response.status_code}")
 
-def get_random_user_post(user_id, access_token):
-    endpoint = f'{user_id}/media'
-    params = {'access_token': access_token}
-    
-    # Make a GET request to get user's posts
-    response = requests.get(f'https://graph.instagram.com/v12.0/{endpoint}', params=params)
-    
-    # Process the response data
-    user_posts_data = response.json().get('data', [])
-
-    # Randomly select a post if there are any
-    if user_posts_data:
-        random_post = random.choice(user_posts_data)
-        return random_post
-    else:
-        return None
 
 #KPI 1 - Get posts
 def search_posts_by_hashtag(hashtag):
@@ -224,17 +208,13 @@ def process_comments(media_id, keyword, access_token):
         user_data = get_instagram_data(username, {'fields': 'biography', 'access_token': access_token})
         user_bio = user_data.get('biography', 'Bio not available')
 
-        #Get a random post to comment on
-        random_user_post = get_random_user_post(user_id, access_token)
-        
         # Check if the keyword is in the user's bio
         if keyword in user_bio.lower():
             prospect_username = username
             # Update prospects sheet using the global variable (replace this with your actual logic)
             update_google_sheet(prospects_sheet_data, username)
             update_global_status(f"Updating prospects sheet with Username: '{username}', Bio: '{user_bio}'.")
-            post_comment(random_user_post.get('Id'), caption, access_token) #Executes KPI#2
-
+            
 #KPI 3 - Tier 1 Outreach
 def generate_comments_and_mark_contacted(username):
     # Implement logic to generate comments and mark as contacted
