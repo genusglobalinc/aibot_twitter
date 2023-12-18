@@ -170,11 +170,13 @@ def post_comment(post_id, context, access_token):
 
 #KPI 1 - Get posts
 def search_posts_by_hashtag(hashtag):
-    # Implement logic to search recent posts by hashtag
-    # Example: Use Instagram Graph API to search for posts
-    params = {'q': hashtag, 'access_token': 'your_access_token'}
-    return get_instagram_data('ig_hashtag_search', params)
-
+    try:
+        params = {'q': hashtag, 'access_token': bots[0].get("Access_Token")}
+        return get_instagram_data('ig_hashtag_search', params)
+    except Exception as e:
+        print(f"Error searching posts by hashtag: {e}")
+        return None
+        
 #KPI 2 - Get prospects from posts
 def process_comments(media_id, keyword, access_token):
     global prospect_username  # Assuming you have a global variable for the Google Sheet
