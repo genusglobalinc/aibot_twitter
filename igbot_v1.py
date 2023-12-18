@@ -51,7 +51,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 bots_sheet_data = initialize_sheet(1) #setup_file.get_worksheet(1).get_all_records()
 posts_sheet_data = initialize_sheet(2)#setup_file.get_worksheet(2).get_all_records()
 prospects_sheet_data = initialize_sheet(3) #setup_file.get_worksheet(3).get_all_records()
-#hashtags_sheet_data = setup_file.get_worksheet(3).get_all_records()
+hashtags_sheet_data = initialize_sheet(4)
 
 # Suppress only the InsecureRequestWarning from urllib3 needed for SSL verification
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
