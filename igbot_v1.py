@@ -128,11 +128,13 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 def get_instagram_data(endpoint, params):
-    # Implement logic to fetch data from Instagram Graph API
-    # Example: Use requests library to make API calls
-    url = f'https://graph.instagram.com/v12.0/{endpoint}'
-    response = requests.get(url, params=params)
-    return response.json()
+    response = requests.get(f'https://graph.instagram.com/v12.0/{endpoint}', params=params)
+    
+    if response.status_code == 200 and response.text:
+        return response.json()
+    else:
+        print(f"Failed to get data from Instagram. Status code: {response.status_code}")
+        return None
     
 #Function to post comment
 def post_comment(post_id, context, access_token):
