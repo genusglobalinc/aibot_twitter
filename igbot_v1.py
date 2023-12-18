@@ -39,10 +39,10 @@ load_dotenv()
 global zyteAPI, zyte_creds_path
 #setup_file = get_google_sheets_data("Prospected Usernames and Bot Accounts") #TODO: deprecated usage, update soon
 creds_sheet = initialize_sheet(0)# Use the index of the sheet (0 for code setup, 1 for bot accounts, 2 for posts, 3 for prospects)
-openai.api_key = creds_sheet[1, 2]
-DIALOGFLOW_KEY_FILE = creds_sheet[2, 2]
-zyteAPI = creds_sheet[3, 2]
-zyte_creds_path = creds_sheet[4, 2]
+openai.api_key = creds_sheet[1][2]
+DIALOGFLOW_KEY_FILE = creds_sheet[2][2]
+zyteAPI = creds_sheet[3][2]
+zyte_creds_path = creds_sheet[4][2]
 os.environ['REQUESTS_CA_BUNDLE'] = '/etc/ssl/certs/ca-certificates.crt'
 
 # Google sheets variables 
