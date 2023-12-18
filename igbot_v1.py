@@ -127,13 +127,22 @@ def signal_handler(sig, frame):
     # Perform cleanup tasks if necessary
     sys.exit(0)
 
+import requests
+
 def get_instagram_data(endpoint, params):
-    response = requests.get(f'https://graph.instagram.com/v12.0/{endpoint}', params=params)
-    
-    if response.status_code == 200 and response.text:
-        return response.json()
-    else:
-        print(f"Failed to get data from Instagram. Status code: {response.status_code}")
+    try:
+        response = requests.get(f'https://graph.instagram.com/v12.0/{endpoint}', params=params)
+        
+        # Print the response text for debugging
+        print(f"Instagram API Response Text: {response.text}")
+        
+        if response.status_code == 200 and response.text:
+            return response.json()
+        else:
+            print(f"Failed to get data from Instagram. Status code: {response.status_code}")
+            return None
+    except requests.RequestException as e:
+        print(f"Error making Instagram API request: {e}")
         return None
     
 #Function to post comment
