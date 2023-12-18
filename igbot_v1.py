@@ -34,12 +34,6 @@ def initialize_sheet(sheet_number):
         #sh = gc.create(sheet_name)
         #worksheet = sh.sheet1
 
-# Initialize sheets with headers based on sheet numbers
-initialize_sheet(0)  # Replace with the desired sheet number
-initialize_sheet(1)  # Replace with the desired sheet number
-initialize_sheet(2)  # Replace with the desired sheet number
-initialize_sheet(3)  # Replace with the desired sheet number
-
 # Load environment variables from .env
 load_dotenv()
 global zyteAPI, zyte_creds_path
