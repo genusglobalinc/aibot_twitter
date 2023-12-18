@@ -39,7 +39,7 @@ load_dotenv()
 global zyteAPI, zyte_creds_path
 #setup_file = get_google_sheets_data("Prospected Usernames and Bot Accounts") #TODO: deprecated usage, update soon
 creds_sheet = initialize_sheet(0)# Use the index of the sheet (0 for code setup, 1 for bot accounts, 2 for posts, 3 for prospects)
-print("DEBUG: creds_sheet:", creds_sheet)
+#print("DEBUG: creds_sheet:", creds_sheet)
 openai.api_key = creds_sheet[0][1]
 DIALOGFLOW_KEY_FILE = creds_sheet[1][1]
 zyteAPI = creds_sheet[2][1]
