@@ -24,15 +24,15 @@ def initialize_sheet(sheet_number):
 
     try:
         sh = gc.open(sheet_name)
-        worksheet = sh.get_worksheet(sheet_number) # Use sheet1 or specify the desired sheet
+        worksheet = sh.get_worksheet(sheet_number)  # Use sheet1 or specify the desired sheet
         values = worksheet.get_all_values()
         return values
 
-    except (gspread.SpreadsheetNotFound, IndexError):
-        # If the sheet doesn't exist or if sheet_number is out of range, create it with headers
+    except (gspread.SpreadsheetNotFound, gspread.WorksheetNotFound, IndexError):
+        # If the sheet doesn't exist or if sheet_number is out of range
         print(f"Sheet with number {sheet_number} not found or out of range.")
-        #sh = gc.create(sheet_name)
-        #worksheet = sh.sheet1
+        return None  # Return None or handle the case accordingly
+
 
 # Load environment variables from .env
 load_dotenv()
