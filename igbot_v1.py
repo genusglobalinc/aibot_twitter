@@ -75,9 +75,9 @@ except GoogleAuthError as e:
 bots = []
 for row in bots_sheet_data:
     bot = {
-        "username": row["Username"],
-        "password": row["Password"],
-        "access_token": row["Access Token"],
+        "username": row[0],
+        "password": row[1],
+        "access_token": row[2],
         }
     
     bots.append(bot)
