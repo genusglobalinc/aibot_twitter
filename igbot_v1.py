@@ -59,6 +59,7 @@ def get_instagram_data(endpoint, params):
 # Load environment variables from .env
 load_dotenv()
 global zyteAPI, zyte_creds_path
+user_id = "test user id"  # Replace with your actual user_id
 # Google sheets variables 
 creds_sheet = initialize_sheet(0)# Use the index of the sheet (0 for code setup, 1 for bot accounts, 2 for posts, 3 for prospects)
 #print("DEBUG: creds_sheet:", creds_sheet)
