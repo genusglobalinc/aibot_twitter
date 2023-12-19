@@ -50,13 +50,13 @@ def get_instagram_data(endpoint, params):
         print()
         print("Getting IG Data..")
         print()
-        print(f"IG Data Text: {response.text}")
         
         if response.status_code == 200 and response.text:
             return response.json()
         else:
             print()
             print(f"Failed to get data from Instagram. Status code: {response.status_code}")
+            print(f"IG Data Text: {response.text}")
             return None
     except requests.RequestException as e:
         print()
