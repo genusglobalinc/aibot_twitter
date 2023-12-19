@@ -56,9 +56,10 @@ def get_instagram_data(endpoint, params):
             return response.json()
         else:
             print()
-            print(f"Failed to get data from Instagram. Status code: {response.status_code}")
-            print(f"IG Data Text: {response.text}")
-
+            print("Failed to get data from Instagram. Status code:", response.status_code)
+            print("IG Data Text:", response.text)
+            print("Headers:", response.headers)
+            
             # Check if the response can be parsed as JSON and contains error_subcode
             try:
                 error_json = response.json()
