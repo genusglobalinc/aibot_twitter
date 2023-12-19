@@ -77,7 +77,7 @@ for row in bots_sheet_data:
     bot = {
         "username": row[0],
         "password": row[1],
-        "access_token": row[2],
+        "access_token": "{}{}".format(bot_app_id, bot_secret),
         }
     
     bots.append(bot)
