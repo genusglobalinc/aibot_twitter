@@ -203,6 +203,7 @@ def search_posts_by_hashtag(hashtag):
     try:
         # Get hashtag ID
         hashtag_id = get_hashtag_id(hashtag)
+        update_global_status(f"Searching hashtag: {hashtag_id}")
 
         # Store hashtag ID in Google Sheets
         if hashtag_id:
