@@ -65,7 +65,8 @@ def get_instagram_data(endpoint, params):
                     error_subcode = error_json['error_subcode']
                     print(f"Error Subcode: {error_subcode}")
             except json.JSONDecodeError:
-                pass  # Ignore if the response is not JSON
+                print()
+                print("Error in decoding json, suberror code cant be found or read.")
 
             return None
     except requests.RequestException as e:
