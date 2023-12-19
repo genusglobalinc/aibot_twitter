@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, session, render_template, url_for, re
 from flask import Flask, session
 from flask_session import Session
 import requests
+from google.auth import exceptions
 import gspread
 from google.oauth2 import service_account
 from google.auth.exceptions import GoogleAuthError
