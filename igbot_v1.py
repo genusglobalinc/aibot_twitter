@@ -131,7 +131,8 @@ import requests
 
 def get_instagram_data(endpoint, params):
     try:
-        response = requests.get(f'https://graph.instagram.com/v12.0/{endpoint}&', params=params)
+        base_url = 'https://graph.instagram.com/v12.0/'
+        response = requests.get(f'{base_url}{endpoint}', params=params)
         
         # Print the response text for debugging
         print(f"Instagram API Response Text: {response.text}")
