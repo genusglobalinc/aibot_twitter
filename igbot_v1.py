@@ -180,9 +180,21 @@ def post_comment(post_id, context, access_token):
 
 #Fetch Hashtag IDs to do search
 def get_hashtag_id(hashtag):
-    user_id = 
-    bots_sheet_data[1][5] = user_id
+    #Get and return iguser id to get hashtag
+    try:
+        params = {'access_token': access_token}
+        response = get_instagram_data('ig_user_id', params)  # Replace 'ig_user_id' with the actual endpoint
+
+        if response and 'id' in response:
+            user_id = response['id']
+            bots_sheet_data[1][5] = user_id
+
+    except Exception as e:
+        print(f"Error getting Instagram User ID: {e}")
+        return None
+
     
+    #Get and Return Hashtag ID
     try:
         params = {'user_id': user_id, 'q': hashtag}
         response = get_instagram_data('ig_hashtag_search', params)
