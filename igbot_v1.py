@@ -58,7 +58,11 @@ def get_instagram_data(endpoint, params):
             print()
             print("Failed to get data from Instagram. Status code:", response.status_code)
             print("IG Data Text:", response.text)
-            print("Headers:", response.headers)
+           
+            # Print specific headers for more information
+            print("WWW-Authenticate Header:", response.headers.get('WWW-Authenticate'))
+            print("X-FB-Debug Header:", response.headers.get('X-FB-Debug'))
+            print("IG-Api-Error-Message Header:", response.headers.get('IG-Api-Error-Message'))
             
             # Check if the response can be parsed as JSON and contains error_subcode
             try:
@@ -127,7 +131,8 @@ for row in bots_sheet_data:
     bots.append(bot)
 
 #Debug Auth
-print(f"Starting Bot.. with credentials (Secret: {bot_secret}, ID: {bot_app_id})")
+print()
+print(f"Starting Bot.. with credentials /n(Secret: {bot_secret}, ID: {bot_app_id})")
 
 #Get and return iguser id to get hashtag
 try:
