@@ -18,8 +18,13 @@ import os
 # Step 1: Define Tool Functions and Environment Variables
 #------------------------------------------------------------------------------------
 def initialize_sheet(sheet_number):
-    gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
-    
+    # Load credentials from the JSON file
+    try:
+        gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
+    except exceptions.GoogleAuthError as e:
+        print(f"Error authenticating: {e}")
+        return None
+
     sheet_name = "Prospected Usernames and Bot Accounts"
 
     try:
@@ -32,7 +37,7 @@ def initialize_sheet(sheet_number):
         # If the sheet doesn't exist or if sheet_number is out of range
         print(f"Sheet with number {sheet_number} not found or out of range.")
         return None  # Return None or handle the case accordingly
-
+        
 def get_instagram_data(endpoint, params):
     try:
         base_url = 'https://graph.instagram.com/v12.0/'
