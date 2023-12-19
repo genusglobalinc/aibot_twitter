@@ -23,6 +23,7 @@ def initialize_sheet(sheet_number):
     try:
         gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
     except exceptions.GoogleAuthError as e:
+        print()
         print(f"Error authenticating: {e}")
         return None
 
@@ -36,6 +37,7 @@ def initialize_sheet(sheet_number):
 
     except (gspread.SpreadsheetNotFound, gspread.WorksheetNotFound, IndexError):
         # If the sheet doesn't exist or if sheet_number is out of range
+        print()
         print(f"Sheet with number {sheet_number} not found or out of range.")
         return None  # Return None or handle the case accordingly
         
@@ -50,9 +52,11 @@ def get_instagram_data(endpoint, params):
         if response.status_code == 200 and response.text:
             return response.json()
         else:
+            print()
             print(f"Failed to get data from Instagram. Status code: {response.status_code}")
             return None
     except requests.RequestException as e:
+        print()
         print(f"Error making Instagram API request: {e}")
         return None
 
@@ -116,6 +120,7 @@ try:
         bots_sheet_data[1][5] = user_id
 
 except Exception as e:
+    print()
     print(f"Error getting Instagram User ID: {e}")
 
 print(f"Running bot as user: {user_id}")
