@@ -180,8 +180,13 @@ def post_comment(post_id, context, access_token):
 
 #KPI 1 - Get posts
 def search_posts_by_hashtag(hashtag):
+    #convert hashtag into hashtag id
+    
+    #store hashtag id in google sheets
+    
+    #search using the hashtag id
     try:
-        params = {'q': hashtag, 'access_token': bots[0].get("Access_Token")}
+        params = {'q': hashtag_id, 'access_token': bots[0].get("Access_Token")}
         return get_instagram_data('ig_hashtag_search', params)
     except Exception as e:
         print(f"Error searching posts by hashtag: {e}")
