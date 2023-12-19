@@ -45,8 +45,9 @@ posts_sheet_data = initialize_sheet(2)#setup_file.get_worksheet(2).get_all_recor
 prospects_sheet_data = initialize_sheet(3) #setup_file.get_worksheet(3).get_all_records()
 hashtags_sheet_data = initialize_sheet(4)
 
-bot_app_id = bots_sheet_data[1][4]
+bot_app_id = bots_sheet_data[1][3]
 bot_secret = bots_sheet_data[1][4]
+
 openai.api_key = creds_sheet[0][1]
 DIALOGFLOW_KEY_FILE = creds_sheet[1][1]
 zyteAPI = creds_sheet[2][1]
@@ -179,8 +180,10 @@ def post_comment(post_id, context, access_token):
 
 #Fetch Hashtag IDs to do search
 def get_hashtag_id(hashtag):
+    user_id = 
+    bots_sheet_data[1][5] = user_id
+    
     try:
-        user_id = 'your_user_id'  # Replace with the actual user ID
         params = {'user_id': user_id, 'q': hashtag}
         response = get_instagram_data('ig_hashtag_search', params)
 
