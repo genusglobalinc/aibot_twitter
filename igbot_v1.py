@@ -126,6 +126,9 @@ for row in bots_sheet_data:
     
     bots.append(bot)
 
+#Debug Auth
+print(f"Starting Bot.. with credentials (Secret: {bot_secret}, ID: {bot_app_id})")
+
 #Get and return iguser id to get hashtag
 try:
     params = {'fields': 'id', 'access_token': bots[0].get("Access_Token")}
