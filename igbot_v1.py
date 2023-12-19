@@ -289,26 +289,25 @@ def close_meetings():
 # Main script to execute the Instagram Graph API workflow
 def instagram_graph_api_script():
     # Loop for 30 times (Step 7)
-    for _ in range(30):
-        # 7. KPI#1: Search recent posts by hashtag and store data in posts sheets
-        for hashtag in hashtags_sheet_data:
-            posts_data = search_posts_by_hashtag(hashtag)
+    # 7. KPI#1: Search recent posts by hashtag and store data in posts sheets
+    for hashtag in hashtags_sheet_data:
+        posts_data = search_posts_by_hashtag(hashtag)
             
-            # Store relevant data in posts sheet
-            if posts_data is not None and 'data' in posts_data:
-                for post in posts_data.get('data', []):
-                    data_to_store = {
-                        'media_id': post.get('id'),
-                        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                        'user_id': post.get('user', {}).get('id'),
-                        'username': post.get('user', {}).get('username'),
-                        'caption': post.get('caption', {}).get('text', '')
-                    }
-                    update_google_sheet('posts_sheet', data_to_store)
-                    # Set date to run again.
-            else:
-                print("Error: No data or invalid data from Instagram API")
-                break
+        # Store relevant data in posts sheet
+        if posts_data is not None and 'data' in posts_data:
+            for post in posts_data.get('data', []):
+                data_to_store = {
+                    'media_id': post.get('id'),
+                    'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'user_id': post.get('user', {}).get('id'),
+                    'username': post.get('user', {}).get('username'),
+                    'caption': post.get('caption', {}).get('text', '')
+                }
+                update_google_sheet('posts_sheet', data_to_store)
+                # Set date to run again.
+        else:
+            print("Error: No data or invalid data from Instagram API")
+            break
 
     update_global_status("Weekly API calls used. Initial prospecting complete.")
     
