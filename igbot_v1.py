@@ -47,6 +47,9 @@ def get_instagram_data(endpoint, params):
         response = requests.get(f'{base_url}{endpoint}', params=params)
         
         # Print the response text for debugging
+        print()
+        print("Getting IG Data..")
+        print()
         print(f"Instagram API Response Text: {response.text}")
         
         if response.status_code == 200 and response.text:
