@@ -293,18 +293,21 @@ def instagram_graph_api_script():
         # 7. KPI#1: Search recent posts by hashtag and store data in posts sheets
         for hashtag in hashtags_sheet_data:
             posts_data = search_posts_by_hashtag(hashtag)
+            
             # Store relevant data in posts sheet
-            for post in posts_data.get('data', []):
-                data_to_store = {
-                    'media_id': post.get('id'),
-                    'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    'user_id': post.get('user', {}).get('id'),
-                    'username': post.get('user', {}).get('username'),
-                    'caption': post.get('caption', {}).get('text', '')
-                }
-                update_google_sheet('posts_sheet', data_to_store)
-
-    # Set date to run again.
+            if posts_data is not None and 'data' in posts_data:
+                for post in posts_data.get('data', []):
+                    data_to_store = {
+                        'media_id': post.get('id'),
+                        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                        'user_id': post.get('user', {}).get('id'),
+                        'username': post.get('user', {}).get('username'),
+                        'caption': post.get('caption', {}).get('text', '')
+                    }
+                    update_google_sheet('posts_sheet', data_to_store)
+            else:
+                print("Error: No data or invalid data from Instagram API")
+                # Set date to run again.
 
     update_global_status("Weekly API calls used. Initial prospecting complete.")
     
