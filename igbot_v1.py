@@ -115,7 +115,7 @@ for row in bots_sheet_data:
 
 #Get and return iguser id to get hashtag
 try:
-    params = {'access_token': bots[0].get("Access_Token")}
+    params = {'fields': 'id', 'access_token': bots[0].get("Access_Token")}
     response = get_instagram_data('ig_user_id', params)  # Replace 'ig_user_id' with the actual endpoint
 
     if response and 'id' in response:
