@@ -182,7 +182,7 @@ def post_comment(post_id, context, access_token):
 def get_hashtag_id(hashtag):
     #Get and return iguser id to get hashtag
     try:
-        params = {'access_token': access_token}
+        params = {'access_token': bots[0].get("Access_Token")}
         response = get_instagram_data('ig_user_id', params)  # Replace 'ig_user_id' with the actual endpoint
 
         if response and 'id' in response:
