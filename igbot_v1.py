@@ -305,9 +305,10 @@ def instagram_graph_api_script():
                         'caption': post.get('caption', {}).get('text', '')
                     }
                     update_google_sheet('posts_sheet', data_to_store)
+                    # Set date to run again.
             else:
                 print("Error: No data or invalid data from Instagram API")
-                # Set date to run again.
+                break
 
     update_global_status("Weekly API calls used. Initial prospecting complete.")
     
