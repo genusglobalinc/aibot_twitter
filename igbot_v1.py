@@ -177,21 +177,42 @@ def post_comment(post_id, context, access_token):
     else:
         print(f"Error posting comment on post {post_id}. Status code: {response.status_code}")
 
+#Fetch Hashtag IDs to do search
+def get_hashtag_id(hashtag):
+    try:
+        user_id = 'your_user_id'  # Replace with the actual user ID
+        params = {'user_id': user_id, 'q': hashtag}
+        response = get_instagram_data('ig_hashtag_search', params)
+
+        if response and 'data' in response:
+            hashtag_data = response['data']
+            if hashtag_data:
+                # Assuming the first result contains the desired hashtag ID
+                return hashtag_data[0].get('id')
+
+    except Exception as e:
+        print(f"Error converting hashtag to ID: {e}")
+        return None
+
 
 #KPI 1 - Get posts
 def search_posts_by_hashtag(hashtag):
-    #convert hashtag into hashtag id
-    
-    #store hashtag id in google sheets
-    
-    #search using the hashtag id
     try:
+        # Get hashtag ID
+        hashtag_id = get_hashtag_id(hashtag)
+
+        # Store hashtag ID in Google Sheets
+        if hashtag_id:
+            hashtags_sheets_data[1][3] = hashtag_id
+
+        # Search using the hashtag ID
         params = {'q': hashtag_id, 'access_token': bots[0].get("Access_Token")}
         return get_instagram_data('ig_hashtag_search', params)
+
     except Exception as e:
         print(f"Error searching posts by hashtag: {e}")
         return None
-        
+
 #KPI 2 - Get prospects from posts
 def process_comments(media_id, keyword, access_token):
     global prospect_username  # Assuming you have a global variable for the Google Sheet
