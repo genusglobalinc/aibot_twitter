@@ -111,6 +111,7 @@ try:
 except Exception as e:
     print(f"Error getting Instagram User ID: {e}")
 
+print(f"Running bot as user: {user_id}")
     
 
 # Flask app for DialogFlow fulfillment
