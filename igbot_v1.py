@@ -15,7 +15,7 @@ import openai  # Make sure to have OpenAI Python library installed
 import os
 
 #-------------------------------------------------------------------------------------------------------------------
-# Step 1: Define Environment Variables
+# Step 1: Define Tool Functions and Environment Variables
 #------------------------------------------------------------------------------------
 def initialize_sheet(sheet_number):
     gc = gspread.service_account(filename='/home/ubuntu/aibot_twitter/ai-bot-twitter-08dd107ad8e6.json')
@@ -33,6 +33,22 @@ def initialize_sheet(sheet_number):
         print(f"Sheet with number {sheet_number} not found or out of range.")
         return None  # Return None or handle the case accordingly
 
+def get_instagram_data(endpoint, params):
+    try:
+        base_url = 'https://graph.instagram.com/v12.0/'
+        response = requests.get(f'{base_url}{endpoint}', params=params)
+        
+        # Print the response text for debugging
+        print(f"Instagram API Response Text: {response.text}")
+        
+        if response.status_code == 200 and response.text:
+            return response.json()
+        else:
+            print(f"Failed to get data from Instagram. Status code: {response.status_code}")
+            return None
+    except requests.RequestException as e:
+        print(f"Error making Instagram API request: {e}")
+        return None
 
 # Load environment variables from .env
 load_dotenv()
@@ -141,25 +157,6 @@ def signal_handler(sig, frame):
     print('Shutting down gracefully...')
     # Perform cleanup tasks if necessary
     sys.exit(0)
-
-import requests
-
-def get_instagram_data(endpoint, params):
-    try:
-        base_url = 'https://graph.instagram.com/v12.0/'
-        response = requests.get(f'{base_url}{endpoint}', params=params)
-        
-        # Print the response text for debugging
-        print(f"Instagram API Response Text: {response.text}")
-        
-        if response.status_code == 200 and response.text:
-            return response.json()
-        else:
-            print(f"Failed to get data from Instagram. Status code: {response.status_code}")
-            return None
-    except requests.RequestException as e:
-        print(f"Error making Instagram API request: {e}")
-        return None
     
 #Function to post comment
 def post_comment(post_id, context, access_token):
