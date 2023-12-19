@@ -71,9 +71,10 @@ def get_instagram_data(endpoint, params):
 
             return None
     except requests.RequestException as e:
-        print()
-        print(f"Error making Instagram API request: {e}")
-        return None
+    print()
+    print(f"Error making Instagram API request: {e}")
+    print(f"Response text: {response.text}")
+    return None
 
 # Load environment variables from .env
 load_dotenv()
