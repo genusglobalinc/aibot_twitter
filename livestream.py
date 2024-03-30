@@ -9,9 +9,11 @@ socketio = SocketIO(app)
 
 # Path to the folder containing MP3 files
 music_folder = "path/to/music/folder"
+printf("Music from: {music_folder}")
 
 # Path to the background video file
 video_file = "path/to/background/video.mp4"
+printf("Animation from: {video_file}")
 
 # Variables for controlling the music playback
 music_paused = False
@@ -20,7 +22,9 @@ start_time = time.time()
 # Variable for indicating preview mode
 preview_mode = False
 
-# Flask route to capture and serve scene image
+##-----------------------------------------------------------------------------------------------------------------------------
+# Flask Routes
+##-----------------------------------------------------------------------------------------------------------------------------
 @app.route('/capture_scene')
 def capture_scene():
     # Dummy implementation to serve a placeholder image
