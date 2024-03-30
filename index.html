@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Control</title>
+</head>
+<body>
+    <h1>Stream Control</h1>
+    
+    <!-- Button to toggle preview -->
+    <button id="previewButton" onclick="togglePreview()">Toggle Preview</button>
+    
+    <!-- Display for scene image -->
+    <img id="sceneImage" src="" alt="Scene Image">
+
+    <!-- Other control buttons (e.g., music control) can be added here -->
+
+    <script>
+        // Function to toggle preview mode
+        function togglePreview() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var previewButton = document.getElementById("previewButton");
+                    if (xhr.responseText === "true") {
+                        previewButton.innerText = "Disable Preview";
+                    } else {
+                        previewButton.innerText = "Enable Preview";
+                    }
+                }
+            };
+            xhr.open("GET", "/toggle_preview", true);
+            xhr.send();
+        }
+
+        // Function to update scene image
+        function updateSceneImage() {
+            var sceneImage = document.getElementById("sceneImage");
+            sceneImage.src = "/capture_scene?" + new Date().getTime(); // Add timestamp to force refresh
+        }
+
+        // Update scene image periodically
+        setInterval(updateSceneImage, 5000); // Update every 5 seconds
+    </script>
+</body>
+</html>
