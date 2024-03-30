@@ -27,6 +27,7 @@ preview_mode = False
 # Flask Routes
 ##-----------------------------------------------------------------------------------------------------------------------------
 
+#this is the homepage for "genusstudios.info"
 @app.route('/')
 def index():
     # Return HTML template with video background and control buttons
@@ -53,12 +54,16 @@ def pause_music():
     global music_paused
     music_paused = True
     return "Music paused"
+    print("Music has been paused.")
+    print()
 
 @app.route('/resume_music', methods=['GET'])
 def resume_music():
     global music_paused
     music_paused = False
     return "Music resumed"
+    print("Music has been resumed.")
+    print()
 
 @app.route('/get_timer', methods=['GET'])
 def get_timer():
@@ -68,6 +73,7 @@ def get_timer():
     seconds = elapsed_time % 60
     return '{:02d}:{:02d}'.format(minutes, seconds)
 
+#CURRENTLY NEEDS THE MOST WORK TO DISPLAY SCENE PREVIEW IN HTML PAGE
 @app.route('/capture_scene')
 def capture_scene():
     # Dummy implementation to serve a placeholder image
