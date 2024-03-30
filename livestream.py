@@ -10,11 +10,11 @@ socketio = SocketIO(app)
 
 # Path to the folder containing MP3 files
 music_folder = "/home/ubuntu/Desktop/LiveStream Music"
-printf("Music from: {music_folder}")
+print(f"Music from: {music_folder}")
 
 # Path to the background video file
 video_file = "/home/ubuntu/Videos/202402164830_48333566.mp4"
-printf("Animation from: {video_file}")
+print(f"Animation from: {video_file}")
 
 # Variables for controlling the music playback
 music_paused = False
