@@ -31,7 +31,7 @@ preview_mode = False
 @app.route('/')
 def index():
     # Return HTML template with video background and control buttons
-    return render_template('index.html')
+    return render_template('livestream.html')
 
 @app.route('/video')
 def get_video():
