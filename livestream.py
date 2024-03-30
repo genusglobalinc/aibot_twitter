@@ -1,4 +1,4 @@
-from flask import Flask, send_file, request
+from flask import Flask, send_file, render_template
 import random
 import os
 import time
@@ -29,8 +29,8 @@ def capture_scene():
 
 @app.route('/')
 def index():
-    # Return HTML page with video background and control buttons
-    return send_file('index.html')
+    # Return HTML template with video background and control buttons
+    return render_template('index.html')
 
 @app.route('/video')
 def get_video():
