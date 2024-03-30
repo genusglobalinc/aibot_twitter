@@ -4,6 +4,7 @@ import os
 import time
 from flask_socketio import SocketIO, emit
 
+#start 24/7 server (supposed to be anyway.. the goal is to not turn this off on the AWS instance)
 app = Flask(__name__)
 socketio = SocketIO(app)
 
@@ -25,11 +26,6 @@ preview_mode = False
 ##-----------------------------------------------------------------------------------------------------------------------------
 # Flask Routes
 ##-----------------------------------------------------------------------------------------------------------------------------
-@app.route('/capture_scene')
-def capture_scene():
-    # Dummy implementation to serve a placeholder image
-    # Replace this with actual implementation to capture scene image from OBS
-    return send_file('placeholder.png', mimetype='image/png')
 
 @app.route('/')
 def index():
@@ -71,6 +67,12 @@ def get_timer():
     minutes = elapsed_time // 60
     seconds = elapsed_time % 60
     return '{:02d}:{:02d}'.format(minutes, seconds)
+
+@app.route('/capture_scene')
+def capture_scene():
+    # Dummy implementation to serve a placeholder image
+    # Replace this with actual implementation to capture scene image from OBS
+    return send_file('placeholder.png', mimetype='image/png')
 
 @app.route('/toggle_preview', methods=['GET'])
 def toggle_preview():
