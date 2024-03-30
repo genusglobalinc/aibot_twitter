@@ -87,4 +87,5 @@ def handle_resume_music():
     emit('music_resumed', 'Music resumed')
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    # Run Flask-SocketIO server with host='0.0.0.0' to listen on all available network interfaces
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
