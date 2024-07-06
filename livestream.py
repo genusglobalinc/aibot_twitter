@@ -1,96 +1,92 @@
-# Import necessary libraries
 from flask import Flask, render_template, request, jsonify
-import requests
+import asyncio
+import websockets
+import json
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# OBS WebSockets and Lua Script endpoints
+# OBS WebSocket URL - localhost port 4444 TODO:CHANGE TO EC2 INSTANCE OR VERIFY
 OBS_WEBSOCKET_URL = "ws://localhost:4444"
-OBS_LUA_SCRIPT_URL = "http://localhost:4444/lua"
 
-# Placeholder for user credentials (replace with actual credentials)
-OBS_USERNAME = "username"
-OBS_PASSWORD = "password"
+# OBS Livestream Functions
+async def obs_request(data):
+    async with websockets.connect(OBS_WEBSOCKET_URL) as websocket:
+        await websocket.send(json.dumps(data))
+        response = await websocket.recv()
+        return json.loads(response)
 
-# Necessary functions
-def obs_request(data):
-    """Send a request to the OBS WebSocket server."""
-    response = requests.post(OBS_LUA_SCRIPT_URL, json=data, auth=(OBS_USERNAME, OBS_PASSWORD))
-    return response.json()
+async def get_stream_status():
+    data = {"request-type": "GetStreamingStatus", "message-id": "1"}
+    return await obs_request(data)
 
-def get_stream_status():
-    """Get the current stream status."""
-    data = {"request-type": "GetStreamingStatus"}
-    return obs_request(data)
+async def start_stream():
+    data = {"request-type": "StartStreaming", "message-id": "1"}
+    return await obs_request(data)
 
-def start_stream():
-    """Start the livestream."""
-    data = {"request-type": "StartStreaming"}
-    return obs_request(data)
+async def stop_stream():
+    data = {"request-type": "StopStreaming", "message-id": "1"}
+    return await obs_request(data)
 
-def stop_stream():
-    """Stop the livestream."""
-    data = {"request-type": "StopStreaming"}
-    return obs_request(data)
+async def set_scene(scene_name):
+    data = {"request-type": "SetCurrentScene", "scene-name": scene_name, "message-id": "1"}
+    return await obs_request(data)
 
-def set_scene(scene_name):
-    """Set the current scene."""
-    data = {"request-type": "SetCurrentScene", "scene-name": scene_name}
-    return obs_request(data)
+async def mute_audio(source_name):
+    data = {"request-type": "SetMute", "source": source_name, "mute": True, "message-id": "1"}
+    return await obs_request(data)
 
-def mute_audio(source_name):
-    """Mute the specified audio source."""
-    data = {"request-type": "SetMute", "source": source_name, "mute": True}
-    return obs_request(data)
+async def unmute_audio(source_name):
+    data = {"request-type": "SetMute", "source": source_name, "mute": False, "message-id": "1"}
+    return await obs_request(data)
 
-def unmute_audio(source_name):
-    """Unmute the specified audio source."""
-    data = {"request-type": "SetMute", "source": source_name, "mute": False}
-    return obs_request(data)
+async def set_volume(source_name, volume):
+    data = {"request-type": "SetVolume", "source": source_name, "volume": volume, "message-id": "1"}
+    return await obs_request(data)
 
-def set_volume(source_name, volume):
-    """Set the volume level of the specified audio source."""
-    data = {"request-type": "SetVolume", "source": source_name, "volume": volume}
-    return obs_request(data)
-
-# Necessary routes for Flask server
+# Flask Routes
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/status', methods=['GET'])
 def status():
-    return jsonify(get_stream_status())
+    result = asyncio.run(get_stream_status())
+    return jsonify(result)
 
 @app.route('/start', methods=['POST'])
 def start():
-    return jsonify(start_stream())
+    result = asyncio.run(start_stream())
+    return jsonify(result)
 
 @app.route('/stop', methods=['POST'])
 def stop():
-    return jsonify(stop_stream())
+    result = asyncio.run(stop_stream())
+    return jsonify(result)
 
 @app.route('/scene', methods=['POST'])
 def scene():
     scene_name = request.form['scene_name']
-    return jsonify(set_scene(scene_name))
+    result = asyncio.run(set_scene(scene_name))
+    return jsonify(result)
 
 @app.route('/mute', methods=['POST'])
 def mute():
     source_name = request.form['source_name']
-    return jsonify(mute_audio(source_name))
+    result = asyncio.run(mute_audio(source_name))
+    return jsonify(result)
 
 @app.route('/unmute', methods=['POST'])
 def unmute():
     source_name = request.form['source_name']
-    return jsonify(unmute_audio(source_name))
+    result = asyncio.run(unmute_audio(source_name))
+    return jsonify(result)
 
 @app.route('/volume', methods=['POST'])
 def volume():
     source_name = request.form['source_name']
     volume = float(request.form['volume'])
-    return jsonify(set_volume(source_name, volume))
+    result = asyncio.run(set_volume(source_name, volume))
+    return jsonify(result)
 
 # Main function/execution
 if __name__ == '__main__':
