@@ -1,103 +1,97 @@
-from flask import Flask, send_file, render_template
-import random
-import os
-import time
-from flask_socketio import SocketIO, emit
+# Import necessary libraries
+from flask import Flask, render_template, request, jsonify
+import requests
 
-#start 24/7 server (supposed to be anyway.. the goal is to not turn this off on the AWS instance)
+# Initialize Flask app
 app = Flask(__name__)
-socketio = SocketIO(app)
 
-# Path to the folder containing MP3 files
-music_folder = "/home/ubuntu/Desktop/LiveStream Music"
-print(f"Music from: {music_folder}")
+# OBS WebSockets and Lua Script endpoints
+OBS_WEBSOCKET_URL = "ws://localhost:4444"
+OBS_LUA_SCRIPT_URL = "http://localhost:4444/lua"
 
-# Path to the background video file
-video_file = "/home/ubuntu/Videos/202402164830_48333566.mp4"
-print(f"Animation from: {video_file}")
+# Placeholder for user credentials (replace with actual credentials)
+OBS_USERNAME = "username"
+OBS_PASSWORD = "password"
 
-# Variables for controlling the music playback
-music_paused = False
-start_time = time.time()
+# Necessary functions
+def obs_request(data):
+    """Send a request to the OBS WebSocket server."""
+    response = requests.post(OBS_LUA_SCRIPT_URL, json=data, auth=(OBS_USERNAME, OBS_PASSWORD))
+    return response.json()
 
-# Variable for indicating preview mode
-preview_mode = False
+def get_stream_status():
+    """Get the current stream status."""
+    data = {"request-type": "GetStreamingStatus"}
+    return obs_request(data)
 
-##-----------------------------------------------------------------------------------------------------------------------------
-# Flask Routes
-##-----------------------------------------------------------------------------------------------------------------------------
+def start_stream():
+    """Start the livestream."""
+    data = {"request-type": "StartStreaming"}
+    return obs_request(data)
 
-#this is the homepage for "genusstudios.info"
+def stop_stream():
+    """Stop the livestream."""
+    data = {"request-type": "StopStreaming"}
+    return obs_request(data)
+
+def set_scene(scene_name):
+    """Set the current scene."""
+    data = {"request-type": "SetCurrentScene", "scene-name": scene_name}
+    return obs_request(data)
+
+def mute_audio(source_name):
+    """Mute the specified audio source."""
+    data = {"request-type": "SetMute", "source": source_name, "mute": True}
+    return obs_request(data)
+
+def unmute_audio(source_name):
+    """Unmute the specified audio source."""
+    data = {"request-type": "SetMute", "source": source_name, "mute": False}
+    return obs_request(data)
+
+def set_volume(source_name, volume):
+    """Set the volume level of the specified audio source."""
+    data = {"request-type": "SetVolume", "source": source_name, "volume": volume}
+    return obs_request(data)
+
+# Necessary routes for Flask server
 @app.route('/')
 def index():
-    # Return HTML template with video background and control buttons
-    return render_template('livestream.html')
+    return render_template('index.html')
 
-@app.route('/video')
-def get_video():
-    # Serve the background video file
-    return send_file(video_file, mimetype='video/mp4')
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify(get_stream_status())
 
-@app.route('/music')
-def stream_music():
-    global music_paused
-    if not music_paused:
-        # Randomly select an MP3 file from the music folder
-        mp3_files = [f for f in os.listdir(music_folder) if f.endswith('.mp3')]
-        random_mp3 = random.choice(mp3_files)
-        return send_file(os.path.join(music_folder, random_mp3), mimetype='audio/mpeg')
-    else:
-        return '', 204  # No content if music is paused
+@app.route('/start', methods=['POST'])
+def start():
+    return jsonify(start_stream())
 
-@app.route('/pause_music', methods=['GET'])
-def pause_music():
-    global music_paused
-    music_paused = True
-    return "Music paused"
-    print("Music has been paused.")
-    print()
+@app.route('/stop', methods=['POST'])
+def stop():
+    return jsonify(stop_stream())
 
-@app.route('/resume_music', methods=['GET'])
-def resume_music():
-    global music_paused
-    music_paused = False
-    return "Music resumed"
-    print("Music has been resumed.")
-    print()
+@app.route('/scene', methods=['POST'])
+def scene():
+    scene_name = request.form['scene_name']
+    return jsonify(set_scene(scene_name))
 
-@app.route('/get_timer', methods=['GET'])
-def get_timer():
-    global start_time
-    elapsed_time = int(time.time() - start_time)
-    minutes = elapsed_time // 60
-    seconds = elapsed_time % 60
-    return '{:02d}:{:02d}'.format(minutes, seconds)
+@app.route('/mute', methods=['POST'])
+def mute():
+    source_name = request.form['source_name']
+    return jsonify(mute_audio(source_name))
 
-#CURRENTLY NEEDS THE MOST WORK TO DISPLAY SCENE PREVIEW IN HTML PAGE
-@app.route('/capture_scene')
-def capture_scene():
-    # Dummy implementation to serve a placeholder image
-    # Replace this with actual implementation to capture scene image from OBS
-    return send_file('placeholder.png', mimetype='image/png')
+@app.route('/unmute', methods=['POST'])
+def unmute():
+    source_name = request.form['source_name']
+    return jsonify(unmute_audio(source_name))
 
-@app.route('/toggle_preview', methods=['GET'])
-def toggle_preview():
-    global preview_mode
-    preview_mode = not preview_mode
-    return str(preview_mode)
+@app.route('/volume', methods=['POST'])
+def volume():
+    source_name = request.form['source_name']
+    volume = float(request.form['volume'])
+    return jsonify(set_volume(source_name, volume))
 
-@socketio.on('pause_music')
-def handle_pause_music():
-    global music_paused
-    music_paused = True
-    emit('music_paused', 'Music paused')
-
-@socketio.on('resume_music')
-def handle_resume_music():
-    global music_paused
-    music_paused = False
-    emit('music_resumed', 'Music resumed')
-
+# Main function/execution
 if __name__ == '__main__':
-    # Run Flask-SocketIO server with host='0.0.0.0' to listen on all available network interfaces
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
